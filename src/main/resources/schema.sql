@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `posts` (
 
 CREATE TABLE IF NOT EXISTS `animes` (
     `id`         INTEGER  PRIMARY KEY AUTO_INCREMENT,
-    `mal_id`        VARCHAR(255) NOT NULL,
+    `mal_id`        VARCHAR(255) NOT NULL UNIQUE,
     `title`        VARCHAR(255) NOT NULL,
      `url` VARCHAR(255) NOT NULL,
      `image_Url` VARCHAR(255) NOT NULL,

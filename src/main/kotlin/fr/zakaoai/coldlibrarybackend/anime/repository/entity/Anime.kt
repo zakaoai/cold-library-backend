@@ -1,11 +1,9 @@
 package fr.zakaoai.coldlibrarybackend.anime.repository.entity
 
 import fr.zakaoai.coldlibrarybackend.anime.DTO.AnimeDTO
-import fr.zakaoai.coldlibrarybackend.anime.DTO.toModel
-import net.sandrohc.jikan.model.anime.AnimeSearchSub
+import fr.zakaoai.coldlibrarybackend.anime.DTO.State
 import net.sandrohc.jikan.model.enums.AnimeType
 import org.springframework.data.annotation.Id
-import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 
 @Table("animes")
@@ -20,5 +18,5 @@ data class Anime(
     val episodes: Int? = 0,
 )
 
-fun Anime.toAnimeDTO() : AnimeDTO { return AnimeDTO(this.malId, this.title, this.url, this.imageUrl, this.type, this.episodes)
+fun Anime.toAnimeDTO() : AnimeDTO { return AnimeDTO(this.malId, this.title, this.url, this.imageUrl, this.type, this.episodes,State.FLUX_FROID)
 }

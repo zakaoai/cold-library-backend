@@ -15,6 +15,7 @@ class JikanAPIService(private val jikan: Jikan) {
         .search()
         .query(search)
         .execute()
+        .cache()
         .map { it -> fromAnimeBase(it) }
 
 

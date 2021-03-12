@@ -11,7 +11,8 @@ data class AnimeDTO(
     val url: String? = null,
     val imageUrl: String? = null,
     val type: AnimeType? = null,
-    val episodes: Int? = 0
+    val episodes: Int? = 0,
+    val state: State? = null
 )
 
 fun fromAnimeBase(anime: AnimeBase): AnimeDTO {

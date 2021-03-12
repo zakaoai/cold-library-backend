@@ -3,9 +3,8 @@ package fr.zakaoai.coldlibrarybackend.anime
 
 import fr.zakaoai.coldlibrarybackend.anime.DTO.AnimeDTO
 import fr.zakaoai.coldlibrarybackend.anime.api.JikanAPIService
-import net.sandrohc.jikan.Jikan
-import net.sandrohc.jikan.model.anime.Anime
 import org.slf4j.LoggerFactory
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
@@ -19,9 +18,15 @@ class AnimeController(private val animeService: AnimeService, private val jikanA
 
     private val logger = LoggerFactory.getLogger(AnimeController::class.java)
 
+    @GetMapping("/{id}")
+    fun findByMalId(@PathVariable id: Int): Mono<AnimeDTO> {
+        return animeService.findByMalId(id).switchIfEmpty(Mono.error(NotFoundException()))
+    }
+
+
     @GetMapping("/search/{search}")
     fun searchAnime(@PathVariable search: String): Flux<AnimeDTO> {
-        return jikanAPIService.searchAnime(search)
+        return animeService.searchAnime(search)
     }
 
     @GetMapping("save/{id}")
