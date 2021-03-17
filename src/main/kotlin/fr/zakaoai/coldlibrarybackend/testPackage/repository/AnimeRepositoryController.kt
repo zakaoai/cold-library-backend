@@ -1,7 +1,8 @@
-package fr.zakaoai.coldlibrarybackend.anime.repository
+package fr.zakaoai.coldlibrarybackend.testPackage.repository
 
 import fr.zakaoai.coldlibrarybackend.anime.DTO.AnimeDTO
 import fr.zakaoai.coldlibrarybackend.anime.DTO.toModel
+import fr.zakaoai.coldlibrarybackend.anime.repository.AnimeRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
