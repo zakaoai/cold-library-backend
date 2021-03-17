@@ -13,5 +13,22 @@ CREATE TABLE IF NOT EXISTS `animes` (
      `url` VARCHAR(255) NOT NULL,
      `image_Url` VARCHAR(255) NOT NULL,
      `type` VARCHAR(255) NOT NULL,
-     `episodes`        INTEGER  NOT NULL
+     `nb_episodes`        INTEGER  NOT NULL,
+     `storage_state` VARCHAR(255) NOT NULL,
+     `is_complete` Boolean ,
+     `last_avaible_episode` INTEGER
 );
+
+CREATE TABLE IF NOT EXISTS `animeEpisodes` (
+    `id`         INTEGER  PRIMARY KEY AUTO_INCREMENT,
+    `mal_id`        VARCHAR(255) NOT NULL,
+    `title`        VARCHAR(255) NOT NULL,
+     `episode_Number` INTEGER NOT NULL,
+     `date_Sortie` TIMESTAMP WITH TIME ZONE,
+     `url_Torrent` VARCHAR(255)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS "PK_ANIME_EPISODE_TABLE" ON `animeEpisodes`
+  (
+    `mal_id` , `episode_Number`
+  );

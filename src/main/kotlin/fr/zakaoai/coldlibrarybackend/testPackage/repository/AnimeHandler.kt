@@ -1,4 +1,4 @@
-package fr.zakaoai.coldlibrarybackend.anime.repository
+package fr.zakaoai.coldlibrarybackend.testPackage.repository
 
 import fr.zakaoai.coldlibrarybackend.anime.DTO.AnimeDTO
 import fr.zakaoai.coldlibrarybackend.anime.DTO.ErrorMessage
