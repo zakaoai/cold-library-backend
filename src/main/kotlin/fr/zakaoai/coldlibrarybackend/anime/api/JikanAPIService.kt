@@ -2,7 +2,6 @@ package fr.zakaoai.coldlibrarybackend.anime.api
 
 import fr.zakaoai.coldlibrarybackend.anime.DTO.AnimeDTO
 import fr.zakaoai.coldlibrarybackend.anime.DTO.AnimeEpisodeDTO
-import fr.zakaoai.coldlibrarybackend.anime.DTO.fromAnimeBase
 import fr.zakaoai.coldlibrarybackend.anime.DTO.fromAnimeEpisode
 import net.sandrohc.jikan.Jikan
 import net.sandrohc.jikan.model.anime.AnimeEpisodes
@@ -19,10 +18,10 @@ class JikanAPIService(private val jikan: Jikan) {
         .query(search)
         .execute()
         .cache()
-        .map { it -> fromAnimeBase(it) }
+        .map { AnimeDTO.fromAnimeBase(it) }
 
 
-    fun getAnimeById(id: Int): Mono<AnimeDTO> = jikan.query().anime().get(id).execute().map { it -> fromAnimeBase(it) }
+    fun getAnimeById(id: Int): Mono<AnimeDTO> = jikan.query().anime().get(id).execute().map { AnimeDTO.fromAnimeBase(it) }
 
     fun getAnimeEpisode(id: Int, page: Int = 1): Mono<AnimeEpisodes> {
         return jikan.query().anime().episodes(id, page).execute()
@@ -38,6 +37,7 @@ class JikanAPIService(private val jikan: Jikan) {
                 getAnimeEpisode(malId, currentPage)
             }
         }.flatMap { response -> Flux.fromIterable(response.episodes) }
+            .filter{ anime -> anime.episodeId > episodeNumber}
             .map { anime -> fromAnimeEpisode(malId, anime) }
     }
 

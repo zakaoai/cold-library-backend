@@ -19,6 +19,11 @@ class AnimeController(private val animeService: AnimeService, private val jikanA
 
     private val logger = LoggerFactory.getLogger(AnimeController::class.java)
 
+    @GetMapping
+    fun getAllAnime(): Flux<AnimeDTO> {
+        return animeService.getAllAnime();
+    }
+
     @GetMapping("{id}")
     fun findByMalId(@PathVariable id: Int): Mono<AnimeDTO> {
         return animeService.findByMalId(id).switchIfEmpty(Mono.error(NotFoundException()))

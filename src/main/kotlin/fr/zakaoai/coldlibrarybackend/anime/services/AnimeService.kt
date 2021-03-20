@@ -15,6 +15,10 @@ import reactor.core.publisher.Mono
 @Service
 class AnimeService(private val repo: AnimeRepository, private val jikanService: JikanAPIService) {
 
+    fun getAllAnime(): Flux<AnimeDTO> {
+        return repo.findAll().map(Anime::toAnimeDTO)
+    }
+
     fun saveAnimeById(malId: Int): Mono<AnimeDTO> {
 
         return repo.findByMalId(malId)

@@ -10,11 +10,13 @@ data class AnimeEpisodeDTO(
     var episodeNumber: Int? = null,
     var dateSortie: OffsetDateTime? = null,
     var urlTorrent: String? = null,
-)
+){
+   fun toModel(withId: Long? = null) =
+    AnimeEpisode(withId, this.malId, this.title, this.episodeNumber, this.dateSortie, this.urlTorrent)
+
+}
 
 fun fromAnimeEpisode(malId: Int, anime: JikanAnimeEpisode): AnimeEpisodeDTO {
     return AnimeEpisodeDTO(malId, anime.title, anime.episodeId, anime.aired)
 }
 
-fun AnimeEpisodeDTO.toModel(withId: Long? = null) =
-    AnimeEpisode(withId, this.malId, this.title, this.episodeNumber, this.dateSortie, this.urlTorrent)
