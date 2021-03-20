@@ -36,7 +36,7 @@ class EpisodeService(
                 .collectList()
                 .flatMap { animes ->
                     animes.sortBy { it.episodeNumber }
-                    val lastEpisodeTracked: Int = Math.max(lastAvaibleEpisode, animes.last()?.episodeNumber ?: 0)
+                    val lastEpisodeTracked: Int = Math.max(lastAvaibleEpisode,  0.takeUnless { !animes.isEmpty() } ?: animes.last()?.episodeNumber ?: 0)
                     jikanAPIService.getAnimeEpisodesByAnimeIdAndEpisodeNumber(malId, lastEpisodeTracked)
                         .map(AnimeEpisodeDTO::toModel)
                         .flatMap(animeEpisodeRepository::save)
