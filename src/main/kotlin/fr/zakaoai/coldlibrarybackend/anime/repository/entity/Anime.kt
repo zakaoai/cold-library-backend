@@ -10,14 +10,14 @@ import org.springframework.data.relational.core.mapping.Table
 data class Anime(
     @Id
     val id: Long? = null,
-    var malId: Int? = null,
-    var title: String? = null,
-    var url: String? = null,
-    var imageUrl: String? = null,
-    var type: AnimeType? = null,
-    var nbEpisodes: Int? = null,
-    var storageState: StorageState? = StorageState.FLUX_FROID,
-    var isComplete: Boolean? = null,
+    var malId: Int ,
+    var title: String,
+    var url: String,
+    var imageUrl: String,
+    var type: AnimeType,
+    var nbEpisodes: Int = 0,
+    var storageState: StorageState = StorageState.FLUX_FROID,
+    var isComplete: Boolean,
     var lastAvaibleEpisode: Int? = null,
 ) {
     fun toAnimeDTO(): AnimeDTO {
