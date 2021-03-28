@@ -1,15 +1,16 @@
 package fr.zakaoai.coldlibrarybackend.anime.services
 
 import fr.zakaoai.coldlibrarybackend.anime.DTO.AnimeEpisodeDTO
-import fr.zakaoai.coldlibrarybackend.anime.DTO.toModel
 import fr.zakaoai.coldlibrarybackend.anime.api.JikanAPIService
 import fr.zakaoai.coldlibrarybackend.anime.repository.AnimeEpisodeRepository
 import fr.zakaoai.coldlibrarybackend.anime.repository.AnimeRepository
+import fr.zakaoai.coldlibrarybackend.anime.repository.entity.Anime
 import fr.zakaoai.coldlibrarybackend.anime.repository.entity.AnimeEpisode
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toFlux
 import reactor.kotlin.core.publisher.toMono
 
@@ -32,7 +33,7 @@ class EpisodeService(
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST)
             anime.lastAvaibleEpisode.toMono()
         }.flatMap { lastAvaibleEpisode ->
-            animeEpisodeRepository.findByMalId(malId)
+            findEpisodeAnimeByAnimeId(malId)
                 .collectList()
                 .flatMap { animes ->
                     animes.sortBy { it.episodeNumber }
@@ -41,8 +42,22 @@ class EpisodeService(
                         .map(AnimeEpisodeDTO::toModel)
                         .flatMap(animeEpisodeRepository::save)
                         .map(AnimeEpisode::toAnimeEpisodeDTO)
-                        .concatWith(animes.map(AnimeEpisode::toAnimeEpisodeDTO).toFlux()).collectList()
+                        .concatWith(animes.toFlux()).collectList()
                 }
         }.flatMapMany { it -> Flux.fromIterable(it) }
     }
+
+    fun removeEpisodesByAnimeId(malId: Int): Mono<Void> {
+       return animeEpisodeRepository.deleteByMalId(malId)
+    }
+
+    fun removeEpisodeByAnimeIdFromEpisodeNumber(malId: Int, episodeNumber: Int): Mono<Void> {
+        return animeEpisodeRepository.findByMalId(malId).filter{ it.episodeNumber < episodeNumber}.flatMap{ it -> animeEpisodeRepository.delete(it)}.toMono()
+    }
+
+    fun removeOldEpisodeByAnimeId(malId: Int): Mono<Void> {
+      return  animeRepository.findByMalId(malId).map(Anime::lastAvaibleEpisode).flatMap{ lastAvaibleEpisode -> lastAvaibleEpisode?.let{ i -> removeEpisodeByAnimeIdFromEpisodeNumber(malId,i)  }}
+    }
+
+
 }

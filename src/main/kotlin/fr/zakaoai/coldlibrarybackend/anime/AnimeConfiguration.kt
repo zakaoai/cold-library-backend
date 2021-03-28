@@ -1,6 +1,6 @@
 package fr.zakaoai.coldlibrarybackend.anime
 
-import fr.zakaoai.coldlibrarybackend.testPackage.repository.AnimeHandler
+import fr.zakaoai.coldlibrarybackend.testPackage.service.AnimeHandler
 import net.sandrohc.jikan.Jikan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
