@@ -1,15 +1,15 @@
-package fr.zakaoai.coldlibrarybackend.testPackage.repository
+package fr.zakaoai.coldlibrarybackend.testPackage.controller
 
-import fr.zakaoai.coldlibrarybackend.anime.DTO.AnimeEpisodeDTO
+import fr.zakaoai.coldlibrarybackend.anime.DTO.AnimeDTO
 import fr.zakaoai.coldlibrarybackend.anime.DTO.toModel
-import fr.zakaoai.coldlibrarybackend.anime.repository.AnimeEpisodeRepository
+import fr.zakaoai.coldlibrarybackend.anime.repository.AnimeRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping(path = ["/AnimeEpisodeRepo"], produces = [MediaType.APPLICATION_JSON_VALUE])
-class AnimeEpisodeRepositoryController(private val repo: AnimeEpisodeRepository) {
+@RequestMapping(path = ["/animeRepo"], produces = [MediaType.APPLICATION_JSON_VALUE])
+class AnimeRepositoryController(private val repo: AnimeRepository) {
 
     @GetMapping
     fun getAll() = repo.findAll()
@@ -19,7 +19,7 @@ class AnimeEpisodeRepositoryController(private val repo: AnimeEpisodeRepository)
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun save(@RequestBody animeEpisodeDTO: AnimeEpisodeDTO) = repo.save(animeEpisodeDTO.toModel())
+    fun save(@RequestBody employee: AnimeDTO) = repo.save(employee.toModel())
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

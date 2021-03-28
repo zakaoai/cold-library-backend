@@ -5,6 +5,7 @@ import fr.zakaoai.coldlibrarybackend.anime.DTO.AnimeDTO
 import fr.zakaoai.coldlibrarybackend.anime.DTO.toModel
 import fr.zakaoai.coldlibrarybackend.anime.api.JikanAPIService
 import fr.zakaoai.coldlibrarybackend.anime.enums.StorageState
+import fr.zakaoai.coldlibrarybackend.anime.repository.AnimeEpisodeRepository
 import fr.zakaoai.coldlibrarybackend.anime.repository.AnimeRepository
 import fr.zakaoai.coldlibrarybackend.anime.repository.entity.Anime
 import org.springframework.stereotype.Service
@@ -13,7 +14,7 @@ import reactor.core.publisher.Mono
 
 
 @Service
-class AnimeService(private val repo: AnimeRepository, private val jikanService: JikanAPIService) {
+class AnimeService(private val repo: AnimeRepository,private val episodeRepo: AnimeEpisodeRepository, private val jikanService: JikanAPIService) {
 
     fun getAllAnime(): Flux<AnimeDTO> {
         return repo.findAll().map(Anime::toAnimeDTO)
@@ -28,7 +29,7 @@ class AnimeService(private val repo: AnimeRepository, private val jikanService: 
     }
 
     fun deleteById(id: Int): Mono<Void> {
-        return repo.findByMalId(id).flatMap(repo::delete)
+        return repo.deleteByMalId(id).and(episodeRepo.deleteByMalId(id))
     }
 
     fun findByMalId(id: Int): Mono<AnimeDTO> {

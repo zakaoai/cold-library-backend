@@ -3,11 +3,9 @@ package fr.zakaoai.coldlibrarybackend.anime.controller
 import fr.zakaoai.coldlibrarybackend.anime.DTO.AnimeEpisodeDTO
 import fr.zakaoai.coldlibrarybackend.anime.services.EpisodeService
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 
 @RestController
@@ -17,6 +15,16 @@ class AnimeEpisodeController(private val animeEpisodeService: EpisodeService) {
     @GetMapping
     fun findByMalId(@PathVariable id: Int): Flux<AnimeEpisodeDTO> {
         return animeEpisodeService.searchEpisodesByAnimeId(id)
+    }
+
+    @DeleteMapping
+    fun deleteByMalId(@PathVariable id: Int): Mono<Void> {
+        return animeEpisodeService.removeEpisodesByAnimeId(id);
+    }
+
+    @DeleteMapping("/old")
+    fun deleteOldByMalId(@PathVariable id: Int): Mono<Void> {
+        return animeEpisodeService.removeOldEpisodeByAnimeId(id);
     }
 
 }
