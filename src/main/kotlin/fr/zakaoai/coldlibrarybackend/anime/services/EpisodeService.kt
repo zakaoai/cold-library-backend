@@ -26,25 +26,29 @@ class EpisodeService(
     }
 
 
+    fun searchAnimeEpisodeFromEpisodeAndSave(malId: Int, fromEpisode : Int): Flux<AnimeEpisodeDTO> {
+        return  jikanAPIService.getAnimeEpisodesByAnimeIdAndEpisodeNumber(malId, fromEpisode)
+            .map(AnimeEpisodeDTO::toModel)
+            .flatMap(animeEpisodeRepository::save)
+            .map(AnimeEpisode::toAnimeEpisodeDTO)
+    }
+
     fun searchEpisodesByAnimeId(malId: Int): Flux<AnimeEpisodeDTO> {
 
-        return animeRepository.findByMalId(malId).flatMap { anime ->
-            if (anime.lastAvaibleEpisode === null)
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST)
-            anime.lastAvaibleEpisode.toMono()
-        }.flatMap { lastAvaibleEpisode ->
+        return animeRepository.findByMalId(malId)
+            .map(Anime::lastAvaibleEpisode)
+            .switchIfEmpty(Mono.error(ResponseStatusException(HttpStatus.BAD_REQUEST)))
+            .flatMapMany { lastAvaibleEpisode ->
             findEpisodeAnimeByAnimeId(malId)
                 .collectList()
-                .flatMap { animes ->
-                    animes.sortBy { it.episodeNumber }
-                    val lastEpisodeTracked: Int = Math.max(lastAvaibleEpisode,  0.takeUnless { !animes.isEmpty() } ?: animes.last()?.episodeNumber ?: 0)
-                    jikanAPIService.getAnimeEpisodesByAnimeIdAndEpisodeNumber(malId, lastEpisodeTracked)
-                        .map(AnimeEpisodeDTO::toModel)
-                        .flatMap(animeEpisodeRepository::save)
-                        .map(AnimeEpisode::toAnimeEpisodeDTO)
-                        .concatWith(animes.toFlux()).collectList()
+                .flatMapMany { animes ->
+                    animes.sortBy(AnimeEpisodeDTO::episodeNumber)
+                    val animesLastEpisode = if (animes.isEmpty()) 0 else animes.last().episodeNumber
+                    val lastEpisodeTracked: Int = (lastAvaibleEpisode ?: 0).coerceAtLeast(animesLastEpisode)
+                    searchAnimeEpisodeFromEpisodeAndSave(malId, lastEpisodeTracked)
+                        .concatWith(animes.toFlux())
                 }
-        }.flatMapMany { it -> Flux.fromIterable(it) }
+        }
     }
 
     fun removeEpisodesByAnimeId(malId: Int): Mono<Void> {
@@ -52,11 +56,13 @@ class EpisodeService(
     }
 
     fun removeEpisodeByAnimeIdFromEpisodeNumber(malId: Int, episodeNumber: Int): Mono<Void> {
-        return animeEpisodeRepository.findByMalId(malId).filter{ it.episodeNumber < episodeNumber}.flatMap{ it -> animeEpisodeRepository.delete(it)}.toMono()
+        return animeEpisodeRepository.findByMalId(malId).filter{ it.episodeNumber < episodeNumber}.flatMap{ it -> animeEpisodeRepository.delete(it)}.singleOrEmpty()
     }
 
     fun removeOldEpisodeByAnimeId(malId: Int): Mono<Void> {
-      return  animeRepository.findByMalId(malId).map(Anime::lastAvaibleEpisode).flatMap{ lastAvaibleEpisode -> lastAvaibleEpisode?.let{ i -> removeEpisodeByAnimeIdFromEpisodeNumber(malId,i)  }}
+      return  animeRepository.findByMalId(malId)
+          .map(Anime::lastAvaibleEpisode)
+          .flatMap{ lastAvaibleEpisode -> lastAvaibleEpisode?.let{ i -> removeEpisodeByAnimeIdFromEpisodeNumber(malId,i)  } ?:Mono.empty()}
     }
 
 

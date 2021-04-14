@@ -8,7 +8,7 @@ import java.time.DayOfWeek
 @Table("trackedanimetorrent")
 class TrackedAnimeTorrent(
     @Id
-    val id: Long? = null,
+    var id: Long? = null,
     var malId: Int,
     var searchWords: String,
     var dayOfRelease: DayOfWeek,
