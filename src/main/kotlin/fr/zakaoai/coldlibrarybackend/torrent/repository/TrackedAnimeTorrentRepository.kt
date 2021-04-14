@@ -6,7 +6,7 @@ import reactor.core.publisher.Mono
 
 interface TrackedAnimeTorrentRepository : ReactiveCrudRepository<TrackedAnimeTorrent, Long> {
 
-    fun findByMalId(malId: Int?): TrackedAnimeTorrent
+    fun findByMalId(malId: Int?): Mono<TrackedAnimeTorrent>
 
     fun deleteByMalId(malId : Int?): Mono<Void>
 }

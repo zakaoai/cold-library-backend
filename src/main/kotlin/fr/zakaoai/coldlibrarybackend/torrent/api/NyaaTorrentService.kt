@@ -2,21 +2,34 @@ package fr.zakaoai.coldlibrarybackend.torrent.api
 
 import de.kaysubs.tracker.nyaasi.NyaaSiApi
 import de.kaysubs.tracker.nyaasi.model.*
+import fr.zakaoai.coldlibrarybackend.torrent.DTO.AnimeEpisodeTorrentDTO
+import fr.zakaoai.coldlibrarybackend.torrent.repository.TrackedAnimeTorrentRepository
+import fr.zakaoai.coldlibrarybackend.torrent.repository.entity.AnimeEpisodeTorrent
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.kotlin.core.publisher.toFlux
+import java.util.*
 
 @Service
-class NyaaTorrentService(private val nyaaSiApi: NyaaSiApi) {
+class NyaaTorrentService(private val nyaaSiApi: NyaaSiApi,
+                         private val trackedAnimeTorrentRepository: TrackedAnimeTorrentRepository) {
 
-    fun searchTorrent(animeEpisode : String): Flux<TorrentPreview> {
-
-        val search = SearchRequest()
+    fun getAnimeSearch(searchTerm : String) : SearchRequest {
+        return SearchRequest()
             .setCategory(Category.Nyaa.anime)
             .setSortedBy(SearchRequest.Sort.SEEDERS)
             .setOrdering(SearchRequest.Ordering.DESCENDING)
-            .setTerm("VOSTFR $animeEpisode")
+            .setTerm(searchTerm)
+    }
 
-        return nyaaSiApi.search(search).toFlux()
+    fun searchEpisodeTorrent(malId : Int, episodeNumber: Int): Flux<AnimeEpisodeTorrentDTO> {
+
+        return trackedAnimeTorrentRepository.findByMalId(malId)
+            .map{trackedAnime -> trackedAnime.searchWords}
+            .map{searchWord -> "VOSTFR $searchWord $episodeNumber"}
+            .map(this::getAnimeSearch)
+            .map { search -> nyaaSiApi.search(search)}
+            .flatMapMany{ Flux.fromArray(it)}
+            .map { AnimeEpisodeTorrentDTO(it,malId,episodeNumber) }
     }
 }

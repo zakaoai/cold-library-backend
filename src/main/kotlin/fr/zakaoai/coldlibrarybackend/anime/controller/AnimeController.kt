@@ -2,7 +2,6 @@ package fr.zakaoai.coldlibrarybackend.anime.controller
 
 
 import fr.zakaoai.coldlibrarybackend.anime.DTO.AnimeDTO
-import fr.zakaoai.coldlibrarybackend.anime.api.JikanAPIService
 import fr.zakaoai.coldlibrarybackend.anime.services.AnimeService
 import org.slf4j.LoggerFactory
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
@@ -15,7 +14,7 @@ import reactor.core.publisher.Mono
 
 @RestController
 @RequestMapping(path = ["/anime"], produces = [MediaType.APPLICATION_JSON_VALUE])
-class AnimeController(private val animeService: AnimeService, private val jikanAPIService: JikanAPIService) {
+class AnimeController(private val animeService: AnimeService) {
 
     private val logger = LoggerFactory.getLogger(AnimeController::class.java)
 
