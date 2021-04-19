@@ -13,11 +13,25 @@ class AnimeEpisodeTorrentDTO(
     var date: LocalDate,
     var torrentLink: String,
     var torrentId: Int,
-) {
+    var torrentSize: String,
+    var seeders: Int,
+    var leechers: Int,
+    var completed: Int,
+
+    ) {
     constructor(torrent: TorrentPreview, malId: Int, episodeNumber: Int) : this(
-        malId, episodeNumber, torrent.title, LocalDate.ofInstant(
+        malId,
+        episodeNumber,
+        torrent.title,
+        LocalDate.ofInstant(
             torrent.date.toInstant(), ZoneId.systemDefault()
-        ), torrent.downloadLink.toString(), torrent.id
+        ),
+        torrent.downloadLink.toString(),
+        torrent.id,
+        torrent.size.toString(),
+        torrent.seeders,
+        torrent.leechers,
+        torrent.completed
     )
 
     fun toModel(withId: Long? = null) = AnimeEpisodeTorrent(
@@ -27,6 +41,10 @@ class AnimeEpisodeTorrentDTO(
         this.title,
         this.date,
         this.torrentLink,
-        this.torrentId
+        this.torrentId,
+        this.torrentSize,
+        this.seeders,
+        this.leechers,
+        this.completed
     )
 }

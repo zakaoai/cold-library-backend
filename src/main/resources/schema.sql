@@ -41,6 +41,10 @@ CREATE TABLE IF NOT EXISTS `animeepisodetorrent` (
 	`title` VARCHAR(255) NOT NULL,
 	`date_Sortie` DATE,
 	`torrent_link` VARCHAR(255) NOT NULL,
-	`torrent_id` INTEGER
+	`torrent_id` INTEGER,
+	`torrent_size` VARCHAR(255) NOT NULL,
+    	`seeders` INTEGER,
+    	`leechers` INTEGER,
+    	`completed` INTEGER
 );
 CREATE UNIQUE INDEX IF NOT EXISTS "PK_ANIME_EPISODE_TABLE" ON `animeEpisodes` (`mal_id`, `episode_Number`);
