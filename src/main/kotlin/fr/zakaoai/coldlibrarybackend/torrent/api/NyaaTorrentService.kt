@@ -5,15 +5,19 @@ import de.kaysubs.tracker.nyaasi.model.*
 import fr.zakaoai.coldlibrarybackend.torrent.DTO.AnimeEpisodeTorrentDTO
 import fr.zakaoai.coldlibrarybackend.torrent.repository.TrackedAnimeTorrentRepository
 import fr.zakaoai.coldlibrarybackend.torrent.repository.entity.AnimeEpisodeTorrent
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.kotlin.core.publisher.toFlux
 import java.util.*
 
 @Service
+@CacheConfig(cacheNames = ["torrents"])
 class NyaaTorrentService(private val nyaaSiApi: NyaaSiApi,
                          private val trackedAnimeTorrentRepository: TrackedAnimeTorrentRepository) {
 
+    @Cacheable
     fun getAnimeSearch(searchTerm : String) : SearchRequest {
         return SearchRequest()
             .setCategory(Category.Nyaa.anime)
@@ -22,6 +26,7 @@ class NyaaTorrentService(private val nyaaSiApi: NyaaSiApi,
             .setTerm(searchTerm)
     }
 
+    @Cacheable
     fun searchEpisodeTorrent(malId : Int, episodeNumber: Int): Flux<AnimeEpisodeTorrentDTO> {
 
         return trackedAnimeTorrentRepository.findByMalId(malId)
