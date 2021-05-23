@@ -82,7 +82,7 @@ class AnimeEpisodeTorrentService(
 
 
     fun scanEpisodeTorrent(malId: Int): Flux<AnimeEpisodeTorrentDTO> {
-        return episodeService.findEpisodeAnimeByAnimeId(malId)
+        return episodeService.searchEpisodesByAnimeId(malId)
             .collectList()
             .flatMapMany { animeList -> filterAnimeEpisodeList(malId, animeList) }
             .flatMap { nyaaTorrentService.searchEpisodeTorrent(malId, it.episodeNumber).next() }

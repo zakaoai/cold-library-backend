@@ -25,10 +25,11 @@ class JikanAPIService(private val jikan: Jikan) {
         .map { AnimeDTO.fromAnimeBase(it) }
 
     @Cacheable("jikanAnimes")
+    fun getAnimeById(id: Int): Mono<AnimeDTO> =
+        jikan.query().anime().get(id).execute().map { AnimeDTO.fromAnimeBase(it) }
 
     @Cacheable("jikanAnimesEpisodes")
-
-    fun getAnimeEpisode(id: Int, page: Int = 1): Mono<AnimeEpisodes> {
+    fun getAnimeEpisodesPage(id: Int, page: Int = 1): Mono<AnimeEpisodes> {
         return jikan.query().anime().episodes(id, page).execute()
     }
 
@@ -36,14 +37,15 @@ class JikanAPIService(private val jikan: Jikan) {
     fun getAnimeEpisodesByAnimeIdAndEpisodeNumber(malId: Int, episodeNumber: Int): Flux<AnimeEpisodeDTO> {
         val initialPage: Int = Math.floorDiv(episodeNumber, 100) + 1
         var currentPage: Int = initialPage
-        return getAnimeEpisode(malId, initialPage).expand { response ->
+        return getAnimeEpisodesPage(malId, initialPage).expand { response ->
             if (currentPage == response.lastPage) Mono.empty()
             else {
                 currentPage++
-                getAnimeEpisode(malId, currentPage)
+                getAnimeEpisodesPage(malId, currentPage)
             }
-        }.flatMap { response -> Flux.fromIterable(response.episodes) }
-            .filter{ anime -> anime.episodeId > episodeNumber}
+        }.map(AnimeEpisodes::episodes)
+            .flatMap { Flux.fromIterable(it) }
+            .filter { anime -> anime.episodeId > episodeNumber }
             .map { anime -> fromAnimeEpisode(malId, anime) }
     }
 
