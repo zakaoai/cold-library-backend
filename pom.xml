@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>fr.zakaoai</groupId>
 	<artifactId>cold-library-backend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>cold-library-backend</name>
 	<description>Test Back End</description>
 	<properties>
@@ -22,6 +22,10 @@
 			<id>central</id>
 			<name>bintray</name>
 			<url>https://jcenter.bintray.com</url>
+		</repository>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
 	<dependencies>
@@ -94,7 +98,7 @@
 		<dependency>
 			<groupId>net.sandrohc</groupId>
 			<artifactId>reactive-jikan</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -118,9 +122,9 @@
 			<version>1.2.3</version>
 		</dependency>
 		<dependency>
-			<groupId>de.kaysubs</groupId>
-			<artifactId>nyaasi-api</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<groupId>com.github.zakaoai</groupId>
+			<artifactId>NyaaSi-API</artifactId>
+			<version>1.0.1</version>
 		</dependency>
 	</dependencies>
 
