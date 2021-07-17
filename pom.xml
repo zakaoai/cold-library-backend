@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>fr.zakaoai</groupId>
 	<artifactId>cold-library-backend</artifactId>
-	<version>0.0.1</version>
+	<version>1.0.0</version>
 	<name>cold-library-backend</name>
 	<description>Test Back End</description>
 	<properties>
