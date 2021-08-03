@@ -1,13 +1,18 @@
 package fr.zakaoai.coldlibrarybackend
 
+
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.stereotype.Component
+import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
@@ -18,19 +23,6 @@ import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Mono
-import fr.zakaoai.coldlibrarybackend.anime.DTO.ErrorMessage
-
-import org.springframework.web.context.request.WebRequest
-
-
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
-import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.ResponseStatus
-
-import org.springframework.web.bind.annotation.RestControllerAdvice
-
-
-
 
 
 @Configuration
@@ -39,16 +31,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 class WebConfig : WebFluxConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-            .allowedOrigins("*")
-            .allowedMethods("OPTIONS, GET, POST, PUT, DELETE")
-            .allowedHeaders("Content-Type, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Authorization, X-Requested-With, requestId, Correlation-Id")
+                .allowedOrigins("*")
+                .allowedMethods("OPTIONS, GET, POST, PUT, DELETE")
+                .allowedHeaders("Content-Type, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Authorization, X-Requested-With, requestId, Correlation-Id")
     }
 }
 
 
 @RestControllerAdvice
 class ControllerExceptionHandler {
-    @ExceptionHandler(value = [NotFoundException ::class])
+    @ExceptionHandler(value = [NotFoundException::class])
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     fun resourceNotFoundException() {
         //
@@ -79,16 +71,16 @@ fun corsFilter(): CorsWebFilter {
 class AddControlHeaderWebFilter : WebFilter {
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         exchange.response
-            .headers
-            .add("Access-Control-Allow-Headers", "*")
+                .headers
+                .add("Access-Control-Allow-Headers", "*")
 
         exchange.response
-            .headers
-            .add("Access-Control-Allow-Origin", "*")
+                .headers
+                .add("Access-Control-Allow-Origin", "*")
 
         exchange.response
-            .headers
-            .add("Access-Control-Allow-Methods", "*")
+                .headers
+                .add("Access-Control-Allow-Methods", "*")
 
         return chain.filter(exchange)
     }
@@ -102,12 +94,12 @@ class RequestTimingFilter : WebFilter {
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         val startMillis = System.currentTimeMillis()
         return chain.filter(exchange)
-            .doOnSuccess { aVoid: Void? ->
-                logger.info(
-                    "Elapsed Time: {}ms",
-                    System.currentTimeMillis() - startMillis
-                )
-            }
+                .doOnSuccess {
+                    logger.info(
+                            "Elapsed Time: {}ms",
+                            System.currentTimeMillis() - startMillis
+                    )
+                }
     }
 }
 
@@ -150,9 +142,9 @@ class RequestLogger {
     }
 
     private fun getStatus(response: ServerHttpResponse): HttpStatus? =
-        try {
-            response.statusCode
-        } catch (ex: Exception) {
-            HttpStatus.CONTINUE
-        }
+            try {
+                response.statusCode
+            } catch (ex: Exception) {
+                HttpStatus.CONTINUE
+            }
 }

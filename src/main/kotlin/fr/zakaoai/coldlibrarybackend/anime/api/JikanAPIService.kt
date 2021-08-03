@@ -17,16 +17,16 @@ class JikanAPIService(private val jikan: Jikan) {
 
     @Cacheable("jikanAnimes")
     fun searchAnime(search: String): Flux<AnimeDTO> = jikan.query()
-        .anime()
-        .search()
-        .query(search)
-        .execute()
-        .cache()
-        .map { AnimeDTO.fromAnimeBase(it) }
+            .anime()
+            .search()
+            .query(search)
+            .execute()
+            .cache()
+            .map { AnimeDTO.fromAnimeBase(it) }
 
     @Cacheable("jikanAnimes")
     fun getAnimeById(id: Int): Mono<AnimeDTO> =
-        jikan.query().anime().get(id).execute().map { AnimeDTO.fromAnimeBase(it) }
+            jikan.query().anime().get(id).execute().map { AnimeDTO.fromAnimeBase(it) }
 
     @Cacheable("jikanAnimesEpisodes")
     fun getAnimeEpisodesPage(id: Int, page: Int = 1): Mono<AnimeEpisodes> {
@@ -44,9 +44,9 @@ class JikanAPIService(private val jikan: Jikan) {
                 getAnimeEpisodesPage(malId, currentPage)
             }
         }.map(AnimeEpisodes::episodes)
-            .flatMap { Flux.fromIterable(it) }
-            .filter { anime -> anime.episodeId > episodeNumber }
-            .map { anime -> fromAnimeEpisode(malId, anime) }
+                .flatMap { Flux.fromIterable(it) }
+                .filter { anime -> anime.episodeId > episodeNumber }
+                .map { anime -> fromAnimeEpisode(malId, anime) }
     }
 
 }

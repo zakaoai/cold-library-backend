@@ -20,7 +20,7 @@ class AnimeController(private val animeService: AnimeService) {
 
     @GetMapping
     fun getAllAnime(): Flux<AnimeDTO> {
-        return animeService.getAllAnime();
+        return animeService.getAllAnime()
     }
 
     @GetMapping("{id}")
@@ -36,7 +36,7 @@ class AnimeController(private val animeService: AnimeService) {
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteAnime(@PathVariable id: Int): Mono<Void> {
-        return animeService.deleteById(id);
+        return animeService.deleteById(id)
     }
 
     @GetMapping("/search/{search}")
@@ -52,7 +52,7 @@ class AnimeController(private val animeService: AnimeService) {
     @PutMapping("{id}/last_avaible_episode")
     fun updateLastAvaibleEpisode(@PathVariable id: Int, @RequestBody lastAvaibleEpisode: Int): Mono<AnimeDTO> {
         return animeService.updateAnimeLastAvaibleEpisode(id, lastAvaibleEpisode)
-            .switchIfEmpty(Mono.error(NotFoundException()))
+                .switchIfEmpty(Mono.error(NotFoundException()))
     }
 
     @PutMapping("{id}/is_complete")

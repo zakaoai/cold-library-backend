@@ -24,8 +24,8 @@ class TrackedAnimeTorrentController(private val trackedAnimeTorrentService: Trac
 
     @PatchMapping("{id}")
     fun updateTrackedAnime(
-        @PathVariable id: Int,
-        @RequestBody trackedAnimeTorrentDTO: TrackedAnimeTorrentDTO
+            @PathVariable id: Int,
+            @RequestBody trackedAnimeTorrentDTO: TrackedAnimeTorrentDTO
     ): Mono<TrackedAnimeTorrentDTO> {
         return trackedAnimeTorrentService.updateTrackedAnime(trackedAnimeTorrentDTO)
     }

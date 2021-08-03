@@ -11,7 +11,7 @@ interface AnimeEpisodeTorrentRepository : ReactiveCrudRepository<AnimeEpisodeTor
 
     fun findByMalIdAndEpisodeNumber(malId: Int?, episodeNumber: Int?): Mono<AnimeEpisodeTorrent>
 
-    fun deleteByMalIdAndEpisodeNumber(malId : Int?,episodeNumber: Int?): Mono<Void>
+    fun deleteByMalIdAndEpisodeNumber(malId: Int?, episodeNumber: Int?): Mono<Void>
 
-    fun deleteByMalId(malId : Int?): Mono<Void>
+    fun deleteByMalId(malId: Int?): Mono<Void>
 }

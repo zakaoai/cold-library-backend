@@ -1,4 +1,3 @@
 package fr.zakaoai.coldlibrarybackend.anime.repository
 
-interface RequestRepository {
-}
+interface RequestRepository

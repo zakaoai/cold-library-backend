@@ -8,5 +8,5 @@ interface TrackedAnimeTorrentRepository : ReactiveCrudRepository<TrackedAnimeTor
 
     fun findByMalId(malId: Int?): Mono<TrackedAnimeTorrent>
 
-    fun deleteByMalId(malId : Int?): Mono<Void>
+    fun deleteByMalId(malId: Int?): Mono<Void>
 }

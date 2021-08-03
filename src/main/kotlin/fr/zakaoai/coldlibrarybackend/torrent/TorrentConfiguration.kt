@@ -8,6 +8,6 @@ import org.springframework.context.annotation.Configuration
 class TorrentConfiguration {
 
     @Bean
-    fun nyaaSiApi(): NyaaSiApi = NyaaSiApi.getNyaa();
+    fun nyaaSiApi(): NyaaSiApi = NyaaSiApi.getNyaa()
 
 }
