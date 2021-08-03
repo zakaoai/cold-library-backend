@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `trackedanimetorrent` (
 	`day_of_release` VARCHAR(255) NOT NULL
 );
 
-ALTER TABLE IF EXISTS `trackedanimetorrent` ADD COLUMN IF NOT EXISTS `last_Episode_On_Server` INTEGER NOT NULL AFTER `mal_id`
+ALTER TABLE IF EXISTS `trackedanimetorrent` ADD COLUMN IF NOT EXISTS `last_Episode_On_Server` INTEGER NOT NULL AFTER `mal_id`;
 
 CREATE TABLE IF NOT EXISTS `animeepisodetorrent` (
 	`id` INTEGER PRIMARY KEY AUTO_INCREMENT,
