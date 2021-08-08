@@ -14,22 +14,31 @@ import reactor.core.publisher.Mono
 
 
 @Service
-class AnimeService(private val repo: AnimeRepository, private val episodeRepo: AnimeEpisodeRepository, private val jikanService: JikanAPIService, private val trackedAnimeTorrentRepository: TrackedAnimeTorrentRepository) {
+class AnimeService(
+    private val repo: AnimeRepository,
+    private val episodeRepo: AnimeEpisodeRepository,
+    private val jikanService: JikanAPIService,
+    private val trackedAnimeTorrentRepository: TrackedAnimeTorrentRepository
+) {
 
     fun getAllAnime(): Flux<AnimeDTO> {
         return repo.findAll().map(Anime::toAnimeDTO)
     }
 
+    fun findAnimeAndSave(malId: Int): Mono<Anime> {
+        return jikanService.getAnimeById(malId).map(AnimeDTO::toModel).flatMap { repo.save(it) };
+    }
+
     fun saveAnimeById(malId: Int): Mono<AnimeDTO> {
-
         return repo.findByMalId(malId)
-                .switchIfEmpty(jikanService.getAnimeById(malId).map(AnimeDTO::toModel).flatMap { repo.save(it) }
-                ).map(Anime::toAnimeDTO)
-
+            .switchIfEmpty(
+                findAnimeAndSave(malId)
+            ).map(Anime::toAnimeDTO)
     }
 
     fun deleteById(id: Int): Mono<Void> {
-        return repo.deleteByMalId(id).and(episodeRepo.deleteByMalId(id)).and(trackedAnimeTorrentRepository.deleteByMalId(id))
+        return repo.deleteByMalId(id).and(episodeRepo.deleteByMalId(id))
+            .and(trackedAnimeTorrentRepository.deleteByMalId(id))
     }
 
     fun findByMalId(id: Int): Mono<AnimeDTO> {
@@ -38,16 +47,16 @@ class AnimeService(private val repo: AnimeRepository, private val episodeRepo: A
 
     fun searchAnime(search: String): Flux<AnimeDTO> {
         return jikanService.searchAnime(search)
-                .flatMap { jikanAnime ->
-                    repo.findByMalId(jikanAnime.malId).map(Anime::toAnimeDTO).defaultIfEmpty(jikanAnime)
-                }
+            .flatMap { jikanAnime ->
+                repo.findByMalId(jikanAnime.malId).map(Anime::toAnimeDTO).defaultIfEmpty(jikanAnime)
+            }
     }
 
     fun updateAnime(animeDTO: AnimeDTO): Mono<AnimeDTO> {
         return repo.findByMalId(animeDTO.malId)
-                .map { anime -> animeDTO.toModel(anime.id) }
-                .flatMap(repo::save)
-                .map(Anime::toAnimeDTO)
+            .map { anime -> animeDTO.toModel(anime.id) }
+            .flatMap(repo::save)
+            .map(Anime::toAnimeDTO)
     }
 
     fun updateAnimeStorageState(malId: Int, state: String): Mono<AnimeDTO> {

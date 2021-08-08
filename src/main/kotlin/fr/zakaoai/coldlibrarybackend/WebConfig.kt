@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -23,6 +24,7 @@ import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Mono
+import javax.validation.ConstraintViolationException
 
 
 @Configuration
@@ -44,6 +46,12 @@ class ControllerExceptionHandler {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     fun resourceNotFoundException() {
         //
+    }
+
+    @ExceptionHandler(ConstraintViolationException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun handleConstraintViolationException(e: ConstraintViolationException): ResponseEntity<String>? {
+        return ResponseEntity("not valid due to validation error: " + e.message, HttpStatus.UNPROCESSABLE_ENTITY)
     }
 }
 

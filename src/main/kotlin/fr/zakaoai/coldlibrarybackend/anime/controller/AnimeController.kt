@@ -7,13 +7,16 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import javax.validation.constraints.Min
 
 
 @RestController
 @RequestMapping(path = ["/anime"], produces = [MediaType.APPLICATION_JSON_VALUE])
+@Validated
 class AnimeController(private val animeService: AnimeService) {
 
     private val logger = LoggerFactory.getLogger(AnimeController::class.java)
@@ -40,7 +43,7 @@ class AnimeController(private val animeService: AnimeService) {
     }
 
     @GetMapping("/search/{search}")
-    fun searchAnime(@PathVariable search: String): Flux<AnimeDTO> {
+    fun searchAnime(@PathVariable @Min(3) search: String): Flux<AnimeDTO> {
         return animeService.searchAnime(search)
     }
 
@@ -52,7 +55,7 @@ class AnimeController(private val animeService: AnimeService) {
     @PutMapping("{id}/last_avaible_episode")
     fun updateLastAvaibleEpisode(@PathVariable id: Int, @RequestBody lastAvaibleEpisode: Int): Mono<AnimeDTO> {
         return animeService.updateAnimeLastAvaibleEpisode(id, lastAvaibleEpisode)
-                .switchIfEmpty(Mono.error(NotFoundException()))
+            .switchIfEmpty(Mono.error(NotFoundException()))
     }
 
     @PutMapping("{id}/is_complete")
