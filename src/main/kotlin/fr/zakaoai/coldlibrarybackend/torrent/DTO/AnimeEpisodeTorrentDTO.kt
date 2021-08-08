@@ -36,15 +36,15 @@ class AnimeEpisodeTorrentDTO(
 
     fun toModel(withId: Long? = null) = AnimeEpisodeTorrent(
             withId,
-            this.malId,
-            this.episodeNumber,
-            this.title,
-            this.date,
-            this.torrentLink,
-            this.torrentId,
-            this.torrentSize,
-            this.seeders,
-            this.leechers,
-            this.completed
+            malId,
+            episodeNumber,
+            title,
+            date,
+            torrentLink,
+            torrentId,
+            torrentSize,
+            seeders,
+            leechers,
+            completed
     )
 }

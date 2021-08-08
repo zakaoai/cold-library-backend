@@ -14,5 +14,5 @@ class TrackedAnimeTorrent(
         var searchWords: String,
         var dayOfRelease: DayOfWeek,
 ) {
-    fun toTrackedAnimeTorrentDTO() = TrackedAnimeTorrentDTO(this.malId, this.lastEpisodeOnServer, this.searchWords, this.dayOfRelease)
+    fun toTrackedAnimeTorrentDTO() = TrackedAnimeTorrentDTO(malId, lastEpisodeOnServer, searchWords, dayOfRelease)
 }

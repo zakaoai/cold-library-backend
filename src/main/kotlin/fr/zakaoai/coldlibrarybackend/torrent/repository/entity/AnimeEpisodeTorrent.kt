@@ -21,15 +21,15 @@ class AnimeEpisodeTorrent(
         var completed: Int,
 ) {
     fun toAnimeEpisodeTorrentDTO() = AnimeEpisodeTorrentDTO(
-            this.malId,
-            this.episodeNumber,
-            this.title,
-            this.dateSortie,
-            this.torrentLink,
-            this.torrentId,
-            this.torrentSize,
-            this.seeders,
-            this.leechers,
-            this.completed
+            malId,
+            episodeNumber,
+            title,
+            dateSortie,
+            torrentLink,
+            torrentId,
+            torrentSize,
+            seeders,
+            leechers,
+            completed
     )
 }

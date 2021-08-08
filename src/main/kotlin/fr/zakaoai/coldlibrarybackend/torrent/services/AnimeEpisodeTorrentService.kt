@@ -88,4 +88,11 @@ class AnimeEpisodeTorrentService(
                 .map(AnimeEpisodeTorrent::toAnimeEpisodeTorrentDTO)
     }
 
+    fun scanPackageTorrent(malId: Int): Mono<AnimeEpisodeTorrentDTO> {
+        return nyaaTorrentService.searchEpisodeTorrent(malId, 0).next()
+            .map(AnimeEpisodeTorrentDTO::toModel)
+            .flatMap(animeEpisodeTorrentRepository::save)
+            .map(AnimeEpisodeTorrent::toAnimeEpisodeTorrentDTO)
+    }
+
 }

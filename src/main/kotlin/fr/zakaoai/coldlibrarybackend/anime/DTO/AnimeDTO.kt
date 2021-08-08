@@ -35,15 +35,15 @@ data class AnimeDTO(
     fun toModel(withId: Long? = null) =
             Anime(
                     withId,
-                    this.malId,
-                    this.title,
-                    this.url,
-                    this.imageUrl,
-                    this.type,
-                    this.nbEpisodes,
-                    this.storageState ?: StorageState.FLUX_FROID,
-                    this.isComplete ?: (this.nbEpisodes != 0),
-                    this.lastAvaibleEpisode
+                    malId,
+                    title,
+                    url,
+                    imageUrl,
+                    type,
+                    nbEpisodes,
+                    storageState ?: StorageState.FLUX_FROID,
+                    isComplete ?: (nbEpisodes != 0),
+                    lastAvaibleEpisode
             )
 }
 

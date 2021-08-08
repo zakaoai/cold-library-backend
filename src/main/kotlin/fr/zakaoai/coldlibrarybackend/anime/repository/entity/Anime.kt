@@ -22,15 +22,15 @@ data class Anime(
 ) {
     fun toAnimeDTO(): AnimeDTO {
         return AnimeDTO(
-                this.malId,
-                this.title,
-                this.url,
-                this.imageUrl,
-                this.type,
-                this.nbEpisodes,
-                this.storageState,
-                this.isComplete,
-                this.lastAvaibleEpisode
+                malId,
+                title,
+                url,
+                imageUrl,
+                type,
+                nbEpisodes,
+                storageState,
+                isComplete,
+                lastAvaibleEpisode
         )
     }
 }

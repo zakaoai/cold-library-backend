@@ -12,7 +12,7 @@ data class AnimeEpisodeDTO(
         var urlTorrent: String? = null,
 ) {
     fun toModel(withId: Long? = null) =
-            AnimeEpisode(withId, this.malId, this.title, this.episodeNumber, this.dateSortie, this.urlTorrent)
+            AnimeEpisode(withId, malId, title, episodeNumber, dateSortie, urlTorrent)
 
 }
 

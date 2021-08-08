@@ -47,4 +47,9 @@ class AnimeEpisodeTorrentController(private val animeEpisodeTorrentService: Anim
     fun scanEpisodeTorrent(@PathVariable id: Int): Flux<AnimeEpisodeTorrentDTO> {
         return animeEpisodeTorrentService.scanEpisodeTorrent(id)
     }
+
+    @GetMapping("/scanPack")
+    fun scanPackageTorrent(@PathVariable id: Int): Mono<AnimeEpisodeTorrentDTO> {
+        return animeEpisodeTorrentService.scanPackageTorrent(id)
+    }
 }

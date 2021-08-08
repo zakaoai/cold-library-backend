@@ -16,7 +16,7 @@ data class AnimeEpisode(
         val urlTorrent: String? = null,
 ) {
     fun toAnimeEpisodeDTO(): AnimeEpisodeDTO {
-        return AnimeEpisodeDTO(this.malId, this.title, this.episodeNumber, this.dateSortie, this.urlTorrent)
+        return AnimeEpisodeDTO(malId, title, episodeNumber, dateSortie, urlTorrent)
     }
 
 }

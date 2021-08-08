@@ -12,27 +12,34 @@ import reactor.core.publisher.Flux
 
 @Service
 @CacheConfig(cacheNames = ["torrents"])
-class NyaaTorrentService(private val nyaaSiApi: NyaaSiApi,
-                         private val trackedAnimeTorrentRepository: TrackedAnimeTorrentRepository) {
+class NyaaTorrentService(
+    private val nyaaSiApi: NyaaSiApi,
+    private val trackedAnimeTorrentRepository: TrackedAnimeTorrentRepository
+) {
 
     @Cacheable
     fun getAnimeSearch(searchTerm: String): SearchRequest {
         return SearchRequest()
-                .setCategory(Category.Nyaa.anime)
-                .setSortedBy(SearchRequest.Sort.SEEDERS)
-                .setOrdering(SearchRequest.Ordering.DESCENDING)
-                .setTerm(searchTerm)
+            .setCategory(Category.Nyaa.anime)
+            .setSortedBy(SearchRequest.Sort.SEEDERS)
+            .setOrdering(SearchRequest.Ordering.DESCENDING)
+            .setTerm(searchTerm)
     }
 
     @Cacheable
     fun searchEpisodeTorrent(malId: Int, episodeNumber: Int): Flux<AnimeEpisodeTorrentDTO> {
 
         return trackedAnimeTorrentRepository.findByMalId(malId)
-                .map { trackedAnime -> trackedAnime.searchWords }
-                .map { searchWord -> "VOSTFR $searchWord $episodeNumber" }
-                .map(this::getAnimeSearch)
-                .map { search -> nyaaSiApi.search(search) }
-                .flatMapMany { Flux.fromArray(it) }
-                .map { AnimeEpisodeTorrentDTO(it, malId, episodeNumber) }
+            .map { trackedAnime -> trackedAnime.searchWords }
+            .map { searchWord ->
+                when (episodeNumber) {
+                    0 -> "VOSTFR $searchWord"
+                    else -> "VOSTFR $searchWord $episodeNumber"
+                }
+            }
+            .map(this::getAnimeSearch)
+            .map { search -> nyaaSiApi.search(search) }
+            .flatMapMany { Flux.fromArray(it) }
+            .map { AnimeEpisodeTorrentDTO(it, malId, episodeNumber) }
     }
 }
