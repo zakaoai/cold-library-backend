@@ -7,20 +7,23 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import javax.validation.constraints.Min
 
 
 @RestController
 @RequestMapping(path = ["/anime"], produces = [MediaType.APPLICATION_JSON_VALUE])
+@Validated
 class AnimeController(private val animeService: AnimeService) {
 
     private val logger = LoggerFactory.getLogger(AnimeController::class.java)
 
     @GetMapping
     fun getAllAnime(): Flux<AnimeDTO> {
-        return animeService.getAllAnime();
+        return animeService.getAllAnime()
     }
 
     @GetMapping("{id}")
@@ -36,11 +39,11 @@ class AnimeController(private val animeService: AnimeService) {
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteAnime(@PathVariable id: Int): Mono<Void> {
-        return animeService.deleteById(id);
+        return animeService.deleteById(id)
     }
 
     @GetMapping("/search/{search}")
-    fun searchAnime(@PathVariable search: String): Flux<AnimeDTO> {
+    fun searchAnime(@PathVariable @Min(3) search: String): Flux<AnimeDTO> {
         return animeService.searchAnime(search)
     }
 

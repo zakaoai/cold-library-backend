@@ -20,6 +20,6 @@ class AnimeConfiguration {
     }
 
     @Bean
-    fun jikan() : Jikan = Jikan()
+    fun jikan(): Jikan = Jikan()
 
 }

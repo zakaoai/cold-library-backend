@@ -22,12 +22,12 @@ class AnimeHandler(private val service: AnimeRepositoryServiceCorr) {
         val criterias = request.queryParams()
         return when {
             criterias.isEmpty() -> ServerResponse.badRequest().json()
-                .bodyValueAndAwait(ErrorMessage("Search must have query params"))
+                    .bodyValueAndAwait(ErrorMessage("Search must have query params"))
             criterias.contains("userId") -> {
                 val criteriaValue = criterias.getFirst("userId")?.toInt()
                 if (criteriaValue == null) {
                     ServerResponse.badRequest().json()
-                        .bodyValueAndAwait(ErrorMessage("Incorrect search criteria value"))
+                            .bodyValueAndAwait(ErrorMessage("Incorrect search criteria value"))
                 } else {
                     ServerResponse.ok().json().bodyAndAwait(service.findByMalId(criteriaValue))
                 }
@@ -59,7 +59,7 @@ class AnimeHandler(private val service: AnimeRepositoryServiceCorr) {
         } else {
             val user = service.addOne(newPost)
             if (user == null) ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR).json().bodyValueAndAwait(
-                ErrorMessage("Internal error")
+                    ErrorMessage("Internal error")
             )
             else ServerResponse.status(HttpStatus.CREATED).json().bodyValueAndAwait(user)
         }
@@ -81,7 +81,7 @@ class AnimeHandler(private val service: AnimeRepositoryServiceCorr) {
             } else {
                 val user = service.updateOne(id, updateUser)
                 if (user == null) ServerResponse.status(HttpStatus.NOT_FOUND).json()
-                    .bodyValueAndAwait(ErrorMessage("Resource $id not found"))
+                        .bodyValueAndAwait(ErrorMessage("Resource $id not found"))
                 else ServerResponse.status(HttpStatus.OK).json().bodyValueAndAwait(user)
             }
         }
@@ -94,7 +94,7 @@ class AnimeHandler(private val service: AnimeRepositoryServiceCorr) {
         } else {
             if (service.deleteOne(id)) ServerResponse.noContent().buildAndAwait()
             else ServerResponse.status(HttpStatus.NOT_FOUND).json()
-                .bodyValueAndAwait(ErrorMessage("Resource $id not found"))
+                    .bodyValueAndAwait(ErrorMessage("Resource $id not found"))
         }
     }
 }

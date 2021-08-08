@@ -1,7 +1,6 @@
 package fr.zakaoai.coldlibrarybackend.testPackage.controller
 
 import fr.zakaoai.coldlibrarybackend.anime.DTO.AnimeDTO
-import fr.zakaoai.coldlibrarybackend.anime.DTO.toModel
 import fr.zakaoai.coldlibrarybackend.anime.repository.AnimeRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType

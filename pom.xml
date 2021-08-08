@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>fr.zakaoai</groupId>
 	<artifactId>cold-library-backend</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<name>cold-library-backend</name>
-	<description>Test Back End</description>
+	<description>Back End Cold Library</description>
 	<properties>
 		<java.version>11</java.version>
 		<kotlin.version>1.4.30</kotlin.version>
@@ -93,7 +93,7 @@
 		<dependency>
 			<groupId>com.kttdevelopment</groupId>
 			<artifactId>mal4j</artifactId>
-			<version>1.1.0</version>
+			<version>2.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sandrohc</groupId>
@@ -114,17 +114,22 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.3</version>
+			<version>1.2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<version>1.2.3</version>
+			<version>1.2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.zakaoai</groupId>
 			<artifactId>NyaaSi-API</artifactId>
 			<version>1.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+			<version>2.5.3</version>
 		</dependency>
 	</dependencies>
 

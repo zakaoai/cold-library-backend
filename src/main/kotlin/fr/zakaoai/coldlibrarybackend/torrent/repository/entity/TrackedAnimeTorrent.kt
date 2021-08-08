@@ -7,11 +7,12 @@ import java.time.DayOfWeek
 
 @Table("trackedanimetorrent")
 class TrackedAnimeTorrent(
-    @Id
-    var id: Long? = null,
-    var malId: Int,
-    var searchWords: String,
-    var dayOfRelease: DayOfWeek,
+        @Id
+        var id: Long? = null,
+        var malId: Int,
+        var lastEpisodeOnServer: Int,
+        var searchWords: String,
+        var dayOfRelease: DayOfWeek,
 ) {
-    fun toTrackedAnimeTorrentDTO() = TrackedAnimeTorrentDTO(this.malId, this.searchWords, this.dayOfRelease)
+    fun toTrackedAnimeTorrentDTO() = TrackedAnimeTorrentDTO(malId, lastEpisodeOnServer, searchWords, dayOfRelease)
 }

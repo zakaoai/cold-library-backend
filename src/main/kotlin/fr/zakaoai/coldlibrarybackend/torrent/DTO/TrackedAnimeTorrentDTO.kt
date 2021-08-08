@@ -5,8 +5,10 @@ import java.time.DayOfWeek
 
 class TrackedAnimeTorrentDTO(
     var malId: Int,
+    var lastEpisodeOnServer: Int,
     var searchWords: String,
     var dayOfRelease: DayOfWeek,
 ) {
-    fun toModel(withId: Long? = null) = TrackedAnimeTorrent(withId, this.malId, this.searchWords, this.dayOfRelease)
+    fun toModel(withId: Long? = null) =
+        TrackedAnimeTorrent(withId, malId, lastEpisodeOnServer, searchWords, dayOfRelease)
 }

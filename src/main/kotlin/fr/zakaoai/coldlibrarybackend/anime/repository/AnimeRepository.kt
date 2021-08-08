@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono
 
 interface AnimeRepository : ReactiveCrudRepository<Anime, Long> {
 
-    fun findByMalId(malId : Int?): Mono<Anime>
+    fun findByMalId(malId: Int?): Mono<Anime>
 
-    fun deleteByMalId(malId : Int?): Mono<Void>
+    fun deleteByMalId(malId: Int?): Mono<Void>
 }

@@ -5,12 +5,10 @@ import fr.zakaoai.coldlibrarybackend.torrent.DTO.TrackedAnimeTorrentDTO
 import fr.zakaoai.coldlibrarybackend.torrent.repository.AnimeEpisodeTorrentRepository
 import fr.zakaoai.coldlibrarybackend.torrent.repository.TrackedAnimeTorrentRepository
 import fr.zakaoai.coldlibrarybackend.torrent.repository.entity.TrackedAnimeTorrent
-import org.springframework.data.crossstore.ChangeSetPersister
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.time.DayOfWeek
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 
 @Service
 class TrackedAnimeTorrentService(
@@ -31,16 +29,22 @@ class TrackedAnimeTorrentService(
 
     fun updateTrackedAnime(trackedAnimeTorrentDTO: TrackedAnimeTorrentDTO): Mono<TrackedAnimeTorrentDTO> {
         return trackedAnimeTorrentRepository.findByMalId(trackedAnimeTorrentDTO.malId)
-            .map{
-                TrackedAnimeTorrent(it.id,it.malId,trackedAnimeTorrentDTO.searchWords,trackedAnimeTorrentDTO.dayOfRelease)
-             }
+            .map {
+                TrackedAnimeTorrent(
+                    it.id,
+                    it.malId,
+                    trackedAnimeTorrentDTO.lastEpisodeOnServer,
+                    trackedAnimeTorrentDTO.searchWords,
+                    trackedAnimeTorrentDTO.dayOfRelease
+                )
+            }
             .flatMap(trackedAnimeTorrentRepository::save)
             .map(TrackedAnimeTorrent::toTrackedAnimeTorrentDTO)
     }
 
     fun createTrackedAnime(malId: Int): Mono<TrackedAnimeTorrentDTO> {
         return animeRepository.findByMalId(malId)
-            .map { TrackedAnimeTorrent(null, malId, it.title, DayOfWeek.MONDAY) }
+            .map { TrackedAnimeTorrent(null, malId, it.nbEpisodes, it.title, DayOfWeek.MONDAY) }
             .flatMap(trackedAnimeTorrentRepository::save)
             .map(TrackedAnimeTorrent::toTrackedAnimeTorrentDTO)
     }

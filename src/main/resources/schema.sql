@@ -30,9 +30,12 @@ CREATE TABLE IF NOT EXISTS `animeEpisodes` (
 CREATE TABLE IF NOT EXISTS `trackedanimetorrent` (
 	`id` INTEGER PRIMARY KEY AUTO_INCREMENT,
 	`mal_id` INTEGER NOT NULL UNIQUE,
+	`last_Episode_On_Server` INTEGER NOT NULL,
 	`search_words` VARCHAR(255) NOT NULL,
 	`day_of_release` VARCHAR(255) NOT NULL
 );
+
+ALTER TABLE IF EXISTS `trackedanimetorrent` ADD COLUMN IF NOT EXISTS `last_Episode_On_Server` INTEGER DEFAULT 0 NOT NULL AFTER `mal_id` ;
 
 CREATE TABLE IF NOT EXISTS `animeepisodetorrent` (
 	`id` INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -47,4 +50,5 @@ CREATE TABLE IF NOT EXISTS `animeepisodetorrent` (
     	`leechers` INTEGER,
     	`completed` INTEGER
 );
+
 CREATE UNIQUE INDEX IF NOT EXISTS "PK_ANIME_EPISODE_TABLE" ON `animeEpisodes` (`mal_id`, `episode_Number`);

@@ -7,29 +7,29 @@ import java.time.LocalDate
 
 @Table("animeepisodetorrent")
 class AnimeEpisodeTorrent(
-    @Id
-    var id: Long? = null,
-    var malId: Int,
-    var episodeNumber: Int,
-    var title: String,
-    var dateSortie: LocalDate,
-    var torrentLink: String,
-    var torrentId: Int,
-    var torrentSize: String,
-    var seeders: Int,
-    var leechers: Int,
-    var completed: Int,
+        @Id
+        var id: Long? = null,
+        var malId: Int,
+        var episodeNumber: Int,
+        var title: String,
+        var dateSortie: LocalDate,
+        var torrentLink: String,
+        var torrentId: Int,
+        var torrentSize: String,
+        var seeders: Int,
+        var leechers: Int,
+        var completed: Int,
 ) {
     fun toAnimeEpisodeTorrentDTO() = AnimeEpisodeTorrentDTO(
-        this.malId,
-        this.episodeNumber,
-        this.title,
-        this.dateSortie,
-        this.torrentLink,
-        this.torrentId,
-        this.torrentSize,
-        this.seeders,
-        this.leechers,
-        this.completed
+            malId,
+            episodeNumber,
+            title,
+            dateSortie,
+            torrentLink,
+            torrentId,
+            torrentSize,
+            seeders,
+            leechers,
+            completed
     )
 }

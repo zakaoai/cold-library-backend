@@ -19,12 +19,7 @@ class AnimeEpisodeController(private val animeEpisodeService: EpisodeService) {
 
     @DeleteMapping
     fun deleteByMalId(@PathVariable id: Int): Mono<Void> {
-        return animeEpisodeService.removeEpisodesByAnimeId(id);
-    }
-
-    @DeleteMapping("/old")
-    fun deleteOldByMalId(@PathVariable id: Int): Mono<Void> {
-        return animeEpisodeService.removeOldEpisodeByAnimeId(id);
+        return animeEpisodeService.removeEpisodesByAnimeId(id)
     }
 
 }
