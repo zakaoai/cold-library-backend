@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import javax.validation.constraints.Min
+import javax.validation.constraints.Size
 
 
 @RestController
@@ -43,7 +44,7 @@ class AnimeController(private val animeService: AnimeService) {
     }
 
     @GetMapping("/search/{search}")
-    fun searchAnime(@PathVariable @Min(3) search: String): Flux<AnimeDTO> {
+    fun searchAnime(@PathVariable @Size(min = 3) search: String): Flux<AnimeDTO> {
         return animeService.searchAnime(search)
     }
 
