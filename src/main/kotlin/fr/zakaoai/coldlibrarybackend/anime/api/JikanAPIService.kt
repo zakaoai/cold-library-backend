@@ -15,14 +15,14 @@ import reactor.core.publisher.Mono
 @CacheConfig
 class JikanAPIService(private val jikan: Jikan) {
 
-    @Cacheable("jikanAnimes")
+    @Cacheable(cacheNames = ["jikanAnimes"] ,  unless = "#result instanceof T(java.lang.Exception)"  )
     fun searchAnime(search: String): Flux<AnimeDTO> = jikan.query()
             .anime()
             .search()
             .query(search)
             .execute()
-            .cache()
             .map { AnimeDTO.fromAnimeBase(it) }
+            .cache()
 
     @Cacheable("jikanAnimes")
     fun getAnimeById(id: Int): Mono<AnimeDTO> =
