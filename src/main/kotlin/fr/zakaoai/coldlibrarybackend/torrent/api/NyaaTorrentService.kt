@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 @Service
 @CacheConfig(cacheNames = ["torrents"])
@@ -41,5 +42,10 @@ class NyaaTorrentService(
             .map { search -> nyaaSiApi.search(search) }
             .flatMapMany { Flux.fromArray(it) }
             .map { AnimeEpisodeTorrentDTO(it, malId, episodeNumber) }
+    }
+
+    fun searchEpisodeTorrentById(torrentId: Int, malId: Int, episodeNumber: Int): Mono<AnimeEpisodeTorrentDTO> {
+        return Mono.just(nyaaSiApi.getTorrentInfo(torrentId))
+            .map { AnimeEpisodeTorrentDTO(it, torrentId, malId, episodeNumber) }
     }
 }
