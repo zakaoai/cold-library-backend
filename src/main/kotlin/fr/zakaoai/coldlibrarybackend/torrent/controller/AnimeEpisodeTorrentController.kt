@@ -10,8 +10,10 @@ import reactor.core.publisher.Mono
 
 @RestController
 @RequestMapping(path = ["/torrent/{id}/episodes"], produces = [MediaType.APPLICATION_JSON_VALUE])
-class AnimeEpisodeTorrentController(private val animeEpisodeTorrentService: AnimeEpisodeTorrentService,
-                                    private val nyaaTorrentService: NyaaTorrentService) {
+class AnimeEpisodeTorrentController(
+    private val animeEpisodeTorrentService: AnimeEpisodeTorrentService,
+    private val nyaaTorrentService: NyaaTorrentService
+) {
 
     @GetMapping
     fun getAnimeEpisodeTorrents(@PathVariable id: Int): Flux<AnimeEpisodeTorrentDTO> {
@@ -20,27 +22,43 @@ class AnimeEpisodeTorrentController(private val animeEpisodeTorrentService: Anim
 
     @GetMapping("{episodeNumber}/alternate")
     fun searchAlternateEpisodeTorrent(
-            @PathVariable id: Int,
-            @PathVariable episodeNumber: Int
+        @PathVariable id: Int,
+        @PathVariable episodeNumber: Int
     ): Flux<AnimeEpisodeTorrentDTO> {
         return animeEpisodeTorrentService.searchAlternateEpisodeTorrent(id, episodeNumber)
     }
 
+    @GetMapping("{episodeNumber}/update")
+    fun updateEpisodeTorrent(
+        @PathVariable id: Int,
+        @PathVariable episodeNumber: Int
+    ): Mono<AnimeEpisodeTorrentDTO> {
+        return animeEpisodeTorrentService.updateEpisodeTorrent(id, episodeNumber)
+    }
+
     @GetMapping("{episodeNumber}/search")
     fun searchEpisodeTorrent(
-            @PathVariable id: Int,
-            @PathVariable episodeNumber: Int
+        @PathVariable id: Int,
+        @PathVariable episodeNumber: Int
     ): Flux<AnimeEpisodeTorrentDTO> {
         return nyaaTorrentService.searchEpisodeTorrent(id, episodeNumber)
     }
 
     @PutMapping("{episodeNumber}")
     fun replaceEpisodeTorrent(
-            @PathVariable id: Int,
-            @PathVariable episodeNumber: Int,
-            @RequestBody animeEpisodeTorrent: AnimeEpisodeTorrentDTO
+        @PathVariable id: Int,
+        @PathVariable episodeNumber: Int,
+        @RequestBody animeEpisodeTorrent: AnimeEpisodeTorrentDTO
     ): Mono<AnimeEpisodeTorrentDTO> {
         return animeEpisodeTorrentService.replaceEpisodeTorrent(id, episodeNumber, animeEpisodeTorrent)
+    }
+
+    @DeleteMapping("{episodeNumber}")
+    fun deleteEpisodeTorrent(
+        @PathVariable id: Int,
+        @PathVariable episodeNumber: Int
+    ): Mono<Void> {
+        return animeEpisodeTorrentService.deleteEpisodeTorrent(id, episodeNumber);
     }
 
     @GetMapping("/scan")
@@ -51,5 +69,10 @@ class AnimeEpisodeTorrentController(private val animeEpisodeTorrentService: Anim
     @GetMapping("/scanPack")
     fun scanPackageTorrent(@PathVariable id: Int): Mono<AnimeEpisodeTorrentDTO> {
         return animeEpisodeTorrentService.scanPackageTorrent(id)
+    }
+
+    @GetMapping("/scanNext")
+    fun scanNExtTorrent(@PathVariable id: Int): Mono<AnimeEpisodeTorrentDTO> {
+        return animeEpisodeTorrentService.scanNextEpisode(id)
     }
 }
