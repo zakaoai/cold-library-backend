@@ -22,11 +22,22 @@ class AnimeService(
 ) {
 
     fun getAllAnime(): Flux<AnimeDTO> {
-        return repo.findAll().map(Anime::toAnimeDTO)
+        return repo.findAll()
+            .map(Anime::toAnimeDTO)
     }
 
     fun findAnimeAndSave(malId: Int): Mono<Anime> {
-        return jikanService.getAnimeById(malId).map(AnimeDTO::toModel).flatMap { repo.save(it) };
+        return jikanService.getAnimeById(malId)
+            .map(AnimeDTO::toModel)
+            .flatMap { repo.save(it) };
+    }
+
+    fun updateAnimeAndSave(malId: Int): Mono<AnimeDTO> {
+        return repo.findByMalId(malId)
+            .flatMap { repoAnime ->
+                jikanService.getAnimeById(malId)
+                    .flatMap { saveAnime(it, repoAnime.id) }
+            }
     }
 
     fun saveAnimeById(malId: Int): Mono<AnimeDTO> {
@@ -37,24 +48,33 @@ class AnimeService(
     }
 
     fun deleteById(id: Int): Mono<Void> {
-        return repo.deleteByMalId(id).and(episodeRepo.deleteByMalId(id))
+        return repo.deleteByMalId(id)
+            .and(episodeRepo.deleteByMalId(id))
             .and(trackedAnimeTorrentRepository.deleteByMalId(id))
     }
 
     fun findByMalId(id: Int): Mono<AnimeDTO> {
-        return repo.findByMalId(id).map(Anime::toAnimeDTO)
+        return repo.findByMalId(id)
+            .map(Anime::toAnimeDTO)
     }
 
     fun searchAnime(search: String): Flux<AnimeDTO> {
         return jikanService.searchAnime(search)
             .flatMap { jikanAnime ->
-                repo.findByMalId(jikanAnime.malId).map(Anime::toAnimeDTO).defaultIfEmpty(jikanAnime)
+                repo.findByMalId(jikanAnime.malId)
+                    .map(Anime::toAnimeDTO)
+                    .defaultIfEmpty(jikanAnime)
             }
     }
 
     fun updateAnime(animeDTO: AnimeDTO): Mono<AnimeDTO> {
         return repo.findByMalId(animeDTO.malId)
-            .map { anime -> animeDTO.toModel(anime.id) }
+            .flatMap { saveAnime(animeDTO, it.id) }
+    }
+
+    fun saveAnime(anime: AnimeDTO, id: Long?): Mono<AnimeDTO> {
+        return Mono.just(anime)
+            .map { anime.toModel(id) }
             .flatMap(repo::save)
             .map(Anime::toAnimeDTO)
     }

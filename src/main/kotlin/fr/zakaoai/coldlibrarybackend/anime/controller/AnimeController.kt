@@ -11,7 +11,6 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import javax.validation.constraints.Min
 import javax.validation.constraints.Size
 
 
@@ -29,6 +28,11 @@ class AnimeController(private val animeService: AnimeService) {
 
     @GetMapping("{id}")
     fun findByMalId(@PathVariable id: Int): Mono<AnimeDTO> {
+        return animeService.findByMalId(id).switchIfEmpty(Mono.error(NotFoundException()))
+    }
+
+    @GetMapping("{id}/update")
+    fun updateByMalId(@PathVariable id: Int): Mono<AnimeDTO> {
         return animeService.findByMalId(id).switchIfEmpty(Mono.error(NotFoundException()))
     }
 
