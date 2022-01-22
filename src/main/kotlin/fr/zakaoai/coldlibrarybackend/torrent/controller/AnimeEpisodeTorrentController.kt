@@ -28,6 +28,14 @@ class AnimeEpisodeTorrentController(
         return animeEpisodeTorrentService.searchAlternateEpisodeTorrent(id, episodeNumber)
     }
 
+    @GetMapping("{episodeNumber}/update")
+    fun updateEpisodeTorrent(
+        @PathVariable id: Int,
+        @PathVariable episodeNumber: Int
+    ): Mono<AnimeEpisodeTorrentDTO> {
+        return animeEpisodeTorrentService.updateEpisodeTorrent(id, episodeNumber)
+    }
+
     @GetMapping("{episodeNumber}/search")
     fun searchEpisodeTorrent(
         @PathVariable id: Int,

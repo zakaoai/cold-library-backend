@@ -39,20 +39,25 @@ class AnimeEpisodeTorrentService(
             }
     }
 
+    fun updateEpisodeTorrent(malId: Int, episodeNumber: Int): Mono<AnimeEpisodeTorrentDTO> {
+        return animeEpisodeTorrentRepository.findByMalIdAndEpisodeNumber(malId, episodeNumber)
+            .flatMap { fromRepo ->
+                nyaaTorrentService.searchEpisodeTorrentById(fromRepo.torrentId, malId, episodeNumber)
+                    .flatMap { saveAnimeTorrentWithId(it, fromRepo.id) }
+            }
+    }
+
     fun replaceEpisodeTorrent(
         malId: Int,
         episodeNumber: Int,
         animeEpisodeTorrent: AnimeEpisodeTorrentDTO
     ): Mono<AnimeEpisodeTorrentDTO> {
         return animeEpisodeTorrentRepository.findByMalIdAndEpisodeNumber(malId, episodeNumber)
-            .map { animeEpisodeTorrent.toModel(it.id) }
-            .flatMap(animeEpisodeTorrentRepository::save)
-            .map(AnimeEpisodeTorrent::toAnimeEpisodeTorrentDTO)
+            .flatMap { saveAnimeTorrentWithId(animeEpisodeTorrent, it.id) }
     }
 
-    fun deleteEpisodeTorrent(malId: Int,
-                             episodeNumber: Int): Mono<Void> {
-        return animeEpisodeTorrentRepository.deleteByMalIdAndEpisodeNumber(malId,episodeNumber);
+    fun deleteEpisodeTorrent(malId: Int, episodeNumber: Int): Mono<Void> {
+        return animeEpisodeTorrentRepository.deleteByMalIdAndEpisodeNumber(malId, episodeNumber);
     }
 
     fun isSameEpisodeNumber(animeEpisode: AnimeEpisodeDTO, episodeNumber: Int): Boolean {
@@ -109,10 +114,15 @@ class AnimeEpisodeTorrentService(
             .flatMap(this::saveAnimeTorrent)
     }
 
-    fun saveAnimeTorrent(torrent: AnimeEpisodeTorrentDTO): Mono<AnimeEpisodeTorrentDTO> {
-        return Mono.just(torrent).map(AnimeEpisodeTorrentDTO::toModel)
+    fun saveAnimeTorrentWithId(torrent: AnimeEpisodeTorrentDTO, id: Long?): Mono<AnimeEpisodeTorrentDTO> {
+        return Mono.just(torrent)
+            .map { it.toModel(id) }
             .flatMap(animeEpisodeTorrentRepository::save)
             .map(AnimeEpisodeTorrent::toAnimeEpisodeTorrentDTO)
+    }
+
+    fun saveAnimeTorrent(torrent: AnimeEpisodeTorrentDTO): Mono<AnimeEpisodeTorrentDTO> {
+        return saveAnimeTorrentWithId(torrent, null)
     }
 
 }

@@ -1,5 +1,6 @@
 package fr.zakaoai.coldlibrarybackend.torrent.DTO
 
+import de.kaysubs.tracker.nyaasi.model.TorrentInfo
 import de.kaysubs.tracker.nyaasi.model.TorrentPreview
 import fr.zakaoai.coldlibrarybackend.torrent.repository.entity.AnimeEpisodeTorrent
 import java.time.LocalDate
@@ -33,6 +34,20 @@ class AnimeEpisodeTorrentDTO(
             torrent.leechers,
             torrent.completed
     )
+        constructor(torrent: TorrentInfo, torrentId: Int,malId: Int, episodeNumber: Int) : this(
+                malId,
+                episodeNumber,
+                torrent.title,
+                LocalDate.ofInstant(
+                        torrent.date.toInstant(), ZoneId.systemDefault()
+                ),
+                torrent.downloadLink.toString(),
+                torrentId,
+                torrent.size.toString(),
+                torrent.seeders,
+                torrent.leechers,
+                torrent.completed
+        )
 
     fun toModel(withId: Long? = null) = AnimeEpisodeTorrent(
             withId,
