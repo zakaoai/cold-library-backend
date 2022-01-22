@@ -33,9 +33,7 @@ class EpisodeService(
     // Old function that was used to retrieve anime episode ( MAL don't reference all episodes )
     fun searchAnimeEpisodeFromEpisodeAndSave(malId: Int, fromEpisode: Int): Flux<AnimeEpisodeDTO> {
         return jikanAPIService.getAnimeEpisodesByAnimeIdAndEpisodeNumber(malId, fromEpisode)
-            .map(AnimeEpisodeDTO::toModel)
-            .flatMap(animeEpisodeRepository::save)
-            .map(AnimeEpisode::toAnimeEpisodeDTO)
+            .flatMap(this::saveEpisode)
     }
 
     fun searchEpisodesByAnimeId(malId: Int): Flux<AnimeEpisodeDTO> {
@@ -66,16 +64,13 @@ class EpisodeService(
             .flatMapMany { lastAvaibleEpisode ->
                 numberToRangeOfEpisode((lastAvaibleEpisode ?: 1), malId)
             }
-
     }
 
     fun saveMissingEpisodeFromMalIdAndEpisodeNumber(malId: Int, episodeNumber: Int): Mono<AnimeEpisodeDTO> {
         return animeRepository.findByMalId(malId)
             .filter { episodeNumber <= (it.lastAvaibleEpisode ?: 1) }
             .map { AnimeEpisodeDTO(malId, "Episode $episodeNumber", episodeNumber) }
-            .map(AnimeEpisodeDTO::toModel)
-            .flatMap(animeEpisodeRepository::save)
-            .map(AnimeEpisode::toAnimeEpisodeDTO)
+            .flatMap(this::saveEpisode)
     }
 
     fun saveAllMissingEpisodeFromAnimeMalId(malId: Int): Flux<AnimeEpisodeDTO> {
@@ -86,13 +81,18 @@ class EpisodeService(
                 getAllEpisodeFromAnimeMalId(malId)
                     .filter { ep -> !listEpNumber.contains(ep.episodeNumber) }
             }
-            .map(AnimeEpisodeDTO::toModel)
-            .flatMap(animeEpisodeRepository::save)
-            .map(AnimeEpisode::toAnimeEpisodeDTO)
+            .flatMap(this::saveEpisode)
     }
 
     fun removeEpisodesByAnimeId(malId: Int): Mono<Void> {
         return animeEpisodeRepository.deleteByMalId(malId)
+    }
+
+    fun saveEpisode(episode: AnimeEpisodeDTO): Mono<AnimeEpisodeDTO> {
+        return Mono.just(episode)
+            .map(AnimeEpisodeDTO::toModel)
+            .flatMap(animeEpisodeRepository::save)
+            .map(AnimeEpisode::toAnimeEpisodeDTO)
     }
 
 }
