@@ -50,6 +50,11 @@ class AnimeEpisodeTorrentService(
             .map(AnimeEpisodeTorrent::toAnimeEpisodeTorrentDTO)
     }
 
+    fun deleteEpisodeTorrent(malId: Int,
+                             episodeNumber: Int): Mono<Void> {
+        return animeEpisodeTorrentRepository.deleteByMalIdAndEpisodeNumber(malId,episodeNumber);
+    }
+
     fun isSameEpisodeNumber(animeEpisode: AnimeEpisodeDTO, episodeNumber: Int): Boolean {
         return animeEpisode.episodeNumber == episodeNumber
     }
