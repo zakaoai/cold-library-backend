@@ -16,10 +16,10 @@ import reactor.kotlin.core.publisher.toFlux
 
 @Service
 class AnimeEpisodeTorrentService(
-        private val animeEpisodeTorrentRepository: AnimeEpisodeTorrentRepository,
-        private val trackedAnimeTorrentRepository: TrackedAnimeTorrentRepository,
-        private val episodeService: EpisodeService,
-        private val nyaaTorrentService: NyaaTorrentService
+    private val animeEpisodeTorrentRepository: AnimeEpisodeTorrentRepository,
+    private val trackedAnimeTorrentRepository: TrackedAnimeTorrentRepository,
+    private val episodeService: EpisodeService,
+    private val nyaaTorrentService: NyaaTorrentService
 ) {
 
     private val logger = LoggerFactory.getLogger(AnimeEpisodeTorrentService::class.java)
@@ -27,27 +27,27 @@ class AnimeEpisodeTorrentService(
 
     fun findAnimeEpisodeTorrentByMalId(malId: Int): Flux<AnimeEpisodeTorrentDTO> {
         return animeEpisodeTorrentRepository.findByMalId(malId)
-                .map(AnimeEpisodeTorrent::toAnimeEpisodeTorrentDTO)
+            .map(AnimeEpisodeTorrent::toAnimeEpisodeTorrentDTO)
     }
 
     fun searchAlternateEpisodeTorrent(malId: Int, episodeNumber: Int): Flux<AnimeEpisodeTorrentDTO> {
         return animeEpisodeTorrentRepository.findByMalIdAndEpisodeNumber(malId, episodeNumber)
-                .map(AnimeEpisodeTorrent::torrentId)
-                .flatMapMany { torrentId ->
-                    nyaaTorrentService.searchEpisodeTorrent(malId, episodeNumber)
-                            .filter { episodeTorrent -> episodeTorrent.torrentId != torrentId }
-                }
+            .map(AnimeEpisodeTorrent::torrentId)
+            .flatMapMany { torrentId ->
+                nyaaTorrentService.searchEpisodeTorrent(malId, episodeNumber)
+                    .filter { episodeTorrent -> episodeTorrent.torrentId != torrentId }
+            }
     }
 
     fun replaceEpisodeTorrent(
-            malId: Int,
-            episodeNumber: Int,
-            animeEpisodeTorrent: AnimeEpisodeTorrentDTO
+        malId: Int,
+        episodeNumber: Int,
+        animeEpisodeTorrent: AnimeEpisodeTorrentDTO
     ): Mono<AnimeEpisodeTorrentDTO> {
         return animeEpisodeTorrentRepository.findByMalIdAndEpisodeNumber(malId, episodeNumber)
-                .map { animeEpisodeTorrent.toModel(it.id) }
-                .flatMap(animeEpisodeTorrentRepository::save)
-                .map(AnimeEpisodeTorrent::toAnimeEpisodeTorrentDTO)
+            .map { animeEpisodeTorrent.toModel(it.id) }
+            .flatMap(animeEpisodeTorrentRepository::save)
+            .map(AnimeEpisodeTorrent::toAnimeEpisodeTorrentDTO)
     }
 
     fun isSameEpisodeNumber(animeEpisode: AnimeEpisodeDTO, episodeNumber: Int): Boolean {
@@ -60,37 +60,52 @@ class AnimeEpisodeTorrentService(
 
     fun filterAnimeEpisodeList(malId: Int, animeEpisodeList: List<AnimeEpisodeDTO>): Flux<AnimeEpisodeDTO> {
         return animeEpisodeTorrentRepository.findByMalId(malId)
-                .map(AnimeEpisodeTorrent::episodeNumber)
-                .collectList()
-                .flatMapMany { episodeNumbers ->
-                    animeEpisodeList.filter { animeEpisode ->
-                        !isAnimeEpisodeInEpisodeNumbers(
-                                animeEpisode,
-                                episodeNumbers
-                        )
-                    }.toFlux()
-                }
+            .map(AnimeEpisodeTorrent::episodeNumber)
+            .collectList()
+            .flatMapMany { episodeNumbers ->
+                animeEpisodeList.filter { animeEpisode ->
+                    !isAnimeEpisodeInEpisodeNumbers(
+                        animeEpisode,
+                        episodeNumbers
+                    )
+                }.toFlux()
+            }
     }
 
 
     fun scanEpisodeTorrent(malId: Int): Flux<AnimeEpisodeTorrentDTO> {
         return trackedAnimeTorrentRepository.findByMalId(malId)
-                .map(TrackedAnimeTorrent::lastEpisodeOnServer)
-                .flatMapMany { lastAvaible ->
-                    episodeService.searchEpisodesByAnimeId(malId)
-                            .filter { ep -> ep.episodeNumber > lastAvaible }
-                }
-                .collectList()
-                .flatMapMany { animeList -> filterAnimeEpisodeList(malId, animeList) }
-                .flatMap { nyaaTorrentService.searchEpisodeTorrent(malId, it.episodeNumber).next() }
-                .map(AnimeEpisodeTorrentDTO::toModel)
-                .flatMap(animeEpisodeTorrentRepository::save)
-                .map(AnimeEpisodeTorrent::toAnimeEpisodeTorrentDTO)
+            .map(TrackedAnimeTorrent::lastEpisodeOnServer)
+            .flatMapMany { lastAvaible ->
+                episodeService.searchEpisodesByAnimeId(malId)
+                    .filter { ep -> ep.episodeNumber > lastAvaible }
+            }
+            .collectList()
+            .flatMapMany { animeList -> filterAnimeEpisodeList(malId, animeList) }
+            .flatMap { nyaaTorrentService.searchEpisodeTorrent(malId, it.episodeNumber).next() }
+            .flatMap(this::saveAnimeTorrent)
+    }
+
+    fun scanNextEpisode(malId: Int): Mono<AnimeEpisodeTorrentDTO> {
+        return trackedAnimeTorrentRepository.findByMalId(malId)
+            .map(TrackedAnimeTorrent::lastEpisodeOnServer)
+            .flatMap { lastAvaible ->
+                episodeService.searchEpisodeByAnimeIdAndEpisodeNumber(malId, lastAvaible + 1)
+            }
+            .flatMap { scanTorrentByMalIdAndEpisodeNumber(malId, it.episodeNumber) }
     }
 
     fun scanPackageTorrent(malId: Int): Mono<AnimeEpisodeTorrentDTO> {
-        return nyaaTorrentService.searchEpisodeTorrent(malId, 0).next()
-            .map(AnimeEpisodeTorrentDTO::toModel)
+        return scanTorrentByMalIdAndEpisodeNumber(malId, 0)
+    }
+
+    fun scanTorrentByMalIdAndEpisodeNumber(malId: Int, episodeNumber: Int): Mono<AnimeEpisodeTorrentDTO> {
+        return nyaaTorrentService.searchEpisodeTorrent(malId, episodeNumber).next()
+            .flatMap(this::saveAnimeTorrent)
+    }
+
+    fun saveAnimeTorrent(torrent: AnimeEpisodeTorrentDTO): Mono<AnimeEpisodeTorrentDTO> {
+        return Mono.just(torrent).map(AnimeEpisodeTorrentDTO::toModel)
             .flatMap(animeEpisodeTorrentRepository::save)
             .map(AnimeEpisodeTorrent::toAnimeEpisodeTorrentDTO)
     }

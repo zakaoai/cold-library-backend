@@ -52,4 +52,9 @@ class AnimeEpisodeTorrentController(private val animeEpisodeTorrentService: Anim
     fun scanPackageTorrent(@PathVariable id: Int): Mono<AnimeEpisodeTorrentDTO> {
         return animeEpisodeTorrentService.scanPackageTorrent(id)
     }
+
+    @GetMapping("/scanNext")
+    fun scanNExtTorrent(@PathVariable id: Int): Mono<AnimeEpisodeTorrentDTO> {
+        return animeEpisodeTorrentService.scanNextEpisode(id)
+    }
 }

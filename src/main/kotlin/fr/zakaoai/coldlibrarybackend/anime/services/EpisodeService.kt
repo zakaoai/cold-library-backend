@@ -11,31 +11,45 @@ import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.switchIfEmpty
 import reactor.kotlin.core.publisher.toFlux
 
 @Service
 class EpisodeService(
-        private val animeEpisodeRepository: AnimeEpisodeRepository,
-        private val animeRepository: AnimeRepository,
-        private val jikanAPIService: JikanAPIService
+    private val animeEpisodeRepository: AnimeEpisodeRepository,
+    private val animeRepository: AnimeRepository,
+    private val jikanAPIService: JikanAPIService
 ) {
 
     fun findEpisodeAnimeByAnimeId(malId: Int): Flux<AnimeEpisodeDTO> {
         return animeEpisodeRepository.findByMalId(malId).map(AnimeEpisode::toAnimeEpisodeDTO)
     }
 
+    fun findEpisodeAnimeByAnimeIdAndEpisodeNumber(malId: Int, episodeNumber: Int): Mono<AnimeEpisodeDTO> {
+        return animeEpisodeRepository.findByMalIdAndEpisodeNumber(malId, episodeNumber)
+            .map(AnimeEpisode::toAnimeEpisodeDTO)
+    }
+
+    // Old function that was used to retrieve anime episode ( MAL don't reference all episodes )
     fun searchAnimeEpisodeFromEpisodeAndSave(malId: Int, fromEpisode: Int): Flux<AnimeEpisodeDTO> {
         return jikanAPIService.getAnimeEpisodesByAnimeIdAndEpisodeNumber(malId, fromEpisode)
-                .map(AnimeEpisodeDTO::toModel)
-                .flatMap(animeEpisodeRepository::save)
-                .map(AnimeEpisode::toAnimeEpisodeDTO)
+            .map(AnimeEpisodeDTO::toModel)
+            .flatMap(animeEpisodeRepository::save)
+            .map(AnimeEpisode::toAnimeEpisodeDTO)
     }
 
     fun searchEpisodesByAnimeId(malId: Int): Flux<AnimeEpisodeDTO> {
 
         return findEpisodeAnimeByAnimeId(malId)
-                .concatWith(saveAllMissingEpisodeFromAnimeMalId(malId))
-                .sort(compareBy(AnimeEpisodeDTO::episodeNumber))
+            .concatWith(saveAllMissingEpisodeFromAnimeMalId(malId))
+            .sort(compareBy(AnimeEpisodeDTO::episodeNumber))
+    }
+
+    fun searchEpisodeByAnimeIdAndEpisodeNumber(malId: Int, episodeNumber: Int): Mono<AnimeEpisodeDTO> {
+        return findEpisodeAnimeByAnimeIdAndEpisodeNumber(malId, episodeNumber)
+            .switchIfEmpty {
+                saveMissingEpisodeFromMalIdAndEpisodeNumber(malId, episodeNumber)
+            }
     }
 
     fun numberToRangeOfEpisode(lastAvaibleEspidode: Int, malId: Int): Flux<AnimeEpisodeDTO> {
@@ -47,25 +61,34 @@ class EpisodeService(
     fun getAllEpisodeFromAnimeMalId(malId: Int): Flux<AnimeEpisodeDTO> {
 
         return animeRepository.findByMalId(malId)
-                .map(Anime::lastAvaibleEpisode)
-                .switchIfEmpty(Mono.error(ResponseStatusException(HttpStatus.BAD_REQUEST)))
-                .flatMapMany { lastAvaibleEpisode ->
-                    numberToRangeOfEpisode((lastAvaibleEpisode ?: 1), malId)
-                }
+            .map(Anime::lastAvaibleEpisode)
+            .switchIfEmpty(Mono.error(ResponseStatusException(HttpStatus.BAD_REQUEST)))
+            .flatMapMany { lastAvaibleEpisode ->
+                numberToRangeOfEpisode((lastAvaibleEpisode ?: 1), malId)
+            }
 
+    }
+
+    fun saveMissingEpisodeFromMalIdAndEpisodeNumber(malId: Int, episodeNumber: Int): Mono<AnimeEpisodeDTO> {
+        return animeRepository.findByMalId(malId)
+            .filter { episodeNumber <= (it.lastAvaibleEpisode ?: 1) }
+            .map { AnimeEpisodeDTO(malId, "Episode $episodeNumber", episodeNumber) }
+            .map(AnimeEpisodeDTO::toModel)
+            .flatMap(animeEpisodeRepository::save)
+            .map(AnimeEpisode::toAnimeEpisodeDTO)
     }
 
     fun saveAllMissingEpisodeFromAnimeMalId(malId: Int): Flux<AnimeEpisodeDTO> {
         return findEpisodeAnimeByAnimeId(malId)
-                .map(AnimeEpisodeDTO::episodeNumber)
-                .collectList()
-                .flatMapMany { listEpNumber ->
-                    getAllEpisodeFromAnimeMalId(malId)
-                            .filter { ep -> !listEpNumber.contains(ep.episodeNumber) }
-                }
-                .map(AnimeEpisodeDTO::toModel)
-                .flatMap(animeEpisodeRepository::save)
-                .map(AnimeEpisode::toAnimeEpisodeDTO)
+            .map(AnimeEpisodeDTO::episodeNumber)
+            .collectList()
+            .flatMapMany { listEpNumber ->
+                getAllEpisodeFromAnimeMalId(malId)
+                    .filter { ep -> !listEpNumber.contains(ep.episodeNumber) }
+            }
+            .map(AnimeEpisodeDTO::toModel)
+            .flatMap(animeEpisodeRepository::save)
+            .map(AnimeEpisode::toAnimeEpisodeDTO)
     }
 
     fun removeEpisodesByAnimeId(malId: Int): Mono<Void> {
