@@ -33,7 +33,7 @@ class AnimeController(private val animeService: AnimeService) {
 
     @GetMapping("{id}/update")
     fun updateByMalId(@PathVariable id: Int): Mono<AnimeDTO> {
-        return animeService.findByMalId(id).switchIfEmpty(Mono.error(NotFoundException()))
+        return animeService.updateAnimeAndSave(id).switchIfEmpty(Mono.error(NotFoundException()))
     }
 
     @PostMapping("{id}")
