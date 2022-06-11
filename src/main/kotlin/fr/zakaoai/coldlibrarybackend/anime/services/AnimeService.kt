@@ -36,7 +36,15 @@ class AnimeService(
         return repo.findByMalId(malId)
             .flatMap { repoAnime ->
                 jikanService.getAnimeById(malId)
-                    .flatMap { saveAnime(it, repoAnime.id) }
+                    .flatMap {
+                        saveAnime(
+                            it.copy(
+                                storageState = repoAnime.storageState,
+                                isComplete = repoAnime.isComplete,
+                                lastAvaibleEpisode = repoAnime.lastAvaibleEpisode
+                            ), repoAnime.id
+                        )
+                    }
             }
     }
 
