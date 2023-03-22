@@ -3,26 +3,25 @@ package fr.zakaoai.coldlibrarybackend.anime.DTO
 
 import fr.zakaoai.coldlibrarybackend.anime.enums.StorageState
 import fr.zakaoai.coldlibrarybackend.anime.repository.entity.Anime
-import net.sandrohc.jikan.model.anime.AnimeBase
-import net.sandrohc.jikan.model.enums.AnimeType
+import net.sandrohc.jikan.model.anime.AnimeType
 
 data class AnimeDTO(
         val malId: Int,
         var title: String,
         var url: String,
-        var imageUrl: String,
-        var type: AnimeType,
-        var nbEpisodes: Int,
+        var imageUrl: String?,
+        var type: AnimeType?,
+        var nbEpisodes: Int?,
         var storageState: StorageState? = null,
         var isComplete: Boolean? = null,
         var lastAvaibleEpisode: Int? = null,
 ) {
     companion object {
-        fun fromAnimeBase(anime: AnimeBase): AnimeDTO = AnimeDTO(
+        fun fromAnimeBase(anime: net.sandrohc.jikan.model.anime.Anime): AnimeDTO = AnimeDTO(
                 anime.malId,
                 anime.title,
                 anime.url,
-                anime.imageUrl,
+                anime.images.preferredImageUrl,
                 anime.type,
                 anime.episodes,
                 null,

@@ -4,7 +4,7 @@ import fr.zakaoai.coldlibrarybackend.anime.DTO.AnimeDTO
 import fr.zakaoai.coldlibrarybackend.anime.DTO.AnimeEpisodeDTO
 import fr.zakaoai.coldlibrarybackend.anime.DTO.fromAnimeEpisode
 import net.sandrohc.jikan.Jikan
-import net.sandrohc.jikan.model.anime.AnimeEpisodes
+import net.sandrohc.jikan.model.anime.AnimeEpisode
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -21,7 +21,7 @@ class JikanAPIService(private val jikan: Jikan) {
             .search()
             .query(search)
             .execute()
-            .map { AnimeDTO.fromAnimeBase(it) }
+            .map (AnimeDTO::fromAnimeBase)
             .cache()
 
     @Cacheable("jikanAnimes")
@@ -29,23 +29,14 @@ class JikanAPIService(private val jikan: Jikan) {
             jikan.query().anime().get(id).execute().map { AnimeDTO.fromAnimeBase(it) }
 
     @Cacheable("jikanAnimesEpisodes")
-    fun getAnimeEpisodesPage(id: Int, page: Int = 1): Mono<AnimeEpisodes> {
-        return jikan.query().anime().episodes(id, page).execute()
+    fun getAnimeEpisodesPage(id: Int): Flux<AnimeEpisode> {
+        return jikan.query().anime().episodes(id).execute()
     }
 
     @Cacheable("jikanAnimesEpisodes")
     fun getAnimeEpisodesByAnimeIdAndEpisodeNumber(malId: Int, episodeNumber: Int): Flux<AnimeEpisodeDTO> {
-        val initialPage: Int = Math.floorDiv(episodeNumber, 100) + 1
-        var currentPage: Int = initialPage
-        return getAnimeEpisodesPage(malId, initialPage).expand { response ->
-            if (currentPage == response.lastPage) Mono.empty()
-            else {
-                currentPage++
-                getAnimeEpisodesPage(malId, currentPage)
-            }
-        }.map(AnimeEpisodes::episodes)
-                .flatMap { Flux.fromIterable(it) }
-                .filter { anime -> anime.episodeId > episodeNumber }
+        return getAnimeEpisodesPage(malId)
+                .filter { anime -> anime.malId > episodeNumber }
                 .map { anime -> fromAnimeEpisode(malId, anime) }
     }
 

@@ -17,6 +17,6 @@ data class AnimeEpisodeDTO(
 }
 
 fun fromAnimeEpisode(malId: Int, anime: JikanAnimeEpisode): AnimeEpisodeDTO {
-    return AnimeEpisodeDTO(malId, anime.title, anime.episodeId, anime.aired)
+    return AnimeEpisodeDTO(malId, anime.title, anime.malId, anime.aired)
 }
 
