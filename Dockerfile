@@ -1,4 +1,4 @@
-FROM maven:3.8.1-jdk-11 AS MAVEN_BUILD
+FROM maven:3.8.5-openjdk-17 AS MAVEN_BUILD
 
 MAINTAINER Zakaoai
 
@@ -8,7 +8,7 @@ COPY src /build/src/
 WORKDIR /build/
 RUN mvn package
 
-FROM adoptopenjdk/openjdk11:alpine-jre
+FROM eclipse-temurin:17-jdk-alpine
 
 
 ARG JAR_FILE="/build/target/*.jar"
