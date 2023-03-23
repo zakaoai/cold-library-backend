@@ -59,8 +59,8 @@ class EpisodeService(
     fun getAllEpisodeFromAnimeMalId(malId: Int): Flux<AnimeEpisodeDTO> {
 
         return animeRepository.findByMalId(malId)
-            .map(Anime::lastAvaibleEpisode)
             .switchIfEmpty(Mono.error(ResponseStatusException(HttpStatus.BAD_REQUEST)))
+            .map(Anime::lastAvaibleEpisode)
             .flatMapMany { lastAvaibleEpisode ->
                 numberToRangeOfEpisode((lastAvaibleEpisode ?: 1), malId)
             }
