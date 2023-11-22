@@ -55,7 +55,7 @@ build/
 
 ### VS Code ###
 .vscode/
-data2/
+data/
 
 .mvn/wrapper/maven-wrapper.jar
 
