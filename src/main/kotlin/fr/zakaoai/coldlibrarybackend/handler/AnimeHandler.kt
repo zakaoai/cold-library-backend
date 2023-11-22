@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.switchIfEmpty
 import reactor.kotlin.core.publisher.toMono
 
 @Component
@@ -47,7 +48,7 @@ class AnimeHandler(val animeService: AnimeService) {
         .toMono()
         .flatMap{animeService.searchAnime(it).collectList()}
         .flatMap(ServerResponse.ok()::bodyValue)
-        .or(ServerResponse.badRequest().build())
+        .switchIfEmpty(ServerResponse.badRequest().build())
 
 
     fun updateStorageState(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()

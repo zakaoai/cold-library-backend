@@ -7,6 +7,7 @@ import fr.zakaoai.coldlibrarybackend.anime.repository.entity.Anime
 import fr.zakaoai.coldlibrarybackend.enums.StorageState
 import fr.zakaoai.coldlibrarybackend.infrastructure.JikanAPIService
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.TrackedAnimeTorrentRepository
+import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -20,18 +21,18 @@ class AnimeService(
     private val trackedAnimeTorrentRepository: TrackedAnimeTorrentRepository
 ) {
 
-    fun getAllAnime(): Flux<fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO> {
+    fun getAllAnime(): Flux<AnimeDTO> {
         return repo.findAll()
             .map(Anime::toAnimeDTO)
     }
 
     fun findAnimeAndSave(malId: Int): Mono<Anime> {
         return jikanService.getAnimeById(malId)
-            .map(fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO::toModel)
+            .map(AnimeDTO::toModel)
             .flatMap { repo.save(it) };
     }
 
-    fun updateAnimeAndSave(malId: Int): Mono<fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO> {
+    fun updateAnimeAndSave(malId: Int): Mono<AnimeDTO> {
         return repo.findByMalId(malId)
             .flatMap { repoAnime ->
                 jikanService.getAnimeById(malId)
@@ -47,7 +48,7 @@ class AnimeService(
             }
     }
 
-    fun saveAnimeById(malId: Int): Mono<fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO> {
+    fun saveAnimeById(malId: Int): Mono<AnimeDTO> {
         return repo.findByMalId(malId)
             .switchIfEmpty(
                 findAnimeAndSave(malId)
@@ -60,12 +61,12 @@ class AnimeService(
             .and(trackedAnimeTorrentRepository.deleteByMalId(id))
     }
 
-    fun findByMalId(id: Int): Mono<fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO> {
+    fun findByMalId(id: Int): Mono<AnimeDTO> {
         return repo.findByMalId(id)
             .map(Anime::toAnimeDTO)
     }
 
-    fun searchAnime(search: String): Flux<fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO> {
+    fun searchAnime(search: String): Flux<AnimeDTO> {
         return jikanService.searchAnime(search)
             .flatMap { jikanAnime ->
                 repo.findByMalId(jikanAnime.malId)
@@ -74,15 +75,15 @@ class AnimeService(
             }
     }
 
-    fun updateAnime(animeDTO: fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO): Mono<fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO> {
+    fun updateAnime(animeDTO: AnimeDTO): Mono<AnimeDTO> {
         return repo.findByMalId(animeDTO.malId)
             .flatMap { saveAnime(animeDTO, it.id) }
     }
 
     fun saveAnime(
-        anime: fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO,
+        anime: AnimeDTO,
         id: Long?
-    ): Mono<fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO> {
+    ): Mono<AnimeDTO> {
         return Mono.just(anime)
             .map { anime.toModel(id) }
             .flatMap(repo::save)
@@ -92,7 +93,7 @@ class AnimeService(
     fun updateAnimeStorageState(
         malId: Int,
         state: String
-    ): Mono<fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO> {
+    ): Mono<AnimeDTO> {
         return repo.findByMalId(malId).flatMap { anime ->
             val dto = anime.toAnimeDTO()
             dto.storageState = StorageState.valueOf(state)
@@ -103,7 +104,7 @@ class AnimeService(
     fun updateAnimeLastAvaibleEpisode(
         malId: Int,
         lastAvaibleEpisode: Int
-    ): Mono<fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO> {
+    ): Mono<AnimeDTO> {
         return repo.findByMalId(malId).flatMap { anime ->
             anime.lastAvaibleEpisode = lastAvaibleEpisode
             repo.save(anime)
@@ -113,7 +114,7 @@ class AnimeService(
     fun updateAnimeIsComplete(
         malId: Int,
         isComplete: Boolean
-    ): Mono<fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO> {
+    ): Mono<AnimeDTO> {
         return repo.findByMalId(malId).flatMap { anime ->
             val dto = anime.toAnimeDTO()
             dto.isComplete = isComplete

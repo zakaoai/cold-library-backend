@@ -1,17 +1,14 @@
-FROM maven:3.8.5-openjdk-17 AS MAVEN_BUILD
+FROM gradle:8.4.0-jdk17-alpine AS build
 
-MAINTAINER Zakaoai
-
-COPY pom.xml /build/
-COPY src /build/src/
-
-WORKDIR /build/
-RUN mvn package
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle build --no-daemon
 
 FROM eclipse-temurin:17-jdk-alpine
 
+EXPOSE 9000
 
-ARG JAR_FILE="/build/target/*.jar"
-COPY --from=MAVEN_BUILD ${JAR_FILE} /app.jar
+ARG JAR_FILE="/home/gradle/src/build/libs/*.jar"
+COPY --from=build ${JAR_FILE} /app.jar
 
 ENTRYPOINT ["java","-jar","/app.jar"]
