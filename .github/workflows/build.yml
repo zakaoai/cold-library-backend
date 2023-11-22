@@ -13,6 +13,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
+          distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
       - name: Tests
         run: gradle test
