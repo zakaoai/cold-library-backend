@@ -15,15 +15,11 @@ class AnimeEpisodeHandler(val animeEpisodeService: EpisodeService) {
 
     private val logger = LoggerFactory.getLogger(AnimeEpisodeHandler::class.java)
 
-
-    @GetMapping
     fun findByMalId(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
         .toMono()
         .flatMap { animeEpisodeService.searchEpisodesByAnimeId(it).collectList() }
         .flatMap(ServerResponse.ok()::bodyValue)
 
-
-    @DeleteMapping
     fun deleteByMalId(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
         .toMono()
         .flatMap(animeEpisodeService::removeEpisodesByAnimeId)

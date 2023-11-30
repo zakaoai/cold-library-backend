@@ -17,35 +17,35 @@ class AnimeEpisodeTorrentHandler(
     val animeEpisodeTorrentService: AnimeEpisodeTorrentService,
     val nyaaTorrentService: NyaaTorrentService
 ) {
-    @GetMapping
+
     fun getAnimeEpisodeTorrents(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
         .toMono()
         .flatMap { animeEpisodeTorrentService.findAnimeEpisodeTorrentByMalId(it).collectList() }
         .flatMap(ServerResponse.ok()::bodyValue)
 
 
-    @GetMapping("{episodeNumber}/alternate")
+
     fun searchAlternateEpisodeTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
         .toMono().zipWith(req.pathVariable("episodeNumber").toInt().toMono())
         .flatMap { animeEpisodeTorrentService.searchAlternateEpisodeTorrent(it.t1, it.t2).collectList() }
         .flatMap(ServerResponse.ok()::bodyValue)
 
 
-    @GetMapping("{episodeNumber}/update")
+
     fun updateEpisodeTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
         .toMono().zipWith(req.pathVariable("episodeNumber").toInt().toMono())
         .flatMap { animeEpisodeTorrentService.updateEpisodeTorrent(it.t1, it.t2) }
         .flatMap(ServerResponse.ok()::bodyValue)
 
 
-    @GetMapping("{episodeNumber}/search")
+
     fun searchEpisodeTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
         .toMono().zipWith(req.pathVariable("episodeNumber").toInt().toMono())
         .flatMap { nyaaTorrentService.searchEpisodeTorrent(it.t1, it.t2).collectList() }
         .flatMap(ServerResponse.ok()::bodyValue)
 
 
-    @PutMapping("{episodeNumber}")
+
     fun replaceEpisodeTorrent(req: ServerRequest): Mono<ServerResponse> =
         req.bodyToMono(AnimeEpisodeTorrentDTO::class.java)
             .flatMap {
@@ -58,14 +58,14 @@ class AnimeEpisodeTorrentHandler(
             .flatMap(ServerResponse.ok()::bodyValue)
 
 
-    @DeleteMapping("{episodeNumber}")
+
     fun deleteEpisodeTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
         .toMono().zipWith(req.pathVariable("episodeNumber").toInt().toMono())
         .flatMap { animeEpisodeTorrentService.deleteEpisodeTorrent(it.t1, it.t2) }
         .flatMap { ServerResponse.ok().build() }
 
 
-    @GetMapping("/scan")
+
     fun scanEpisodeTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
         .toMono()
         .flatMap { animeEpisodeTorrentService.scanEpisodeTorrent(it).collectList() }
@@ -73,7 +73,7 @@ class AnimeEpisodeTorrentHandler(
         .flatMap(ServerResponse.ok()::bodyValue)
 
 
-    @GetMapping("/scanPack")
+
     fun scanPackageTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
         .toMono()
         .flatMap(animeEpisodeTorrentService::scanPackageTorrent)
@@ -81,7 +81,7 @@ class AnimeEpisodeTorrentHandler(
         .switchIfEmpty(ServerResponse.notFound().build())
 
 
-    @GetMapping("/scanNext")
+
     fun scanNextTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
         .toMono()
         .flatMap(animeEpisodeTorrentService::scanNextEpisode)
