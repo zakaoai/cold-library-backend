@@ -109,8 +109,14 @@ class AnimeEpisodeTorrentService(
     }
 
     fun scanTorrentByMalIdAndEpisodeNumber(malId: Int, episodeNumber: Int): Mono<AnimeEpisodeTorrentDTO> {
-        return nyaaTorrentService.searchEpisodeTorrent(malId, episodeNumber).next()
-            .flatMap(this::saveAnimeTorrent)
+        return animeEpisodeTorrentRepository.findByMalIdAndEpisodeNumber(malId, episodeNumber).singleOptional()
+            .flatMap {
+                if (it.isEmpty)
+                    nyaaTorrentService.searchEpisodeTorrent(malId, episodeNumber).next()
+                        .flatMap(this::saveAnimeTorrent)
+                else
+                    Mono.empty()
+            }
     }
 
     fun saveAnimeTorrentWithId(torrent: AnimeEpisodeTorrentDTO, id: Long?): Mono<AnimeEpisodeTorrentDTO> {
