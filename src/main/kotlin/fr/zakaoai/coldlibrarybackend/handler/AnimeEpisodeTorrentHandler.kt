@@ -69,6 +69,7 @@ class AnimeEpisodeTorrentHandler(
     fun scanEpisodeTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
         .toMono()
         .flatMap { animeEpisodeTorrentService.scanEpisodeTorrent(it).collectList() }
+        .defaultIfEmpty(emptyList<AnimeEpisodeTorrentDTO>())
         .flatMap(ServerResponse.ok()::bodyValue)
 
 
@@ -77,13 +78,15 @@ class AnimeEpisodeTorrentHandler(
         .toMono()
         .flatMap(animeEpisodeTorrentService::scanPackageTorrent)
         .flatMap(ServerResponse.ok()::bodyValue)
+        .switchIfEmpty(ServerResponse.notFound().build())
 
 
     @GetMapping("/scanNext")
-    fun scanNExtTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
+    fun scanNextTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
         .toMono()
         .flatMap(animeEpisodeTorrentService::scanNextEpisode)
         .flatMap(ServerResponse.ok()::bodyValue)
+        .switchIfEmpty(ServerResponse.notFound().build())
 
 
 }

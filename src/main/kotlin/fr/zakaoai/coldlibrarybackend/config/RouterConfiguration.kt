@@ -52,7 +52,7 @@ class RouterConfiguration(
                 DELETE("{episodeNumber}", animeEpisodeTorrentHandler::deleteEpisodeTorrent)
                 GET("scan", animeEpisodeTorrentHandler::scanEpisodeTorrent)
                 GET("scanPack", animeEpisodeTorrentHandler::scanPackageTorrent)
-                GET("scanNext", animeEpisodeTorrentHandler::scanNExtTorrent)
+                GET("scanNext", animeEpisodeTorrentHandler::scanNextTorrent)
             }
         }
 }
