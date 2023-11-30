@@ -31,10 +31,14 @@ class AnimeEpisodeTorrentService(
 
     fun searchAlternateEpisodeTorrent(malId: Int, episodeNumber: Int): Flux<AnimeEpisodeTorrentDTO> {
         return animeEpisodeTorrentRepository.findByMalIdAndEpisodeNumber(malId, episodeNumber)
-            .map(AnimeEpisodeTorrent::torrentId)
-            .flatMapMany { torrentId ->
+
+            .flatMapMany { et ->
                 nyaaTorrentService.searchEpisodeTorrent(malId, episodeNumber)
-                    .filter { episodeTorrent -> episodeTorrent.torrentId != torrentId }
+                    .handle { t, u ->
+                        if (t.torrentId == et.torrentId) saveAnimeTorrentWithId(t, et.id).subscribe()
+                        u.next(t)
+                    }
+
             }
     }
 
