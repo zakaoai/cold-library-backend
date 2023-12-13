@@ -55,8 +55,7 @@ class ControllerExceptionHandler {
 
 
 @Bean
-fun corsFilter(): CorsWebFilter {
-
+fun corsConfiguration(): UrlBasedCorsConfigurationSource {
     val config = CorsConfiguration()
 
     // Possibly...
@@ -70,20 +69,12 @@ fun corsFilter(): CorsWebFilter {
     val source = UrlBasedCorsConfigurationSource().apply {
         registerCorsConfiguration("/**", config)
     }
-    return CorsWebFilter(source)
+    return source
 }
 
-@Component
-class AddControlHeaderWebFilter : WebFilter {
-    override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
-        exchange.response.headers.add("Access-Control-Allow-Headers", "*")
-
-        exchange.response.headers.add("Access-Control-Allow-Origin", "*")
-
-        exchange.response.headers.add("Access-Control-Allow-Methods", "*")
-
-        return chain.filter(exchange)
-    }
+@Bean
+fun corsFilter(): CorsWebFilter {
+    return CorsWebFilter(corsConfiguration())
 }
 
 @Component
@@ -94,10 +85,10 @@ class RequestTimingFilter : WebFilter {
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         val startMillis = System.currentTimeMillis()
         return chain.filter(exchange).doOnSuccess {
-                logger.info(
-                    "Elapsed Time: {}ms", System.currentTimeMillis() - startMillis
-                )
-            }
+            logger.info(
+                "Elapsed Time: {}ms", System.currentTimeMillis() - startMillis
+            )
+        }
     }
 }
 
