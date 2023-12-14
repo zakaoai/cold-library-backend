@@ -53,30 +53,6 @@ class ControllerExceptionHandler {
     }
 }
 
-
-@Bean
-fun corsConfiguration(): UrlBasedCorsConfigurationSource {
-    val config = CorsConfiguration()
-
-    // Possibly...
-    // config.applyPermitDefaultValues()
-
-    config.allowCredentials = true
-    config.addAllowedOrigin("*")
-    config.addAllowedHeader("*")
-    config.addAllowedMethod("*")
-
-    val source = UrlBasedCorsConfigurationSource().apply {
-        registerCorsConfiguration("/**", config)
-    }
-    return source
-}
-
-@Bean
-fun corsFilter(): CorsWebFilter {
-    return CorsWebFilter(corsConfiguration())
-}
-
 @Component
 class RequestTimingFilter : WebFilter {
 

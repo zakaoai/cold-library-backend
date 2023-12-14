@@ -1,6 +1,6 @@
 package fr.zakaoai.coldlibrarybackend.config.security
 
-import fr.zakaoai.coldlibrarybackend.handler.GlobalErrorHandler
+
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -21,7 +21,7 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebFluxSecurity
-data class SecurityConfig(val errorHandler: GlobalErrorHandler) {
+class SecurityConfig {
 
     @Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     lateinit var issuer: String
@@ -52,7 +52,6 @@ data class SecurityConfig(val errorHandler: GlobalErrorHandler) {
     ): SecurityWebFilterChain = http {
         cors { }
         authorizeExchange {
-            //  authorize(ServerWebExchangeMatchers.pathMatchers(HttpMethod.OPTIONS,"/**"),permitAll)
             authorize("/anime*", hasAuthority("admin"))
             authorize("/torrent*", hasAuthority("admin"))
             authorize(anyExchange, permitAll)
@@ -60,12 +59,12 @@ data class SecurityConfig(val errorHandler: GlobalErrorHandler) {
         oauth2ResourceServer {
             jwt {
                 jwtAuthenticationConverter = makePermissionsConverter()
-                jwtDecoder =  jwtDecoder()
+                jwtDecoder = jwtDecoder()
             }
         }
     }
 
-    fun jwtDecoder(): ReactiveJwtDecoder  {
+    fun jwtDecoder(): ReactiveJwtDecoder {
         val jwtDecoder = ReactiveJwtDecoders.fromOidcIssuerLocation(issuer) as NimbusReactiveJwtDecoder
         val audienceValidator: OAuth2TokenValidator<Jwt> = AudienceValidator(audience)
         val withIssuer: OAuth2TokenValidator<Jwt> = JwtValidators.createDefaultWithIssuer(issuer)
