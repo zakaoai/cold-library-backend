@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "fr.zakaoai"
-version = "1.4.0-SNAPSHOT"
+version = "1.4.0"
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_17
