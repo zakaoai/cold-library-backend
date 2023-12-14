@@ -17,7 +17,7 @@ class RouterConfiguration(
         animeHandler: AnimeHandler,
         cacheHandler: CacheHandler,
         trackedAnimeTorrentHandler: TrackedAnimeTorrentHandler,
-        animeEpisodeTorrentHandler: AnimeEpisodeTorrentHandler
+        animeEpisodeTorrentHandler: AnimeEpisodeTorrentHandler,
     ) =
         router {
             "/anime".nest {
@@ -36,7 +36,7 @@ class RouterConfiguration(
                 DELETE("", animeEpisodeHandler::deleteByMalId)
             }
             GET("/cache/clearAllCaches", cacheHandler::clearAllCaches)
-            "torrent".nest {
+            "/torrent".nest {
                 GET("", trackedAnimeTorrentHandler::getAllTrackedAnime)
                 GET("{id}", trackedAnimeTorrentHandler::getTrackedAnime)
                 PATCH("{id}", trackedAnimeTorrentHandler::updateTrackedAnime)

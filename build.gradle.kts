@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.springframework.boot") version "3.1.5"
+	id("org.springframework.boot") version "3.2.0"
 	id("io.spring.dependency-management") version "1.1.4"
-	kotlin("jvm") version "1.9.20"
-	kotlin("plugin.spring") version "1.9.20"
+	kotlin("jvm") version "1.9.21"
+	kotlin("plugin.spring") version "1.9.21"
 	id("org.springdoc.openapi-gradle-plugin") version "1.8.0"
 	id ("jacoco")
 }
@@ -36,6 +36,10 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
 	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+// https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-resource-server
+	implementation("org.springframework.security:spring-security-oauth2-resource-server:6.2.0")
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-cache")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -44,9 +48,9 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	implementation("org.liquibase:liquibase-core")
 	implementation("org.springframework:spring-jdbc")
-	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0")
+	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0")
 // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webflux-api
-	testImplementation("org.springdoc:springdoc-openapi-starter-webflux-api:2.2.0")
+	testImplementation("org.springdoc:springdoc-openapi-starter-webflux-api:2.3.0")
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("io.r2dbc:r2dbc-h2")
 	runtimeOnly("org.postgresql:postgresql")
