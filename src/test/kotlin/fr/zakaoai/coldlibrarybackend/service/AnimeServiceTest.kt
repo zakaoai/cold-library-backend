@@ -1,8 +1,9 @@
 package fr.zakaoai.coldlibrarybackend.service
 
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeEpisodeRepository
-import fr.zakaoai.coldlibrarybackend.anime.repository.AnimeRepository
+
 import fr.zakaoai.coldlibrarybackend.infrastructure.JikanAPIService
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.TrackedAnimeTorrentRepository
 import io.mockk.MockKAnnotations
 import io.mockk.every

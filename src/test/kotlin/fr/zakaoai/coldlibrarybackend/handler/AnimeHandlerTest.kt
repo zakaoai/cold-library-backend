@@ -9,12 +9,14 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.core.ParameterizedTypeReference
+import org.springframework.test.context.TestPropertySource
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.server.RouterFunction
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.kotlin.core.publisher.toFlux
 
 @SpringBootTest
+@TestPropertySource(properties = ["spring.liquibase.enabled=false"])
 class AnimeHandlerTest {
 
     @Autowired
