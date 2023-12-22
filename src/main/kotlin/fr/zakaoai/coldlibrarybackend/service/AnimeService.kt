@@ -34,7 +34,7 @@ class AnimeService(
     }
 
     fun updateAnimeAndSave(malId: Int): Mono<AnimeDTO> {
-        return repo.findByMalId(malId)
+        return repo.getWithMalId(malId.toString())
             .flatMap { repoAnime ->
                 jikanService.getAnimeById(malId)
                     .flatMap {
@@ -50,7 +50,7 @@ class AnimeService(
     }
 
     fun saveAnimeById(malId: Int): Mono<AnimeDTO> {
-        return repo.findByMalId(malId)
+        return repo.getWithMalId(malId.toString())
             .switchIfEmpty(
                 findAnimeAndSave(malId)
             ).map(Anime::toAnimeDTO)
@@ -63,21 +63,21 @@ class AnimeService(
     }
 
     fun findByMalId(id: Int): Mono<AnimeDTO> {
-        return repo.findByMalId(id)
+        return repo.getWithMalId(id.toString())
             .map(Anime::toAnimeDTO)
     }
 
     fun searchAnime(search: String): Flux<AnimeDTO> {
         return jikanService.searchAnime(search)
             .flatMap { jikanAnime ->
-                repo.findByMalId(jikanAnime.malId)
+                repo.getWithMalId(jikanAnime.malId.toString())
                     .map(Anime::toAnimeDTO)
                     .defaultIfEmpty(jikanAnime)
             }
     }
 
     fun updateAnime(animeDTO: AnimeDTO): Mono<AnimeDTO> {
-        return repo.findByMalId(animeDTO.malId)
+        return repo.getWithMalId(animeDTO.malId.toString())
             .flatMap { saveAnime(animeDTO, it.id) }
     }
 
@@ -95,7 +95,7 @@ class AnimeService(
         malId: Int,
         state: String
     ): Mono<AnimeDTO> {
-        return repo.findByMalId(malId).flatMap { anime ->
+        return repo.getWithMalId(malId.toString()).flatMap { anime ->
             val dto = anime.toAnimeDTO()
             dto.storageState = StorageState.valueOf(state)
             updateAnime(dto)
@@ -106,7 +106,7 @@ class AnimeService(
         malId: Int,
         lastAvaibleEpisode: Int
     ): Mono<AnimeDTO> {
-        return repo.findByMalId(malId).flatMap { anime ->
+        return repo.getWithMalId(malId.toString()).flatMap { anime ->
             anime.lastAvaibleEpisode = lastAvaibleEpisode
             repo.save(anime)
         }.map(Anime::toAnimeDTO)
@@ -116,7 +116,7 @@ class AnimeService(
         malId: Int,
         isComplete: Boolean
     ): Mono<AnimeDTO> {
-        return repo.findByMalId(malId).flatMap { anime ->
+        return repo.getWithMalId(malId.toString()).flatMap { anime ->
             val dto = anime.toAnimeDTO()
             dto.isComplete = isComplete
             if (isComplete) {

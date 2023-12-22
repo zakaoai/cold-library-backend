@@ -44,7 +44,7 @@ class TrackedAnimeTorrentService(
     }
 
     fun createTrackedAnime(malId: Int): Mono<TrackedAnimeTorrentDTO> {
-        return animeRepository.findByMalId(malId)
+        return animeRepository.getWithMalId(malId.toString())
             .map { TrackedAnimeTorrent(null, malId, it.nbEpisodes, it.title, DayOfWeek.MONDAY) }
             .flatMap(trackedAnimeTorrentRepository::save)
             .map(TrackedAnimeTorrent::toTrackedAnimeTorrentDTO)

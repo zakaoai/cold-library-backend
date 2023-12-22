@@ -75,7 +75,7 @@ class EpisodeService(
 
     fun getAllEpisodeFromAnimeMalId(malId: Int): Flux<fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeDTO> {
 
-        return animeRepository.findByMalId(malId)
+        return animeRepository.getWithMalId(malId.toString())
             .switchIfEmpty(Mono.error(ResponseStatusException(HttpStatus.BAD_REQUEST)))
             .map(Anime::lastAvaibleEpisode)
             .flatMapMany { lastAvaibleEpisode ->
@@ -87,7 +87,7 @@ class EpisodeService(
         malId: Int,
         episodeNumber: Int
     ): Mono<fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeDTO> {
-        return animeRepository.findByMalId(malId)
+        return animeRepository.getWithMalId(malId.toString())
             .filter { episodeNumber <= (it.lastAvaibleEpisode ?: 1) }
             .map {
                 fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeDTO(
