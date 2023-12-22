@@ -1,11 +1,12 @@
 package fr.zakaoai.coldlibrarybackend.service
 
 
-import fr.zakaoai.coldlibrarybackend.anime.repository.AnimeEpisodeRepository
-import fr.zakaoai.coldlibrarybackend.anime.repository.AnimeRepository
-import fr.zakaoai.coldlibrarybackend.anime.repository.entity.Anime
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeEpisodeRepository
+
 import fr.zakaoai.coldlibrarybackend.enums.StorageState
 import fr.zakaoai.coldlibrarybackend.infrastructure.JikanAPIService
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.Anime
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.TrackedAnimeTorrentRepository
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO
 import org.springframework.stereotype.Service

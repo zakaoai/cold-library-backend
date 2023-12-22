@@ -1,7 +1,8 @@
 package fr.zakaoai.coldlibrarybackend.model.dto.response
 
-import fr.zakaoai.coldlibrarybackend.anime.repository.entity.Request
+
 import fr.zakaoai.coldlibrarybackend.enums.RequestStatus
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.Request
 
 data class RequestDTO(
     val animeId: Int? = null,

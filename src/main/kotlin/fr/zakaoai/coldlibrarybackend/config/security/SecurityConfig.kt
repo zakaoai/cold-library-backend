@@ -52,8 +52,8 @@ class SecurityConfig {
     ): SecurityWebFilterChain = http {
         cors { }
         authorizeExchange {
-            authorize("/anime*", hasAuthority("admin"))
-            authorize("/torrent*", hasAuthority("admin"))
+            authorize("/anime/**", hasAuthority("admin"))
+            authorize("/torrent/**", hasAuthority("admin"))
             authorize(anyExchange, permitAll)
         }
         oauth2ResourceServer {

@@ -1,8 +1,9 @@
 package fr.zakaoai.coldlibrarybackend.service
 
-import fr.zakaoai.coldlibrarybackend.anime.repository.AnimeRepository
+
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.TrackedAnimeTorrent
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeEpisodeTorrentRepository
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.TrackedAnimeTorrentRepository
 import fr.zakaoai.coldlibrarybackend.model.dto.response.TrackedAnimeTorrentDTO
 import org.springframework.stereotype.Service

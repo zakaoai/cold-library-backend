@@ -1,3 +1,3 @@
-package fr.zakaoai.coldlibrarybackend.anime.repository
+package fr.zakaoai.coldlibrarybackend.infrastructure.db.services
 
 interface RequestRepository

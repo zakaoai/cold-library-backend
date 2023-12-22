@@ -1,4 +1,4 @@
-package fr.zakaoai.coldlibrarybackend.anime.repository.entity
+package fr.zakaoai.coldlibrarybackend.infrastructure.db.entities
 
 import fr.zakaoai.coldlibrarybackend.enums.StorageState
 import net.sandrohc.jikan.model.anime.AnimeType

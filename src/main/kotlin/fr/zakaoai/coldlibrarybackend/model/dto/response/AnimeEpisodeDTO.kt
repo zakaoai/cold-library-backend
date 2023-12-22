@@ -1,6 +1,7 @@
 package fr.zakaoai.coldlibrarybackend.model.dto.response
 
-import fr.zakaoai.coldlibrarybackend.anime.repository.entity.AnimeEpisode
+
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeEpisode
 import java.time.OffsetDateTime
 import net.sandrohc.jikan.model.anime.AnimeEpisode as JikanAnimeEpisode
 

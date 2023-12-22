@@ -1,8 +1,9 @@
 package fr.zakaoai.coldlibrarybackend.model.dto.response
 
 
-import fr.zakaoai.coldlibrarybackend.anime.repository.entity.Anime
+
 import fr.zakaoai.coldlibrarybackend.enums.StorageState
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.Anime
 import net.sandrohc.jikan.model.anime.AnimeType
 
 data class AnimeDTO(

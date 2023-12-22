@@ -1,10 +1,11 @@
 package fr.zakaoai.coldlibrarybackend.service
 
-import fr.zakaoai.coldlibrarybackend.anime.repository.AnimeEpisodeRepository
-import fr.zakaoai.coldlibrarybackend.anime.repository.AnimeRepository
-import fr.zakaoai.coldlibrarybackend.anime.repository.entity.Anime
-import fr.zakaoai.coldlibrarybackend.anime.repository.entity.AnimeEpisode
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeEpisodeRepository
+
 import fr.zakaoai.coldlibrarybackend.infrastructure.JikanAPIService
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.Anime
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeEpisode
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -21,7 +22,8 @@ class EpisodeService(
 ) {
 
     fun findEpisodeAnimeByAnimeId(malId: Int): Flux<fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeDTO> {
-        return animeEpisodeRepository.findByMalId(malId).map(AnimeEpisode::toAnimeEpisodeDTO)
+        return animeEpisodeRepository.getWithMalId(malId.toString())
+           .map(AnimeEpisode::toAnimeEpisodeDTO)
     }
 
     fun findEpisodeAnimeByAnimeIdAndEpisodeNumber(
@@ -98,8 +100,8 @@ class EpisodeService(
     }
 
     fun saveAllMissingEpisodeFromAnimeMalId(malId: Int): Flux<fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeDTO> {
-        return findEpisodeAnimeByAnimeId(malId)
-            .map(fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeDTO::episodeNumber)
+        return animeEpisodeRepository.getWithMalId(malId.toString())
+            .map(AnimeEpisode::episodeNumber)
             .collectList()
             .flatMapMany { listEpNumber ->
                 getAllEpisodeFromAnimeMalId(malId)
