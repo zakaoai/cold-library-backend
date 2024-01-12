@@ -12,33 +12,33 @@ import reactor.kotlin.core.publisher.toMono
 @Component
 class AnimeHandler(val animeService: AnimeService) {
 
-    private val logger = LoggerFactory.getLogger(AnimeEpisodeHandler::class.java)
+    private val logger = LoggerFactory.getLogger(AnimeHandler::class.java)
 
     fun getAllAnime(req: ServerRequest): Mono<ServerResponse> =
         animeService.getAllAnime().collectList().flatMap(ServerResponse.ok()::bodyValue)
 
 
-    fun findByMalId(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
+    fun findByMalId(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
         .toMono()
         .flatMap(animeService::findByMalId)
         .flatMap(ServerResponse.ok()::bodyValue)
         .switchIfEmpty(ServerResponse.notFound().build())
 
 
-    fun updateByMalId(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
+    fun updateByMalId(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
         .toMono()
         .flatMap(animeService::updateAnimeAndSave)
         .flatMap(ServerResponse.ok()::bodyValue)
         .switchIfEmpty(ServerResponse.notFound().build())
 
 
-    fun saveAnime(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
+    fun saveAnime(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
         .toMono()
-        .flatMap(animeService::saveAnimeById)
+        .flatMap(animeService::findAnimeInServerAndSave)
         .flatMap(ServerResponse.ok()::bodyValue)
 
 
-    fun deleteAnime(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
+    fun deleteAnime(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
         .toMono()
         .flatMap(animeService::deleteById)
         .flatMap{ServerResponse.noContent().build()}
@@ -51,21 +51,21 @@ class AnimeHandler(val animeService: AnimeService) {
         .switchIfEmpty(ServerResponse.badRequest().build())
 
 
-    fun updateStorageState(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
+    fun updateStorageState(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
         .toMono().zipWith(req.bodyToMono(String::class.java))
         .flatMap { animeService.updateAnimeStorageState(it.t1, it.t2) }
         .flatMap(ServerResponse.ok()::bodyValue)
         .switchIfEmpty(ServerResponse.notFound().build())
 
 
-    fun updateLastAvaibleEpisode(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
+    fun updateLastAvaibleEpisode(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
         .toMono().zipWith(req.bodyToMono(Int::class.java))
         .flatMap { animeService.updateAnimeLastAvaibleEpisode(it.t1, it.t2) }
         .flatMap(ServerResponse.ok()::bodyValue)
         .switchIfEmpty(ServerResponse.notFound().build())
 
 
-    fun updateIsComplete(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toInt()
+    fun updateIsComplete(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
         .toMono().zipWith(req.bodyToMono(Boolean::class.java))
         .flatMap { animeService.updateAnimeIsComplete(it.t1, it.t2) }
         .flatMap(ServerResponse.ok()::bodyValue)

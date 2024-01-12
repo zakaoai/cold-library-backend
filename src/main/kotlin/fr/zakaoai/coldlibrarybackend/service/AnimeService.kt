@@ -1,14 +1,16 @@
 package fr.zakaoai.coldlibrarybackend.service
 
 
-import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeEpisodeRepository
-
 import fr.zakaoai.coldlibrarybackend.enums.StorageState
 import fr.zakaoai.coldlibrarybackend.infrastructure.JikanAPIService
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.Anime
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeInServer
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeInServerRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeRepository
-import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.TrackedAnimeTorrentRepository
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO
+import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeDTO
+import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeInServer
+import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeModel
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -16,113 +18,64 @@ import reactor.core.publisher.Mono
 
 @Service
 class AnimeService(
-    private val repo: AnimeRepository,
-    private val episodeRepo: AnimeEpisodeRepository,
+    private val animeInServerRepository: AnimeInServerRepository,
+    private val animeRepository: AnimeRepository,
     private val jikanService: JikanAPIService,
-    private val trackedAnimeTorrentRepository: TrackedAnimeTorrentRepository
-) {
 
-    fun getAllAnime(): Flux<AnimeDTO> {
-        return repo.findAll()
-            .map(Anime::toAnimeDTO)
-    }
+    ) {
 
-    fun findAnimeAndSave(malId: Int): Mono<Anime> {
-        return jikanService.getAnimeById(malId)
-            .map(AnimeDTO::toModel)
-            .flatMap { repo.save(it) };
-    }
+    fun getAllAnime(): Flux<AnimeDTO> = animeInServerRepository.findAllWithAnimeInformation()
 
-    fun updateAnimeAndSave(malId: Int): Mono<AnimeDTO> {
-        return repo.getWithMalId(malId.toString())
-            .flatMap { repoAnime ->
-                jikanService.getAnimeById(malId)
-                    .flatMap {
-                        saveAnime(
-                            it.copy(
-                                storageState = repoAnime.storageState,
-                                isComplete = repoAnime.isComplete,
-                                lastAvaibleEpisode = repoAnime.lastAvaibleEpisode
-                            ), repoAnime.id
-                        )
-                    }
-            }
-    }
+    fun findAnimeInServerAndSave(malId: Long): Mono<AnimeDTO> = jikanService.getAnimeById(malId)
+        .map(net.sandrohc.jikan.model.anime.Anime::toAnimeModel)
+        .flatMap { animeRepository.findById(it.malId).switchIfEmpty(animeRepository.save(it.copy(isNew = true))) }
+        .flatMap { animeDAO ->
+            animeInServerRepository.findById(animeDAO.malId)
+                .switchIfEmpty(animeInServerRepository.save(animeDAO.toAnimeInServer().copy(isNew = true)))
+                .map { animeDAO.toAnimeDTO(it) }
+        }
 
-    fun saveAnimeById(malId: Int): Mono<AnimeDTO> {
-        return repo.getWithMalId(malId.toString())
-            .switchIfEmpty(
-                findAnimeAndSave(malId)
-            ).map(Anime::toAnimeDTO)
-    }
+    fun updateAnimeAndSave(malId: Long): Mono<Anime> = animeRepository.findById(malId)
+        .flatMap {
+            jikanService.getAnimeById(malId)
+                .flatMap {
+                    animeRepository.save(it.toAnimeModel())
+                }
+        }
 
-    fun deleteById(id: Int): Mono<Void> {
-        return repo.deleteByMalId(id)
-            .and(episodeRepo.deleteByMalId(id))
-            .and(trackedAnimeTorrentRepository.deleteByMalId(id))
-    }
+    fun deleteById(malId: Long): Mono<Void> = animeInServerRepository.deleteById(malId)
 
-    fun findByMalId(id: Int): Mono<AnimeDTO> {
-        return repo.getWithMalId(id.toString())
-            .map(Anime::toAnimeDTO)
-    }
+    fun findByMalId(id: Long): Mono<AnimeDTO> = animeInServerRepository.findWithAnimeInformation(id)
 
     fun searchAnime(search: String): Flux<AnimeDTO> {
         return jikanService.searchAnime(search)
             .flatMap { jikanAnime ->
-                repo.getWithMalId(jikanAnime.malId.toString())
-                    .map(Anime::toAnimeDTO)
-                    .defaultIfEmpty(jikanAnime)
+                findByMalId(jikanAnime.malId.toLong())
+                    .defaultIfEmpty(jikanAnime.toAnimeDTO())
             }
-    }
-
-    fun updateAnime(animeDTO: AnimeDTO): Mono<AnimeDTO> {
-        return repo.getWithMalId(animeDTO.malId.toString())
-            .flatMap { saveAnime(animeDTO, it.id) }
-    }
-
-    fun saveAnime(
-        anime: AnimeDTO,
-        id: Long?
-    ): Mono<AnimeDTO> {
-        return Mono.just(anime)
-            .map { anime.toModel(id) }
-            .flatMap(repo::save)
-            .map(Anime::toAnimeDTO)
     }
 
     fun updateAnimeStorageState(
-        malId: Int,
+        malId: Long,
         state: String
-    ): Mono<AnimeDTO> {
-        return repo.getWithMalId(malId.toString()).flatMap { anime ->
-            val dto = anime.toAnimeDTO()
-            dto.storageState = StorageState.valueOf(state)
-            updateAnime(dto)
-        }
-    }
+    ): Mono<AnimeInServer> = animeInServerRepository.findById(malId)
+        .map { it.copy(storageState = StorageState.valueOf(state)) }
+        .flatMap(animeInServerRepository::save)
 
     fun updateAnimeLastAvaibleEpisode(
-        malId: Int,
+        malId: Long,
         lastAvaibleEpisode: Int
-    ): Mono<AnimeDTO> {
-        return repo.getWithMalId(malId.toString()).flatMap { anime ->
-            anime.lastAvaibleEpisode = lastAvaibleEpisode
-            repo.save(anime)
-        }.map(Anime::toAnimeDTO)
-    }
+    ): Mono<AnimeInServer> = animeInServerRepository.findById(malId)
+        .map { it.copy(lastAvaibleEpisode = lastAvaibleEpisode) }
+        .flatMap(animeInServerRepository::save)
+
 
     fun updateAnimeIsComplete(
-        malId: Int,
+        malId: Long,
         isComplete: Boolean
-    ): Mono<AnimeDTO> {
-        return repo.getWithMalId(malId.toString()).flatMap { anime ->
-            val dto = anime.toAnimeDTO()
-            dto.isComplete = isComplete
-            if (isComplete) {
-                dto.lastAvaibleEpisode = dto.nbEpisodes
-            }
-            updateAnime(dto)
-        }
-    }
+    ): Mono<AnimeInServer> = animeInServerRepository.findById(malId)
+        .map { it.copy(isComplete = isComplete) }
+        .flatMap(animeInServerRepository::save)
+
+
 }

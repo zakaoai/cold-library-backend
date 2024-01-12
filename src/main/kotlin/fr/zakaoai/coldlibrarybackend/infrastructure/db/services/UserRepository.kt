@@ -1,6 +1,6 @@
 package fr.zakaoai.coldlibrarybackend.infrastructure.db.services
 
-import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.Request
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.User
 import org.springframework.data.repository.reactive.ReactiveCrudRepository
 
-interface RequestRepository : ReactiveCrudRepository<Request, Long>
+interface UserRepository : ReactiveCrudRepository<User, Long>

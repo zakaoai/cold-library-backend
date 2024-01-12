@@ -1,1 +1,0 @@
-CREATE UNIQUE INDEX IF NOT EXISTS "PK_ANIME_EPISODE_TORRENT_TABLE" ON `animeepisodetorrent` (`mal_id`, `episode_Number`);

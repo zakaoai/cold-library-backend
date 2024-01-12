@@ -75,7 +75,6 @@ score
 season
 year
 broadcast
-score
 rank
 
 AnimeEpisode :
@@ -240,3 +239,5 @@ result :
     }
 }
 ```
+
+https://www.bezkoder.com/spring-boot-r2dbc-postgresql/

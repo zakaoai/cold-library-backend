@@ -11,7 +11,7 @@ interface NyaaTorrentService {
     fun getAnimeSearch(searchTerm: String): SearchRequest
 
 
-    fun searchEpisodeTorrent(malId: Int, episodeNumber: Int): Flux<AnimeEpisodeTorrentDTO>
+//    fun searchEpisodeTorrent(malId: Int, episodeNumber: Int): Flux<AnimeEpisodeTorrentDTO>
 
     fun searchEpisodeTorrentById(torrentId: Int, malId: Int, episodeNumber: Int): Mono<AnimeEpisodeTorrentDTO>
 }

@@ -10,10 +10,6 @@ import reactor.core.publisher.Mono
 
 interface AnimeEpisodeRepository : ReactiveCrudRepository<AnimeEpisode, Long> {
 
-    fun findByMalIdAndEpisodeNumber(malId: Int, EpisodeNumber: Int): Mono<AnimeEpisode>
+    fun findByMalIdAndEpisodeNumber(malId: Long, episodeNumber: Int): Mono<AnimeEpisode>
 
-    fun deleteByMalId(malId: Int): Mono<Void>
-
-    @Query("SELECT *  FROM animeEpisodes WHERE animeEpisodes.MAL_ID = :malId ")
-    fun getWithMalId( @Param("malId") malId : String): Flux<AnimeEpisode>
 }

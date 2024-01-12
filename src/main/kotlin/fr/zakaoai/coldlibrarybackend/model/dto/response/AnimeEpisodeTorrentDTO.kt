@@ -1,6 +1,5 @@
 package fr.zakaoai.coldlibrarybackend.model.dto.response
 
-import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeEpisodeTorrent
 import java.time.LocalDate
 
 
@@ -15,20 +14,4 @@ data class AnimeEpisodeTorrentDTO(
     var seeders: Int,
     var leechers: Int,
     var completed: Int,
-    ) {
-
-
-    fun toModel(withId: Long? = null) = AnimeEpisodeTorrent(
-        withId,
-        malId,
-        episodeNumber,
-        title,
-        date,
-        torrentLink,
-        torrentId,
-        torrentSize,
-        seeders,
-        leechers,
-        completed
-    )
-}
+)

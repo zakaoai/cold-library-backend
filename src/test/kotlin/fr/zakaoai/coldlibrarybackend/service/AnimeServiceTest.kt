@@ -4,7 +4,6 @@ import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeEpisodeRepo
 
 import fr.zakaoai.coldlibrarybackend.infrastructure.JikanAPIService
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeRepository
-import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.TrackedAnimeTorrentRepository
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs

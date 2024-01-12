@@ -7,17 +7,15 @@ import org.springframework.web.reactive.function.server.router
 
 
 @Configuration
-class RouterConfiguration(
-    val animeEpisodeHandler: AnimeEpisodeHandler
-) {
+class RouterConfiguration {
 
     @Bean
     fun routes(
-        animeEpisodeHandler: AnimeEpisodeHandler,
         animeHandler: AnimeHandler,
         cacheHandler: CacheHandler,
-        trackedAnimeTorrentHandler: TrackedAnimeTorrentHandler,
-        animeEpisodeTorrentHandler: AnimeEpisodeTorrentHandler,
+//        animeEpisodeHandler: AnimeEpisodeHandler,
+//        trackedAnimeTorrentHandler: TrackedAnimeTorrentHandler,
+//        animeEpisodeTorrentHandler: AnimeEpisodeTorrentHandler,
     ) =
         router {
             "/anime".nest {
@@ -31,28 +29,28 @@ class RouterConfiguration(
                 PUT("{id}/last_avaible_episode", animeHandler::updateLastAvaibleEpisode)
                 PUT("{id}/is_complete", animeHandler::updateIsComplete)
             }
-            "/anime/{id}/episodes".nest {
-                GET("", animeEpisodeHandler::findByMalId)
-                DELETE("", animeEpisodeHandler::deleteByMalId)
-            }
-            GET("/cache/clearAllCaches", cacheHandler::clearAllCaches)
-            "/torrent".nest {
-                GET("", trackedAnimeTorrentHandler::getAllTrackedAnime)
-                GET("{id}", trackedAnimeTorrentHandler::getTrackedAnime)
-                PATCH("{id}", trackedAnimeTorrentHandler::updateTrackedAnime)
-                DELETE("{id}", trackedAnimeTorrentHandler::deleteTrackedAnime)
-                POST("{id}", trackedAnimeTorrentHandler::createTrackedAnime)
-            }
-            "/torrent/{id}/episodes".nest {
-                GET("", animeEpisodeTorrentHandler::getAnimeEpisodeTorrents)
-                GET("{episodeNumber}/alternate", animeEpisodeTorrentHandler::searchAlternateEpisodeTorrent)
-                GET("{episodeNumber}/update", animeEpisodeTorrentHandler::updateEpisodeTorrent)
-                GET("{episodeNumber}/search", animeEpisodeTorrentHandler::searchEpisodeTorrent)
-                PUT("{episodeNumber}", animeEpisodeTorrentHandler::replaceEpisodeTorrent)
-                DELETE("{episodeNumber}", animeEpisodeTorrentHandler::deleteEpisodeTorrent)
-                GET("scan", animeEpisodeTorrentHandler::scanEpisodeTorrent)
-                GET("scanPack", animeEpisodeTorrentHandler::scanPackageTorrent)
-                GET("scanNext", animeEpisodeTorrentHandler::scanNextTorrent)
-            }
+//            "/anime/{id}/episodes".nest {
+//                GET("", animeEpisodeHandler::findByMalId)
+//                DELETE("", animeEpisodeHandler::deleteByMalId)
+//            }
+//            GET("/cache/clearAllCaches", cacheHandler::clearAllCaches)
+//            "/torrent".nest {
+//                GET("", trackedAnimeTorrentHandler::getAllTrackedAnime)
+//                GET("{id}", trackedAnimeTorrentHandler::getTrackedAnime)
+//                PATCH("{id}", trackedAnimeTorrentHandler::updateTrackedAnime)
+//                DELETE("{id}", trackedAnimeTorrentHandler::deleteTrackedAnime)
+//                POST("{id}", trackedAnimeTorrentHandler::createTrackedAnime)
+//            }
+//            "/torrent/{id}/episodes".nest {
+//                GET("", animeEpisodeTorrentHandler::getAnimeEpisodeTorrents)
+//                GET("{episodeNumber}/alternate", animeEpisodeTorrentHandler::searchAlternateEpisodeTorrent)
+//                GET("{episodeNumber}/update", animeEpisodeTorrentHandler::updateEpisodeTorrent)
+//                GET("{episodeNumber}/search", animeEpisodeTorrentHandler::searchEpisodeTorrent)
+//                PUT("{episodeNumber}", animeEpisodeTorrentHandler::replaceEpisodeTorrent)
+//                DELETE("{episodeNumber}", animeEpisodeTorrentHandler::deleteEpisodeTorrent)
+//                GET("scan", animeEpisodeTorrentHandler::scanEpisodeTorrent)
+//                GET("scanPack", animeEpisodeTorrentHandler::scanPackageTorrent)
+//                GET("scanNext", animeEpisodeTorrentHandler::scanNextTorrent)
+//            }
         }
 }

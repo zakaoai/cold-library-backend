@@ -1,0 +1,6 @@
+package fr.zakaoai.coldlibrarybackend.infrastructure.db.services
+
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.DelugeEpisodeTorrent
+import org.springframework.data.repository.reactive.ReactiveCrudRepository
+
+interface DelugeEpisodeTorrentRepository : ReactiveCrudRepository<DelugeEpisodeTorrent, Long>
