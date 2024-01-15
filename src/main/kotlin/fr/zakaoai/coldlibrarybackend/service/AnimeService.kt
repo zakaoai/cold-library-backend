@@ -77,5 +77,8 @@ class AnimeService(
         .map { it.copy(isComplete = isComplete) }
         .flatMap(animeInServerRepository::save)
 
+    fun updateIsDownloading(malId: Long,isDownloading: Boolean): Mono<AnimeInServer> = animeInServerRepository.findById(malId)
+        .map { it.copy(isDownloading = isDownloading) }
+        .flatMap(animeInServerRepository::save)
 
 }

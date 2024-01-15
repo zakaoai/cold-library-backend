@@ -70,4 +70,10 @@ class AnimeHandler(val animeService: AnimeService) {
         .flatMap { animeService.updateAnimeIsComplete(it.t1, it.t2) }
         .flatMap(ServerResponse.ok()::bodyValue)
         .switchIfEmpty(ServerResponse.notFound().build())
+
+    fun updateIsDownloading(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
+        .toMono().zipWith(req.bodyToMono(Boolean::class.java))
+        .flatMap { animeService.updateIsDownloading(it.t1, it.t2) }
+        .flatMap(ServerResponse.ok()::bodyValue)
+        .switchIfEmpty(ServerResponse.notFound().build())
 }

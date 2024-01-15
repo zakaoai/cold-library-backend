@@ -14,7 +14,7 @@ class RouterConfiguration {
         animeHandler: AnimeHandler,
         cacheHandler: CacheHandler,
 //        animeEpisodeHandler: AnimeEpisodeHandler,
-//        trackedAnimeTorrentHandler: TrackedAnimeTorrentHandler,
+        animeTorrentHandler: AnimeTorrentHandler,
 //        animeEpisodeTorrentHandler: AnimeEpisodeTorrentHandler,
     ) =
         router {
@@ -28,19 +28,20 @@ class RouterConfiguration {
                 PUT("{id}/storage_state", animeHandler::updateStorageState)
                 PUT("{id}/last_avaible_episode", animeHandler::updateLastAvaibleEpisode)
                 PUT("{id}/is_complete", animeHandler::updateIsComplete)
+                PUT("{id}/is_downloading", animeHandler::updateIsDownloading)
             }
 //            "/anime/{id}/episodes".nest {
 //                GET("", animeEpisodeHandler::findByMalId)
 //                DELETE("", animeEpisodeHandler::deleteByMalId)
 //            }
 //            GET("/cache/clearAllCaches", cacheHandler::clearAllCaches)
-//            "/torrent".nest {
-//                GET("", trackedAnimeTorrentHandler::getAllTrackedAnime)
-//                GET("{id}", trackedAnimeTorrentHandler::getTrackedAnime)
-//                PATCH("{id}", trackedAnimeTorrentHandler::updateTrackedAnime)
-//                DELETE("{id}", trackedAnimeTorrentHandler::deleteTrackedAnime)
-//                POST("{id}", trackedAnimeTorrentHandler::createTrackedAnime)
-//            }
+            "/torrent".nest {
+                GET("", animeTorrentHandler::getAllTrackedAnime)
+                GET("{id}", animeTorrentHandler::getTrackedAnime)
+                PATCH("{id}", animeTorrentHandler::updateTrackedAnime)
+                DELETE("{id}", animeTorrentHandler::deleteTrackedAnime)
+                POST("{id}", animeTorrentHandler::createTrackedAnime)
+            }
 //            "/torrent/{id}/episodes".nest {
 //                GET("", animeEpisodeTorrentHandler::getAnimeEpisodeTorrents)
 //                GET("{episodeNumber}/alternate", animeEpisodeTorrentHandler::searchAlternateEpisodeTorrent)

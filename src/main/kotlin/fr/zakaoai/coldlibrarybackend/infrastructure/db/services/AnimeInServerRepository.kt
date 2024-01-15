@@ -10,9 +10,9 @@ import reactor.core.publisher.Mono
 
 interface AnimeInServerRepository : ReactiveCrudRepository<AnimeInServer, Long> {
 
-    @Query("SELECT * FROM AnimeInServer NATURAL JOIN Anime")
+    @Query("SELECT * FROM cold_library.\"AnimeInServer\" NATURAL JOIN cold_library.\"Anime\"")
     fun findAllWithAnimeInformation(): Flux<AnimeDTO>
 
-    @Query("SELECT * FROM cold_library.\"AnimeInServer\" ais LEFT JOIN cold_library.\"Anime\" a ON ais.\"malId\"  = a.\"malId\"  WHERE a.\"malId\" = :malId")
+    @Query("SELECT * FROM cold_library.\"AnimeInServer\" ais NATURAL JOIN cold_library.\"Anime\" a WHERE a.\"mal_id\" = :malId")
     fun findWithAnimeInformation(@Param("malId") malId: Long): Mono<AnimeDTO>
 }
