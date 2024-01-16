@@ -63,6 +63,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/io.mockk/mockk
 	testImplementation("io.mockk:mockk:1.13.8")
 	testImplementation("com.ninja-squad:springmockk:4.0.2")
+	testImplementation ("io.rest-assured:spring-mock-mvc")
+	// https://mvnrepository.com/artifact/io.rest-assured/spring-mock-mvc-kotlin-extensions
+	testImplementation("io.rest-assured:spring-mock-mvc-kotlin-extensions")
 
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-kotlin
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.0")
