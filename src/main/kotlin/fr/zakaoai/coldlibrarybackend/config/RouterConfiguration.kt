@@ -13,7 +13,7 @@ class RouterConfiguration {
     fun routes(
         animeHandler: AnimeHandler,
         cacheHandler: CacheHandler,
-//        animeEpisodeHandler: AnimeEpisodeHandler,
+        animeEpisodeHandler: AnimeEpisodeHandler,
         animeTorrentHandler: AnimeTorrentHandler,
 //        animeEpisodeTorrentHandler: AnimeEpisodeTorrentHandler,
     ) =
@@ -30,10 +30,11 @@ class RouterConfiguration {
                 PUT("{id}/is_complete", animeHandler::updateIsComplete)
                 PUT("{id}/is_downloading", animeHandler::updateIsDownloading)
             }
-//            "/anime/{id}/episodes".nest {
-//                GET("", animeEpisodeHandler::findByMalId)
-//                DELETE("", animeEpisodeHandler::deleteByMalId)
-//            }
+            "/anime/{id}/episodes".nest {
+                GET("", animeEpisodeHandler::findByMalId)
+                GET("/{episodeNumber}", animeEpisodeHandler::findByMalIdAndEpisodeNumber)
+                DELETE("", animeEpisodeHandler::deleteByMalId)
+            }
 //            GET("/cache/clearAllCaches", cacheHandler::clearAllCaches)
             "/torrent".nest {
                 GET("", animeTorrentHandler::getAllTrackedAnime)

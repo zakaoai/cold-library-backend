@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 @Service
 @CacheConfig
@@ -30,7 +31,12 @@ class JikanAPIServiceImpl(private val jikan: Jikan) : JikanAPIService {
     }
 
     @Cacheable("jikanAnimesEpisodes")
-    override fun getAnimeEpisodesByAnimeIdAndEpisodeNumber(malId: Long, episodeNumber: Int) = getAnimeEpisodesPage(malId)
-        .filter { anime -> anime.malId > episodeNumber }
+    override fun getAnimeEpisodesFromEpisodeByAnimeIdAndEpisodeNumber(malId: Long, episodeNumber: Int) =
+        getAnimeEpisodesPage(malId)
+            .filter { anime -> anime.malId > episodeNumber }
+
+    @Cacheable("jikanAnimesEpisode")
+    override fun getAnimeEpisodeByAnimeIdAndEpisodeNumber(malId: Long, episodeNumber: Int): Mono<AnimeEpisode> =
+        jikan.query().anime().episode(malId.toInt(), episodeNumber).execute()
 
 }

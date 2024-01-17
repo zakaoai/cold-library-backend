@@ -8,12 +8,12 @@ import java.time.OffsetDateTime
 @Table("\"AnimeEpisode\"")
 data class AnimeEpisode(
     @Id
-    val id: Long?,
-    val malId: Int,
+    val id: Long? = null,
+    val malId: Long,
     val episodeNumber: Int,
     val title: String,
-    val url: String,
-    val date: LocalDateTime,
+    val url: String? = null,
+    val date: LocalDateTime? = null,
 )
 
 

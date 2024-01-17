@@ -1,7 +1,5 @@
 package fr.zakaoai.coldlibrarybackend.infrastructure
 
-import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO
-import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeDTO
 import net.sandrohc.jikan.model.anime.Anime
 import net.sandrohc.jikan.model.anime.AnimeEpisode
 import reactor.core.publisher.Flux
@@ -16,6 +14,8 @@ interface JikanAPIService {
 
     fun getAnimeEpisodesPage(id: Long): Flux<AnimeEpisode>
 
-    fun getAnimeEpisodesByAnimeIdAndEpisodeNumber(malId: Long, episodeNumber: Int): Flux<AnimeEpisode>
+    fun getAnimeEpisodesFromEpisodeByAnimeIdAndEpisodeNumber(malId: Long, episodeNumber: Int): Flux<AnimeEpisode>
+
+    fun getAnimeEpisodeByAnimeIdAndEpisodeNumber(malId: Long, episodeNumber: Int): Mono<AnimeEpisode>
 
 }
