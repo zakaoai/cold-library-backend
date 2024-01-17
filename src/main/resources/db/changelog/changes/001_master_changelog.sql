@@ -185,7 +185,7 @@ CREATE TABLE cold_library."AnimeEpisodeTorrent" (
 	title character varying NOT NULL,
 	date date NOT NULL,
 	torrent_link character varying NOT NULL,
-	torrent_id bigint NOT NULL,
+	torrent_id smallint NOT NULL,
 	torrent_size character varying NOT NULL,
 	seeders smallint NOT NULL,
 	leechers smallint NOT NULL,
@@ -317,3 +317,4 @@ GRANT USAGE
    ON SCHEMA public
    TO PUBLIC;
 -- ddl-end --
+

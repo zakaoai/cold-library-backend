@@ -13,7 +13,7 @@ class AnimeEpisodeTorrent(
         val title: String,
         val date: LocalDate,
         val torrentLink: String,
-        val torrentId: Long,
+        val torrentId: Int,
         val torrentSize: String,
         val seeders: Int,
         val leechers: Int,

@@ -5,13 +5,17 @@ import de.kaysubs.tracker.nyaasi.model.Category
 import de.kaysubs.tracker.nyaasi.model.SearchRequest
 import de.kaysubs.tracker.nyaasi.model.TorrentPreview
 import fr.zakaoai.coldlibrarybackend.infrastructure.NyaaTorrentService
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeEpisode
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeEpisodeTorrent
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeTorrentDTO
+import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeEpisodeTorrent
 import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeEpisodeTorrentDTO
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
 
 
 @Service
@@ -19,9 +23,9 @@ import reactor.core.publisher.Mono
 class NyaaTorrentServiceImpl(
     private val nyaaSiApi: NyaaSiApi,
 //    private val trackedAnimeTorrentRepository: TrackedAnimeTorrentRepository
-) : NyaaTorrentService{
+) : NyaaTorrentService {
 
-    val filterSearchWord = listOf("x265", "1080p" , "720p", "10 bits", "5.1", "x264", "1920", "1080")
+    val filterSearchWord = listOf("x265", "1080p", "720p", "10 bits", "5.1", "x264", "1920", "1080")
 
     @Cacheable
     override fun getAnimeSearch(searchTerm: String): SearchRequest {
@@ -32,32 +36,27 @@ class NyaaTorrentServiceImpl(
             .setTerm(searchTerm)
     }
 
-    fun filterSearchRemovingWords( episodeNumber: Int)  = { torrentPreview: TorrentPreview ->
-            var copyTitle = torrentPreview.title
-            filterSearchWord.forEach { copyTitle = copyTitle.replace(it, "") }
-             copyTitle.contains(episodeNumber.toString())
+    fun filterSearchRemovingWords(episodeNumber: Int) = { torrentPreview: TorrentPreview ->
+        var copyTitle = torrentPreview.title
+        filterSearchWord.forEach { copyTitle = copyTitle.replace(it, "") }
+        copyTitle.contains(episodeNumber.toString())
     }
 
-//    @Cacheable
-//    override fun searchEpisodeTorrent(malId: Int, episodeNumber: Int): Flux<AnimeEpisodeTorrentDTO> {
-//
-//        return trackedAnimeTorrentRepository.findByMalId(malId)
-//            .map { trackedAnime -> trackedAnime.searchWords }
-//            .map { searchWord ->
-//                when (episodeNumber) {
-//                    0 -> "VOSTFR $searchWord"
-//                    else -> "VOSTFR $searchWord $episodeNumber"
-//                }
-//            }
-//            .map(this::getAnimeSearch)
-//            .map { search -> nyaaSiApi.search(search) }
-//            .map{ it.filter(filterSearchRemovingWords(episodeNumber))}
-//            .flatMapMany { Flux.fromIterable(it) }
-//            .map { it.toAnimeEpisodeTorrentDTO(malId,episodeNumber)  }
-//    }
+    @Cacheable
+    override fun searchEpisodeTorrent(
+        malId: Long,
+        episodeNumber: Int,
+        searchWord: String,
+    ): Flux<TorrentPreview> = when (episodeNumber) {
+        0 -> "VOSTFR $searchWord"
+        else -> "VOSTFR $searchWord $episodeNumber"
+    }.toMono()
+        .map(this::getAnimeSearch)
+        .map { search -> nyaaSiApi.search(search) }
+        .map { it.filter(filterSearchRemovingWords(episodeNumber)) }
+        .flatMapMany { Flux.fromIterable(it) }
 
-    override fun searchEpisodeTorrentById(torrentId: Int, malId: Int, episodeNumber: Int): Mono<AnimeEpisodeTorrentDTO> {
-        return Mono.just(nyaaSiApi.getTorrentInfo(torrentId))
-            .map { it.toAnimeEpisodeTorrentDTO(torrentId, malId, episodeNumber)  }
-    }
+    override fun searchEpisodeTorrentById(
+        torrentId: Int,
+    ) = nyaaSiApi.getTorrentInfo(torrentId).toMono()
 }

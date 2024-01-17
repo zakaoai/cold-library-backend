@@ -27,7 +27,7 @@ class AnimeTorrentService(
 
     fun createTrackedAnime(malId: Long) = animeRepository.findById(malId)
         .map { AnimeTorrent(malId, 0, it.title, DayOfWeek.MONDAY, 0, "/${it.title}", true) }
-        .flatMap(animeTorrentRepository::save)
+        .flatMap{ animeTorrentRepository.findById(malId).switchIfEmpty(animeTorrentRepository.save(it))}
         .map(AnimeTorrent::toAnimeTorrentDTO)
 
     fun deleteTrackedAnime(malId: Long) = animeInServerRepository.findById(malId)
