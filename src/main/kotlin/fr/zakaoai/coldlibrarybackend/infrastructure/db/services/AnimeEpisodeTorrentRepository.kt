@@ -1,6 +1,7 @@
 package fr.zakaoai.coldlibrarybackend.infrastructure.db.services
 
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeEpisodeTorrent
+import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeTorrentDTO
 import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.data.repository.reactive.ReactiveCrudRepository
@@ -9,9 +10,12 @@ import reactor.core.publisher.Mono
 
 interface AnimeEpisodeTorrentRepository : ReactiveCrudRepository<AnimeEpisodeTorrent, Long> {
 
-    fun findByMalId(malId: Long): Flux<AnimeEpisodeTorrent>
+    @Query("SELECT aet.*, ae.episode_number FROM cold_library.\"AnimeEpisodeTorrent\" aet INNER JOIN cold_library.\"AnimeEpisode\" ae ON aet.id_anime_episode=ae.id WHERE ae.\"mal_id\" = :malId")
+    fun findByMalIdWithEpisodeNumber(@Param("malId") malId: Long,): Flux<AnimeEpisodeTorrentDTO>
 
-    @Query("SELECT aet.* FROM cold_library.\"AnimeEpisodeTorrent\" aet NATURAL JOIN cold_library.\"AnimeEpisode\" ae WHERE ae.\"mal_id\" = :malId AND ae.\"episode_number\" = :episodeNumber")
+    fun findByMalId(malId: Long,): Flux<AnimeEpisodeTorrent>
+
+    @Query("SELECT aet.* FROM cold_library.\"AnimeEpisodeTorrent\" aet INNER JOIN cold_library.\"AnimeEpisode\" ae ON aet.id_anime_episode=ae.id WHERE ae.\"mal_id\" = :malId AND ae.\"episode_number\" = :episodeNumber")
     fun findByMalIdAndEpisodeNumber(
         @Param("malId") malId: Long,
         @Param("episodeNumber") episodeNumber: Int

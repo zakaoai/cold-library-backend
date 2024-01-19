@@ -29,5 +29,11 @@ class AnimeEpisodeHandler(val animeEpisodeService: AnimeEpisodeService) {
         .flatMap(animeEpisodeService::deleteEpisodeByMalId)
         .flatMap { ServerResponse.noContent().build() }
 
+    fun deleteByMalIdAndEpisodeNumber(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
+        .toMono()
+        .zipWith(req.pathVariable("episodeNumber").toInt().toMono())
+        .flatMap { animeEpisodeService.deleteByMalIdAndEpisodeNumber(it.t1,it.t2) }
+        .flatMap(ServerResponse.ok()::bodyValue)
+
 
 }

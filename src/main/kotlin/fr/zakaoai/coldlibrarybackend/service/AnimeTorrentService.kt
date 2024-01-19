@@ -25,10 +25,14 @@ class AnimeTorrentService(
     fun updateTrackedAnime(animeTorrent: AnimeTorrent) = animeTorrentRepository.save(animeTorrent)
         .map(AnimeTorrent::toAnimeTorrentDTO)
 
-    fun createTrackedAnime(malId: Long) = animeRepository.findById(malId)
-        .map { AnimeTorrent(malId, 0, it.title, DayOfWeek.MONDAY, 0, "/${it.title}", true) }
-        .flatMap{ animeTorrentRepository.findById(malId).switchIfEmpty(animeTorrentRepository.save(it))}
-        .map(AnimeTorrent::toAnimeTorrentDTO)
+    fun createTrackedAnime(malId: Long) =
+        animeInServerRepository.findById(malId)
+            .map { it.copy(isDownloading = true) }
+            .flatMap(animeInServerRepository::save)
+            .then(animeRepository.findById(malId))
+            .map { AnimeTorrent(malId, 0, it.title, DayOfWeek.MONDAY, 0, "/${it.title}", true) }
+            .flatMap { animeTorrentRepository.findById(malId).switchIfEmpty(animeTorrentRepository.save(it)) }
+            .map(AnimeTorrent::toAnimeTorrentDTO)
 
     fun deleteTrackedAnime(malId: Long) = animeInServerRepository.findById(malId)
         .map { it.copy(isDownloading = false) }

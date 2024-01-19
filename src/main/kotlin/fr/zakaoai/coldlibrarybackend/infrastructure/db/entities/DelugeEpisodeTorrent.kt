@@ -9,5 +9,5 @@ data class DelugeEpisodeTorrent(
     var id: Long? = null,
     val torrent_hash: String,
     val progress: Int,
-    val id_AnimeEpisodeTorrent: Long
+    val idAnimeEpisodeTorrent: Long
 )

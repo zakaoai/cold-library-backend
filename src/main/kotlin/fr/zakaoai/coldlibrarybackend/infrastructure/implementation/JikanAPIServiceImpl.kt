@@ -33,7 +33,7 @@ class JikanAPIServiceImpl(private val jikan: Jikan) : JikanAPIService {
     @Cacheable("jikanAnimesEpisodes")
     override fun getAnimeEpisodesFromEpisodeByAnimeIdAndEpisodeNumber(malId: Long, episodeNumber: Int) =
         getAnimeEpisodesPage(malId)
-            .filter { anime -> anime.malId > episodeNumber }
+            .filter { anime -> anime.malId >= episodeNumber }
 
     @Cacheable("jikanAnimesEpisode")
     override fun getAnimeEpisodeByAnimeIdAndEpisodeNumber(malId: Long, episodeNumber: Int): Mono<AnimeEpisode> =

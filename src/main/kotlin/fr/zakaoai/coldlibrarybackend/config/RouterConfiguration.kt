@@ -15,7 +15,7 @@ class RouterConfiguration {
         cacheHandler: CacheHandler,
         animeEpisodeHandler: AnimeEpisodeHandler,
         animeTorrentHandler: AnimeTorrentHandler,
-//        animeEpisodeTorrentHandler: AnimeEpisodeTorrentHandler,
+        animeEpisodeTorrentHandler: AnimeEpisodeTorrentHandler,
     ) =
         router {
             "/anime".nest {
@@ -34,6 +34,7 @@ class RouterConfiguration {
                 GET("", animeEpisodeHandler::findByMalId)
                 GET("/{episodeNumber}", animeEpisodeHandler::findByMalIdAndEpisodeNumber)
                 DELETE("", animeEpisodeHandler::deleteByMalId)
+                DELETE("/{episodeNumber}", animeEpisodeHandler::deleteByMalIdAndEpisodeNumber)
             }
 //            GET("/cache/clearAllCaches", cacheHandler::clearAllCaches)
             "/torrent".nest {
@@ -43,16 +44,15 @@ class RouterConfiguration {
                 DELETE("{id}", animeTorrentHandler::deleteTrackedAnime)
                 POST("{id}", animeTorrentHandler::createTrackedAnime)
             }
-//            "/torrent/{id}/episodes".nest {
-//                GET("", animeEpisodeTorrentHandler::getAnimeEpisodeTorrents)
-//                GET("{episodeNumber}/alternate", animeEpisodeTorrentHandler::searchAlternateEpisodeTorrent)
-//                GET("{episodeNumber}/update", animeEpisodeTorrentHandler::updateEpisodeTorrent)
-//                GET("{episodeNumber}/search", animeEpisodeTorrentHandler::searchEpisodeTorrent)
-//                PUT("{episodeNumber}", animeEpisodeTorrentHandler::replaceEpisodeTorrent)
-//                DELETE("{episodeNumber}", animeEpisodeTorrentHandler::deleteEpisodeTorrent)
-//                GET("scan", animeEpisodeTorrentHandler::scanEpisodeTorrent)
-//                GET("scanPack", animeEpisodeTorrentHandler::scanPackageTorrent)
-//                GET("scanNext", animeEpisodeTorrentHandler::scanNextTorrent)
-//            }
+            "/torrent/{id}/episodes".nest {
+                GET("", animeEpisodeTorrentHandler::getAnimeEpisodeTorrents)
+                GET("{episodeNumber}/alternate", animeEpisodeTorrentHandler::searchAlternateEpisodeTorrent)
+                GET("{episodeNumber}/update", animeEpisodeTorrentHandler::updateEpisodeTorrent)
+                PUT("{episodeNumber}", animeEpisodeTorrentHandler::replaceEpisodeTorrent)
+                DELETE("{episodeNumber}", animeEpisodeTorrentHandler::deleteEpisodeTorrent)
+                GET("scan", animeEpisodeTorrentHandler::scanEpisodeTorrent)
+                GET("scanPack", animeEpisodeTorrentHandler::scanPackageTorrent)
+                GET("scanNext", animeEpisodeTorrentHandler::scanNextTorrent)
+            }
         }
 }

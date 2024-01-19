@@ -10,6 +10,7 @@ import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeEpisodeDTO
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
 
 @Service
 class AnimeEpisodeService(
@@ -29,21 +30,32 @@ class AnimeEpisodeService(
 
     fun findOrcreateAnimeEpisode(malId: Long, episodeNumber: Int) =
         animeEpisodeRepository.findByMalIdAndEpisodeNumber(malId, episodeNumber)
-            .switchIfEmpty(jikanAPIService.getAnimeEpisodeByAnimeIdAndEpisodeNumber(malId, episodeNumber)
-                .map { it.toAnimeEpisode(malId) }
-                .defaultIfEmpty(AnimeEpisode(null, malId, episodeNumber, "Episode $episodeNumber", null, null))
-                .flatMap(animeEpisodeRepository::save))
-
+            .switchIfEmpty(when (episodeNumber) {
+                0 -> AnimeEpisode(null, malId, episodeNumber, "Pack", null, null).toMono()
+                else -> jikanAPIService.getAnimeEpisodeByAnimeIdAndEpisodeNumber(malId, episodeNumber)
+                    .map { it.toAnimeEpisode(malId) }
+            }
+                .flatMap(animeEpisodeRepository::save)
+            )
     fun createAnimeEpisodeFromListOfEpisodeNumber(malId: Long, episodeNumbers: List<Int>) =
         jikanAPIService.getAnimeEpisodesFromEpisodeByAnimeIdAndEpisodeNumber(malId, episodeNumbers.first())
             .filter { episodeNumbers.contains(it.malId) }
             .map { it.toAnimeEpisode(malId) }
             .collectList()
+            .map { jikanAnimeEpisodeList ->
+                jikanAnimeEpisodeList += episodeNumbers.filter { episodeNumber ->
+                    jikanAnimeEpisodeList.none { animeEpisode -> animeEpisode.episodeNumber == episodeNumber }
+                }
+                    .map {
+                        AnimeEpisode(null, malId, it, "Episode $it", null, null)
+                    }
+                jikanAnimeEpisodeList
+            }
             .flatMapMany(animeEpisodeRepository::saveAll)
 
     fun findOrCreateAnimeEpisodesFromEpisode(malId: Long, episodeNumber: Int) =
         animeEpisodeRepository.findByMalId(malId)
-            .filter { it.episodeNumber >= episodeNumber }
+            .filter { it.episodeNumber > episodeNumber }
             .collectList()
             .zipWith(animeInServerRepository.findById(malId).map(AnimeInServer::lastAvaibleEpisode))
             .flatMap {
@@ -66,6 +78,8 @@ class AnimeEpisodeService(
 
 
     fun deleteEpisodeByMalId(malId: Long) = animeEpisodeRepository.deleteByMalId(malId)
+
+    fun deleteByMalIdAndEpisodeNumber(malId: Long,episodeNumber: Int) = animeEpisodeRepository.deleteByMalIdAndEpisodeNumber(malId, episodeNumber)
 
 
 }

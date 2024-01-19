@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDate
 
 @Table("\"AnimeEpisodeTorrent\"")
-class AnimeEpisodeTorrent(
+data class AnimeEpisodeTorrent(
         @Id
         var id: Long? = null,
         val title: String,
@@ -18,7 +18,6 @@ class AnimeEpisodeTorrent(
         val seeders: Int,
         val leechers: Int,
         val completed: Int,
-        @Column("id_AnimeEpisode")
         val idAnimeEpisode: Long,
         val malId: Long
 )

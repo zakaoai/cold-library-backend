@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 
 data class AnimeEpisodeTorrentDTO(
-    var id: Long,
+    var id: Long? = null,
     val title: String,
     val date: LocalDate,
     val torrentLink: String,

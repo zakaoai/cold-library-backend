@@ -16,4 +16,6 @@ interface AnimeEpisodeRepository : ReactiveCrudRepository<AnimeEpisode, Long> {
 
     fun deleteByMalId(malId: Long): Mono<Void>
 
+    fun deleteByMalIdAndEpisodeNumber(malId: Long,episodeNumber: Int): Mono<Void>
+
 }

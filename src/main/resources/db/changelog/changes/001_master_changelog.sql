@@ -185,15 +185,15 @@ CREATE TABLE cold_library."AnimeEpisodeTorrent" (
 	title character varying NOT NULL,
 	date date NOT NULL,
 	torrent_link character varying NOT NULL,
-	torrent_id smallint NOT NULL,
+	torrent_id integer NOT NULL,
 	torrent_size character varying NOT NULL,
 	seeders smallint NOT NULL,
 	leechers smallint NOT NULL,
 	completed smallint NOT NULL,
-	"id_AnimeEpisode" bigint,
+	id_anime_episode bigint,
 	mal_id bigint,
 	CONSTRAINT "AnimeEpisodeTorrent_pk" PRIMARY KEY (id),
-	CONSTRAINT "AnimeEpisodeTorrent_uq" UNIQUE ("id_AnimeEpisode")
+	CONSTRAINT "AnimeEpisodeTorrent_uq" UNIQUE (id_anime_episode)
 );
 -- ddl-end --
 ALTER TABLE cold_library."AnimeEpisodeTorrent" OWNER TO postgres;
@@ -220,9 +220,9 @@ CREATE TABLE cold_library."DelugeEpisodeTorrent" (
 	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1 ),
 	torrent_hash character varying NOT NULL,
 	progress real,
-	"id_AnimeEpisodeTorrent" bigint,
+	id_anime_episode_torrent bigint,
 	CONSTRAINT "DelugeEpisodeTorrent_pk" PRIMARY KEY (id),
-	CONSTRAINT "DelugeEpisodeTorrent_uq" UNIQUE ("id_AnimeEpisodeTorrent")
+	CONSTRAINT "DelugeEpisodeTorrent_uq" UNIQUE (id_anime_episode_torrent)
 );
 -- ddl-end --
 ALTER TABLE cold_library."DelugeEpisodeTorrent" OWNER TO postgres;
@@ -287,7 +287,7 @@ ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- object: "AnimeEpisode_fk" | type: CONSTRAINT --
 -- ALTER TABLE cold_library."AnimeEpisodeTorrent" DROP CONSTRAINT IF EXISTS "AnimeEpisode_fk" CASCADE;
-ALTER TABLE cold_library."AnimeEpisodeTorrent" ADD CONSTRAINT "AnimeEpisode_fk" FOREIGN KEY ("id_AnimeEpisode")
+ALTER TABLE cold_library."AnimeEpisodeTorrent" ADD CONSTRAINT "AnimeEpisode_fk" FOREIGN KEY (id_anime_episode)
 REFERENCES cold_library."AnimeEpisode" (id) MATCH FULL
 ON DELETE SET NULL ON UPDATE CASCADE;
 -- ddl-end --
@@ -301,7 +301,7 @@ ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- object: "AnimeEpisodeTorrent_fk" | type: CONSTRAINT --
 -- ALTER TABLE cold_library."DelugeEpisodeTorrent" DROP CONSTRAINT IF EXISTS "AnimeEpisodeTorrent_fk" CASCADE;
-ALTER TABLE cold_library."DelugeEpisodeTorrent" ADD CONSTRAINT "AnimeEpisodeTorrent_fk" FOREIGN KEY ("id_AnimeEpisodeTorrent")
+ALTER TABLE cold_library."DelugeEpisodeTorrent" ADD CONSTRAINT "AnimeEpisodeTorrent_fk" FOREIGN KEY (id_anime_episode_torrent)
 REFERENCES cold_library."AnimeEpisodeTorrent" (id) MATCH FULL
 ON DELETE SET NULL ON UPDATE CASCADE;
 -- ddl-end --
