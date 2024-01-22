@@ -2,7 +2,7 @@ package fr.zakaoai.coldlibrarybackend.service
 
 
 import fr.zakaoai.coldlibrarybackend.enums.StorageState
-import fr.zakaoai.coldlibrarybackend.infrastructure.JikanAPIService
+import fr.zakaoai.coldlibrarybackend.infrastructure.JikanApiService
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.Anime
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeInServer
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeInServerRepository
@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono
 class AnimeService(
     private val animeInServerRepository: AnimeInServerRepository,
     private val animeRepository: AnimeRepository,
-    private val jikanService: JikanAPIService,
+    private val jikanService: JikanApiService,
 
     ) {
 
@@ -77,8 +77,9 @@ class AnimeService(
         .map { it.copy(isComplete = isComplete) }
         .flatMap(animeInServerRepository::save)
 
-    fun updateIsDownloading(malId: Long,isDownloading: Boolean): Mono<AnimeInServer> = animeInServerRepository.findById(malId)
-        .map { it.copy(isDownloading = isDownloading) }
-        .flatMap(animeInServerRepository::save)
+    fun updateIsDownloading(malId: Long, isDownloading: Boolean): Mono<AnimeInServer> =
+        animeInServerRepository.findById(malId)
+            .map { it.copy(isDownloading = isDownloading) }
+            .flatMap(animeInServerRepository::save)
 
 }

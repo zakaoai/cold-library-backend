@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table
 data class DelugeEpisodeTorrent(
     @Id
     var id: Long? = null,
-    val torrent_hash: String,
-    val progress: Int,
+    val torrentHash: String,
+    val progress: Float,
     val idAnimeEpisodeTorrent: Long
 )

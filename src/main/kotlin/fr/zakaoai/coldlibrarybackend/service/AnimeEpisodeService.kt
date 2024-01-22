@@ -1,6 +1,6 @@
 package fr.zakaoai.coldlibrarybackend.service
 
-import fr.zakaoai.coldlibrarybackend.infrastructure.JikanAPIService
+import fr.zakaoai.coldlibrarybackend.infrastructure.JikanApiService
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeEpisode
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeInServer
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeEpisodeRepository
@@ -16,7 +16,7 @@ import reactor.kotlin.core.publisher.toMono
 class AnimeEpisodeService(
     private val animeEpisodeRepository: AnimeEpisodeRepository,
     private val animeInServerRepository: AnimeInServerRepository,
-    private val jikanAPIService: JikanAPIService
+    private val jikanAPIService: JikanApiService
 ) {
 
     fun findAnimeEpisodeByAnimeId(malId: Long) = animeEpisodeRepository.findByMalId(malId)
@@ -37,6 +37,7 @@ class AnimeEpisodeService(
             }
                 .flatMap(animeEpisodeRepository::save)
             )
+
     fun createAnimeEpisodeFromListOfEpisodeNumber(malId: Long, episodeNumbers: List<Int>) =
         jikanAPIService.getAnimeEpisodesFromEpisodeByAnimeIdAndEpisodeNumber(malId, episodeNumbers.first())
             .filter { episodeNumbers.contains(it.malId) }
@@ -79,7 +80,8 @@ class AnimeEpisodeService(
 
     fun deleteEpisodeByMalId(malId: Long) = animeEpisodeRepository.deleteByMalId(malId)
 
-    fun deleteByMalIdAndEpisodeNumber(malId: Long,episodeNumber: Int) = animeEpisodeRepository.deleteByMalIdAndEpisodeNumber(malId, episodeNumber)
+    fun deleteByMalIdAndEpisodeNumber(malId: Long, episodeNumber: Int) =
+        animeEpisodeRepository.deleteByMalIdAndEpisodeNumber(malId, episodeNumber)
 
 
 }

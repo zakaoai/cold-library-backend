@@ -1,7 +1,7 @@
 package fr.zakaoai.coldlibrarybackend.infrastructure.implementation
 
 
-import fr.zakaoai.coldlibrarybackend.infrastructure.JikanAPIService
+import fr.zakaoai.coldlibrarybackend.infrastructure.JikanApiService
 import net.sandrohc.jikan.Jikan
 import net.sandrohc.jikan.model.anime.AnimeEpisode
 import org.springframework.cache.annotation.CacheConfig
@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono
 
 @Service
 @CacheConfig
-class JikanAPIServiceImpl(private val jikan: Jikan) : JikanAPIService {
+class JikanAPIServiceImpl(private val jikan: Jikan) : JikanApiService {
 
     @Cacheable(cacheNames = ["jikanAnimes"], unless = "#result instanceof T(java.lang.Exception)")
     override fun searchAnime(search: String) = jikan.query()

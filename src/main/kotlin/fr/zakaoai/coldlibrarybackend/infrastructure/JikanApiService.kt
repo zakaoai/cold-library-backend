@@ -5,9 +5,7 @@ import net.sandrohc.jikan.model.anime.AnimeEpisode
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
-
-interface JikanAPIService {
-
+interface JikanApiService {
     fun searchAnime(search: String): Flux<Anime>
 
     fun getAnimeById(id: Long): Mono<Anime>

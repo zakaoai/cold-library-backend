@@ -16,6 +16,8 @@ class RouterConfiguration {
         animeEpisodeHandler: AnimeEpisodeHandler,
         animeTorrentHandler: AnimeTorrentHandler,
         animeEpisodeTorrentHandler: AnimeEpisodeTorrentHandler,
+        delugeTorrentHandler: DelugeTorrentHandler,
+        myAnimeListHandler: MyAnimeListHandler
     ) =
         router {
             "/anime".nest {
@@ -38,11 +40,13 @@ class RouterConfiguration {
             }
 //            GET("/cache/clearAllCaches", cacheHandler::clearAllCaches)
             "/torrent".nest {
+                GET("/updateDelugeTorrent", delugeTorrentHandler::updateAllTorrent)
                 GET("", animeTorrentHandler::getAllTrackedAnime)
                 GET("{id}", animeTorrentHandler::getTrackedAnime)
                 PATCH("{id}", animeTorrentHandler::updateTrackedAnime)
                 DELETE("{id}", animeTorrentHandler::deleteTrackedAnime)
                 POST("{id}", animeTorrentHandler::createTrackedAnime)
+
             }
             "/torrent/{id}/episodes".nest {
                 GET("", animeEpisodeTorrentHandler::getAnimeEpisodeTorrents)
@@ -50,9 +54,14 @@ class RouterConfiguration {
                 GET("{episodeNumber}/update", animeEpisodeTorrentHandler::updateEpisodeTorrent)
                 PUT("{episodeNumber}", animeEpisodeTorrentHandler::replaceEpisodeTorrent)
                 DELETE("{episodeNumber}", animeEpisodeTorrentHandler::deleteEpisodeTorrent)
+                GET("{episodeNumber}/deluge", delugeTorrentHandler::downloadTorrent)
+                GET("{episodeNumber}/deluge/update", delugeTorrentHandler::updateTorrent)
                 GET("scan", animeEpisodeTorrentHandler::scanEpisodeTorrent)
                 GET("scanPack", animeEpisodeTorrentHandler::scanPackageTorrent)
                 GET("scanNext", animeEpisodeTorrentHandler::scanNextTorrent)
+            }
+            "user".nest {
+                GET("animelist", myAnimeListHandler::getUserAnimeList)
             }
         }
 }
