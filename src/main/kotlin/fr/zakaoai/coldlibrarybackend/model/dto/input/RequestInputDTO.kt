@@ -1,20 +1,15 @@
-package fr.zakaoai.coldlibrarybackend.infrastructure.db.entities
+package fr.zakaoai.coldlibrarybackend.model.dto.input
 
 import fr.zakaoai.coldlibrarybackend.enums.RequestStatus
 import fr.zakaoai.coldlibrarybackend.enums.RequestType
-import org.springframework.data.annotation.Id
-import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
-@Table("\"Request\"")
-data class Request(
-    @Id
+data class RequestInputDTO(
     val id: Long? = null,
     val malId: Long,
     val type: RequestType,
     val state: RequestStatus,
     val date: LocalDateTime = LocalDateTime.now(),
-    val userId: String,
+    val userId: String?,
     val assignedUserId: String? = null
 )
-

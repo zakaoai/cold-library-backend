@@ -14,7 +14,7 @@ CREATE TABLE cold_library."Log" (
 	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1 ),
 	action character varying NOT NULL,
 	date timestamp NOT NULL DEFAULT now(),
-	id_user bigint,
+	user_id character varying NOT NULL,
 	CONSTRAINT "Logs_pk" PRIMARY KEY (id)
 );
 -- ddl-end --
@@ -39,13 +39,11 @@ ALTER TABLE cold_library."Log" OWNER TO postgres;
 -- object: cold_library."User" | type: TABLE --
 -- DROP TABLE IF EXISTS cold_library."User" CASCADE;
 CREATE TABLE cold_library."User" (
-	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1 ),
-	sub character varying NOT NULL,
+	user_id character varying NOT NULL,
 	name character varying NOT NULL,
-	username character varying NOT NULL,
 	email character varying NOT NULL,
-	mal_username character varying NOT NULL,
-	CONSTRAINT user_pk PRIMARY KEY (id)
+	mal_username character varying,
+	CONSTRAINT user_pk PRIMARY KEY (user_id)
 );
 -- ddl-end --
 ALTER TABLE cold_library."User" OWNER TO postgres;
@@ -72,9 +70,10 @@ CREATE TABLE cold_library."Request" (
 	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1 ),
 	type character varying NOT NULL,
 	state character varying NOT NULL,
-	id_user bigint NOT NULL,
-	mal_id bigint,
+	mal_id bigint NOT NULL,
 	date timestamp NOT NULL DEFAULT now(),
+	user_id character varying NOT NULL,
+	assigned_user_id character varying,
 	CONSTRAINT "Request_pk" PRIMARY KEY (id)
 );
 -- ddl-end --
@@ -243,39 +242,46 @@ ALTER TABLE cold_library."DelugeEpisodeTorrent" OWNER TO postgres;
 -- ALTER SEQUENCE cold_library."DelugeEpisodeTorrent_id_seq" OWNER TO postgres;
 -- -- ddl-end --
 --
--- object: user_fk | type: CONSTRAINT --
--- ALTER TABLE cold_library."Log" DROP CONSTRAINT IF EXISTS user_fk CASCADE;
-ALTER TABLE cold_library."Log" ADD CONSTRAINT user_fk FOREIGN KEY (id_user)
-REFERENCES cold_library."User" (id) MATCH FULL
+-- object: "User_fk" | type: CONSTRAINT --
+-- ALTER TABLE cold_library."Request" DROP CONSTRAINT IF EXISTS "User_fk" CASCADE;
+ALTER TABLE cold_library."Request" ADD CONSTRAINT "User_fk" FOREIGN KEY (user_id)
+REFERENCES cold_library."User" (user_id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: "User_fk1" | type: CONSTRAINT --
+-- ALTER TABLE cold_library."Request" DROP CONSTRAINT IF EXISTS "User_fk1" CASCADE;
+ALTER TABLE cold_library."Request" ADD CONSTRAINT "User_fk1" FOREIGN KEY (assigned_user_id)
+REFERENCES cold_library."User" (user_id) MATCH FULL
 ON DELETE SET NULL ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: user_fk | type: CONSTRAINT --
--- ALTER TABLE cold_library."Request" DROP CONSTRAINT IF EXISTS user_fk CASCADE;
-ALTER TABLE cold_library."Request" ADD CONSTRAINT user_fk FOREIGN KEY (id_user)
-REFERENCES cold_library."User" (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ALTER TABLE cold_library."Log" DROP CONSTRAINT IF EXISTS user_fk CASCADE;
+ALTER TABLE cold_library."Log" ADD CONSTRAINT user_fk FOREIGN KEY (user_id)
+REFERENCES cold_library."User" (user_id) MATCH FULL
+ON DELETE SET NULL ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: "Anime_fk" | type: CONSTRAINT --
 -- ALTER TABLE cold_library."Request" DROP CONSTRAINT IF EXISTS "Anime_fk" CASCADE;
 ALTER TABLE cold_library."Request" ADD CONSTRAINT "Anime_fk" FOREIGN KEY (mal_id)
 REFERENCES cold_library."Anime" (mal_id) MATCH FULL
-ON DELETE SET NULL ON UPDATE CASCADE;
+ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: "Anime_fk" | type: CONSTRAINT --
 -- ALTER TABLE cold_library."AnimeEpisode" DROP CONSTRAINT IF EXISTS "Anime_fk" CASCADE;
 ALTER TABLE cold_library."AnimeEpisode" ADD CONSTRAINT "Anime_fk" FOREIGN KEY (mal_id)
 REFERENCES cold_library."Anime" (mal_id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
+ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: "Anime_fk" | type: CONSTRAINT --
 -- ALTER TABLE cold_library."AnimeInServer" DROP CONSTRAINT IF EXISTS "Anime_fk" CASCADE;
 ALTER TABLE cold_library."AnimeInServer" ADD CONSTRAINT "Anime_fk" FOREIGN KEY (mal_id)
 REFERENCES cold_library."Anime" (mal_id) MATCH FULL
-ON DELETE SET NULL ON UPDATE CASCADE;
+ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: "Anime_fk" | type: CONSTRAINT --
@@ -289,21 +295,21 @@ ON DELETE SET NULL ON UPDATE CASCADE;
 -- ALTER TABLE cold_library."AnimeEpisodeTorrent" DROP CONSTRAINT IF EXISTS "AnimeEpisode_fk" CASCADE;
 ALTER TABLE cold_library."AnimeEpisodeTorrent" ADD CONSTRAINT "AnimeEpisode_fk" FOREIGN KEY (id_anime_episode)
 REFERENCES cold_library."AnimeEpisode" (id) MATCH FULL
-ON DELETE SET NULL ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: "AnimeTorrent_fk" | type: CONSTRAINT --
 -- ALTER TABLE cold_library."AnimeEpisodeTorrent" DROP CONSTRAINT IF EXISTS "AnimeTorrent_fk" CASCADE;
 ALTER TABLE cold_library."AnimeEpisodeTorrent" ADD CONSTRAINT "AnimeTorrent_fk" FOREIGN KEY (mal_id)
 REFERENCES cold_library."AnimeTorrent" (mal_id) MATCH FULL
-ON DELETE SET NULL ON UPDATE CASCADE;
+ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: "AnimeEpisodeTorrent_fk" | type: CONSTRAINT --
 -- ALTER TABLE cold_library."DelugeEpisodeTorrent" DROP CONSTRAINT IF EXISTS "AnimeEpisodeTorrent_fk" CASCADE;
 ALTER TABLE cold_library."DelugeEpisodeTorrent" ADD CONSTRAINT "AnimeEpisodeTorrent_fk" FOREIGN KEY (id_anime_episode_torrent)
 REFERENCES cold_library."AnimeEpisodeTorrent" (id) MATCH FULL
-ON DELETE SET NULL ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: "grant_CU_26541e8cda" | type: PERMISSION --
@@ -317,4 +323,3 @@ GRANT USAGE
    ON SCHEMA public
    TO PUBLIC;
 -- ddl-end --
-

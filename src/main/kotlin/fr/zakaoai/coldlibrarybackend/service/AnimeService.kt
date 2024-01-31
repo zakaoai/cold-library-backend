@@ -3,7 +3,6 @@ package fr.zakaoai.coldlibrarybackend.service
 
 import fr.zakaoai.coldlibrarybackend.enums.StorageState
 import fr.zakaoai.coldlibrarybackend.infrastructure.JikanApiService
-import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.Anime
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeInServer
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeInServerRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeRepository
@@ -11,6 +10,8 @@ import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO
 import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeDTO
 import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeInServer
 import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeModel
+import net.sandrohc.jikan.model.anime.Anime
+import net.sandrohc.jikan.model.season.Season
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -26,16 +27,18 @@ class AnimeService(
 
     fun getAllAnime(): Flux<AnimeDTO> = animeInServerRepository.findAllWithAnimeInformation()
 
-    fun findAnimeInServerAndSave(malId: Long): Mono<AnimeDTO> = jikanService.getAnimeById(malId)
-        .map(net.sandrohc.jikan.model.anime.Anime::toAnimeModel)
-        .flatMap { animeRepository.findById(it.malId).switchIfEmpty(animeRepository.save(it.copy(isNew = true))) }
+    fun findAnimeAndSave(malId: Long) = animeRepository.findById(malId).switchIfEmpty(jikanService.getAnimeById(malId)
+        .map(Anime::toAnimeModel)
+        .flatMap { animeRepository.save(it.copy(isNew = true)) })
+
+    fun findAnimeInServerAndSave(malId: Long): Mono<AnimeDTO> = findAnimeAndSave(malId)
         .flatMap { animeDAO ->
             animeInServerRepository.findById(animeDAO.malId)
                 .switchIfEmpty(animeInServerRepository.save(animeDAO.toAnimeInServer().copy(isNew = true)))
                 .map { animeDAO.toAnimeDTO(it) }
         }
 
-    fun updateAnimeAndSave(malId: Long): Mono<Anime> = animeRepository.findById(malId)
+    fun updateAnimeAndSave(malId: Long) = animeRepository.findById(malId)
         .flatMap {
             jikanService.getAnimeById(malId)
                 .flatMap {
@@ -82,4 +85,11 @@ class AnimeService(
             .map { it.copy(isDownloading = isDownloading) }
             .flatMap(animeInServerRepository::save)
 
+    fun searchAnimeBySeason(year: Int, season: Season, page: Int) = jikanService.getAnimeBySeason(year, season, page)
+        .flatMap { jikanAnime ->
+            findByMalId(jikanAnime.malId.toLong())
+                .defaultIfEmpty(jikanAnime.toAnimeDTO())
+        }
+
+    fun getSeasons() = jikanService.getSeason()
 }

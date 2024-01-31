@@ -1,21 +1,22 @@
 package fr.zakaoai.coldlibrarybackend.handler
 
 import fr.zakaoai.coldlibrarybackend.service.AnimeService
+import net.sandrohc.jikan.model.season.Season
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
-import reactor.kotlin.core.publisher.switchIfEmpty
 import reactor.kotlin.core.publisher.toMono
+import reactor.util.function.Tuples
 
 @Component
 class AnimeHandler(val animeService: AnimeService) {
 
     private val logger = LoggerFactory.getLogger(AnimeHandler::class.java)
 
-    fun getAllAnime(req: ServerRequest): Mono<ServerResponse> =
-        animeService.getAllAnime().collectList().flatMap(ServerResponse.ok()::bodyValue)
+    fun getAllAnime(req: ServerRequest): Mono<ServerResponse> = animeService.getAllAnime()
+        .collectList().flatMap(ServerResponse.ok()::bodyValue)
 
 
     fun findByMalId(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
@@ -41,12 +42,12 @@ class AnimeHandler(val animeService: AnimeService) {
     fun deleteAnime(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
         .toMono()
         .flatMap(animeService::deleteById)
-        .flatMap{ServerResponse.noContent().build()}
+        .flatMap { ServerResponse.noContent().build() }
 
 
     fun searchAnime(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("search").takeIf { it.length >= 3 }
         .toMono()
-        .flatMap{animeService.searchAnime(it).collectList()}
+        .flatMap { animeService.searchAnime(it).collectList() }
         .flatMap(ServerResponse.ok()::bodyValue)
         .switchIfEmpty(ServerResponse.badRequest().build())
 
@@ -74,6 +75,19 @@ class AnimeHandler(val animeService: AnimeService) {
     fun updateIsDownloading(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
         .toMono().zipWith(req.bodyToMono(Boolean::class.java))
         .flatMap { animeService.updateIsDownloading(it.t1, it.t2) }
+        .flatMap(ServerResponse.ok()::bodyValue)
+        .switchIfEmpty(ServerResponse.notFound().build())
+
+    fun searchAnimeBySeason(req: ServerRequest): Mono<ServerResponse> =
+        Tuples.of(req.pathVariable("year").toInt(), req.pathVariable("season"), req.pathVariable("page").toInt())
+            .toMono()
+            .flatMapMany { animeService.searchAnimeBySeason(it.t1, Season.valueOf(it.t2), it.t3) }
+            .collectList()
+            .flatMap(ServerResponse.ok()::bodyValue)
+            .switchIfEmpty(ServerResponse.notFound().build())
+
+    fun getSeasons(req: ServerRequest): Mono<ServerResponse> = animeService.getSeasons()
+        .collectList()
         .flatMap(ServerResponse.ok()::bodyValue)
         .switchIfEmpty(ServerResponse.notFound().build())
 }

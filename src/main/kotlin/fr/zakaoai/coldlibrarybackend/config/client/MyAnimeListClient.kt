@@ -1,5 +1,6 @@
-package fr.zakaoai.coldlibrarybackend.config.webclient
+package fr.zakaoai.coldlibrarybackend.config.client
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.client.ReactorResourceFactory
@@ -10,7 +11,10 @@ class MyAnimeListClient {
 
     val myAnimeListUrl = "https://api.myanimelist.net"
 
+    @Value("\${myanimelist.client-id}")
+    lateinit var clientId: String
+
     @Bean("MALWebClient")
     fun authWebClient(resourceFactory: ReactorResourceFactory) = WebClient.builder().baseUrl(myAnimeListUrl)
-        .defaultHeader("X-MAL-CLIENT-ID", "13542614067bb3cfdcaac71f933af8ea").build()
+        .defaultHeader("X-MAL-CLIENT-ID", clientId).build()
 }

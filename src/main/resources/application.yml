@@ -1,6 +1,11 @@
 auth0:
   audience: zakaoai6.ddns.net
   domain : zakaoai.eu.auth0.com
+  management:
+    domain: zakaoai.eu.auth0.com
+    clientId: WuB83Crd8srij5IyNMJtDCm7VPtQj5Yc
+    clientSecret: [ YOUR CLIENT SECRET HERE ]
+    audience: https://zakaoai.eu.auth0.com/api/v2/
 
 spring:
   security:
@@ -12,19 +17,15 @@ spring:
           issuer-uri: https://zakaoai.eu.auth0.com/
   liquibase:
     url: jdbc:postgresql://localhost:5432/projects?currentSchema=cold_library
-    user: 'postgres'
-    password: 'mysecretpassword'
+    user:
+    password:
     enabled: 'true'
   application:
     name: cold-library-backend
-  h2:
-    console:
-      path: /h2-ui
-      enabled: 'true'
   r2dbc:
     url: r2dbc:postgresql://localhost:5432/projects?currentSchema=cold_library
-    username: 'postgres'
-    password: 'mysecretpassword'
+    username:
+    password:
 security:
   basic:
     enabled: 'false'
@@ -37,3 +38,9 @@ logging:
         r2dbc: DEBUG
         security: TRACE
 
+myanimelist:
+  client-id: [ YOUR MYANIMELIST CLIENT ID HERE ]
+
+deluge:
+  host: [ YOUR DELUGE WEBUI HOST HERE]
+  password: [ YOUR DELUGE PASSWORD HERE]

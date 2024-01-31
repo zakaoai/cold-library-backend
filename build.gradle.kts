@@ -51,8 +51,6 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0")
 // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webflux-api
 	testImplementation("org.springdoc:springdoc-openapi-starter-webflux-api:2.3.0")
-	runtimeOnly("com.h2database:h2")
-	runtimeOnly("io.r2dbc:r2dbc-h2")
 	runtimeOnly("org.postgresql:postgresql")
 	runtimeOnly("org.postgresql:r2dbc-postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -71,6 +69,12 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.0")
 	implementation("net.sandrohc:reactive-jikan:2.2.0")
 	implementation("com.github.zakaoai:NyaaSi-API:1.0.1")
+
+	// https://mvnrepository.com/artifact/org.springframework.session/spring-session-core
+	implementation("org.springframework.session:spring-session-core")
+
+	implementation("com.auth0:auth0:2.10.0")
+
 
 }
 

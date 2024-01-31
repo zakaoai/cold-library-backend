@@ -17,9 +17,15 @@ class RouterConfiguration {
         animeTorrentHandler: AnimeTorrentHandler,
         animeEpisodeTorrentHandler: AnimeEpisodeTorrentHandler,
         delugeTorrentHandler: DelugeTorrentHandler,
-        myAnimeListHandler: MyAnimeListHandler
+        myAnimeListHandler: MyAnimeListHandler,
+        userHandler: UserHandler,
+        requestHandler: RequestHandler
     ) =
         router {
+            "seasons".nest {
+                GET("", animeHandler::getSeasons)
+                GET("{year}/{season}/{page}", animeHandler::searchAnimeBySeason)
+            }
             "/anime".nest {
                 GET("", animeHandler::getAllAnime)
                 GET("{id}", animeHandler::findByMalId)
@@ -62,6 +68,16 @@ class RouterConfiguration {
             }
             "user".nest {
                 GET("animelist", myAnimeListHandler::getUserAnimeList)
+                GET("", userHandler::getCurrentUser)
+                GET("all",userHandler::getAllUser)
+                PUT("malUsername", userHandler::updateCurrentUserMalUsername)
+            }
+            "request".nest {
+                POST("",requestHandler::createRequest)
+                GET("me", requestHandler::getMyRequest)
+                GET("assigned", requestHandler::getMyAssignedRequest)
+                GET("all",requestHandler::getAllRequest)
+                POST("{id}",requestHandler::updateRequest)
             }
         }
 }

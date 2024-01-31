@@ -4,6 +4,8 @@ package fr.zakaoai.coldlibrarybackend.infrastructure.implementation
 import fr.zakaoai.coldlibrarybackend.infrastructure.JikanApiService
 import net.sandrohc.jikan.Jikan
 import net.sandrohc.jikan.model.anime.AnimeEpisode
+import net.sandrohc.jikan.model.season.Season
+import net.sandrohc.jikan.model.season.SeasonEntry
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -38,5 +40,13 @@ class JikanAPIServiceImpl(private val jikan: Jikan) : JikanApiService {
     @Cacheable("jikanAnimesEpisode")
     override fun getAnimeEpisodeByAnimeIdAndEpisodeNumber(malId: Long, episodeNumber: Int): Mono<AnimeEpisode> =
         jikan.query().anime().episode(malId.toInt(), episodeNumber).execute()
+
+    override fun getAnimeBySeason(year: Int, season: Season, page: Int?) = jikan.query().season()[year, season]
+        .page(page)
+        .execute()
+
+    @Cacheable("jikanSeasonList")
+    override fun getSeason(): Flux<SeasonEntry> = jikan.query().season().list().execute()
+
 
 }
