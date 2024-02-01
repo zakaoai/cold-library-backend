@@ -11,7 +11,7 @@ import reactor.kotlin.core.publisher.toMono
 import reactor.util.function.Tuples
 
 @Component
-class AnimeHandler(val animeService: AnimeService) {
+class AnimeHandler(val animeService: AnimeService) : HandlerLogger() {
 
     private val logger = LoggerFactory.getLogger(AnimeHandler::class.java)
 

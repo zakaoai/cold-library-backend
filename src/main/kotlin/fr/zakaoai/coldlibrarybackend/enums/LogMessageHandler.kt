@@ -1,6 +1,35 @@
 package fr.zakaoai.coldlibrarybackend.enums
 
 enum class LogMessageHandler(val message: String) {
-    LOG_GET_ALL_LOGS("Lecture des logs"),
-    LOG_GET_USER_LOGS("Lecture des logs de l'utilisateur %s")
+    ANIME_EPISODE_FIND_BY_MAL_ID("AnimeEpisodeHandler:findByMalId - Lecture des épisodes de l'anime %s"),
+    ANIME_EPISODE_FIND_BY_MAL_ID_AND_EPISODE_NUMBER("AnimeEpisodeHandler:findByMalIdAndEpisodeNumber - Lecture de l'épisode %s de l'anime %s"),
+    ANIME_EPISODE_DELETE_BY_MAL_ID("AnimeEpisodeHandler:deleteByMalId - Supression des épisodes de l'anime %s"),
+    ANIME_EPISODE_DELETE_BY_MAL_ID_AND_EPISODE_NUMBER("AnimeEpisodeHandler:deleteByMalIdAndEpisodeNumber - Supression de l'épisode %s de l'anime %s"),
+    ANIME_EPISODE_TORRENT_FIND_BY_MAL_ID("AnimeEpisodeTorrentHandler:findAnimeEpisodeTorrentByMalId -"),
+    ANIME_EPISODE_TORRENT_SEARCH_ALTERNATE("AnimeEpisodeTorrentHandler:searchAlternateEpisodeTorrent -"),
+    ANIME_EPISODE_TORRENT_UPDATE("AnimeEpisodeTorrentHandler:updateEpisodeTorrent -"),
+    ANIME_EPISODE_TORRENT_REPLACE("AnimeEpisodeTorrentHandler:replaceEpisodeTorrent -"),
+    ANIME_EPISODE_TORRENT_DELETE("AnimeEpisodeTorrentHandler:deleteEpisodeTorrent -"),
+    ANIME_EPISODE_TORRENT_SCAN_ALL("AnimeEpisodeTorrentHandler:scanEpisodeTorrent -"),
+    ANIME_EPISODE_TORRENT_SCAN_PACKAGE("AnimeEpisodeTorrentHandler:scanPackageTorrent -"),
+    ANIME_EPISODE_TORRENT_SCAN_NEXT("AnimeEpisodeTorrentHandler:scanNextTorrent -"),
+    ANIME_GET_ALL("AnimeHandler:getAllAnime -"),
+    ANIME_FIND_BY_MAL_ID("AnimeHandler:findByMalId -"),
+    ANIME_UPDATE_BY_MAL_ID("AnimeHandler:updateByMalId -"),
+    ANIME_SAVE("AnimeHandler:saveAnime -"),
+    ANIME_DELETE("AnimeHandler:deleteAnime -"),
+    ANIME_SEARCH("AnimeHandler:searchAnime -"),
+    ANIME_UPDATE_STORAGE_STATE("AnimeHandler:updateStorageState -"),
+    ANIME_UPDATE_LAST_AVAIBLE_EPISODE("AnimeHandler:updateLastAvaibleEpisode -"),
+    ANIME_UPDATE_IS_COMPLETE("AnimeHandler:updateIsComplete -"),
+    ANIME_UPDATE_IS_DOWNLOADING("AnimeHandler:updateIsDownloading -"),
+    ANIME_SEARCH_BY_SEASON("AnimeHandler:searchAnimeBySeason -"),
+    ANIME_GET_SEASONS("AnimeHandler:getSeasons -"),
+    ANIME_TORRENT_GET_BY_MAL_ID("AnimeTorrentHandler:getTrackedAnime -"),
+    ANIME_TORRENT_GET_ALL("AnimeTorrentHandler:getAllTrackedAnime -"),
+    ANIME_TORRENT_UPDATE_BY_MAL_ID("AnimeTorrentHandler:updateTrackedAnime -"),
+    ANIME_TORRENT_DELETE_BY_MAL_ID("AnimeTorrentHandler:deleteTrackedAnime -"),
+    ANIME_TORRENT_CREATE_BY_MAL_ID("AnimeTorrentHandler:createTrackedAnime -"),
+    LOG_GET_ALL_LOGS("LogHandler:getAllLogs - Lecture des logs"),
+    LOG_GET_USER_LOGS("LogHandler:getLogOfUser - Lecture des logs de l'utilisateur %s")
 }

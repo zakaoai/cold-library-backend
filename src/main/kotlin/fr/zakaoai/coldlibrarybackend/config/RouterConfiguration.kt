@@ -56,7 +56,7 @@ class RouterConfiguration {
 
             }
             "/torrent/{id}/episodes".nest {
-                GET("", animeEpisodeTorrentHandler::getAnimeEpisodeTorrents)
+                GET("", animeEpisodeTorrentHandler::findAnimeEpisodeTorrentByMalId)
                 GET("{episodeNumber}/alternate", animeEpisodeTorrentHandler::searchAlternateEpisodeTorrent)
                 GET("{episodeNumber}/update", animeEpisodeTorrentHandler::updateEpisodeTorrent)
                 PUT("{episodeNumber}", animeEpisodeTorrentHandler::replaceEpisodeTorrent)

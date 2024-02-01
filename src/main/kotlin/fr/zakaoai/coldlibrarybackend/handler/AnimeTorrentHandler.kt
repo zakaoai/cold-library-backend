@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 
 @Component
-class AnimeTorrentHandler(val animeTorrentService: AnimeTorrentService) {
+class AnimeTorrentHandler(val animeTorrentService: AnimeTorrentService) : HandlerLogger() {
 
 
     fun getTrackedAnime(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()

@@ -11,17 +11,19 @@ import reactor.kotlin.core.publisher.toMono
 @Component
 class AnimeEpisodeTorrentHandler(
     val animeEpisodeTorrentService: AnimeEpisodeTorrentService
-) {
+) : HandlerLogger() {
 
-    fun getAnimeEpisodeTorrents(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
+    fun findAnimeEpisodeTorrentByMalId(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
         .toMono()
-        .flatMap { animeEpisodeTorrentService.findAnimeEpisodeTorrentByMalId(it).collectList() }
+        .flatMapMany(animeEpisodeTorrentService::findAnimeEpisodeTorrentByMalId)
+        .collectList()
         .flatMap(ServerResponse.ok()::bodyValue)
 
 
     fun searchAlternateEpisodeTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
         .toMono().zipWith(req.pathVariable("episodeNumber").toInt().toMono())
-        .flatMap { animeEpisodeTorrentService.searchAlternateEpisodeTorrent(it.t1, it.t2).collectList() }
+        .flatMapMany { animeEpisodeTorrentService.searchAlternateEpisodeTorrent(it.t1, it.t2) }
+        .collectList()
         .flatMap(ServerResponse.ok()::bodyValue)
 
 
