@@ -47,7 +47,8 @@ class AnimeHandler(val animeService: AnimeService) {
 
     fun searchAnime(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("search").takeIf { it.length >= 3 }
         .toMono()
-        .flatMap { animeService.searchAnime(it).collectList() }
+        .flatMapMany(animeService::searchAnime)
+        .collectList()
         .flatMap(ServerResponse.ok()::bodyValue)
         .switchIfEmpty(ServerResponse.badRequest().build())
 

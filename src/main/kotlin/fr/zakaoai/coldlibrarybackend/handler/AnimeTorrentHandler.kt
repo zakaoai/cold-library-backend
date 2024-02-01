@@ -19,8 +19,9 @@ class AnimeTorrentHandler(val animeTorrentService: AnimeTorrentService) {
         .switchIfEmpty(ServerResponse.notFound().build())
 
 
-    fun getAllTrackedAnime(req: ServerRequest): Mono<ServerResponse> =
-        animeTorrentService.getAllTrackedAnime().collectList().flatMap(ServerResponse.ok()::bodyValue)
+    fun getAllTrackedAnime(req: ServerRequest): Mono<ServerResponse> = animeTorrentService.getAllTrackedAnime()
+        .collectList()
+        .flatMap(ServerResponse.ok()::bodyValue)
 
 
     fun updateTrackedAnime(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()

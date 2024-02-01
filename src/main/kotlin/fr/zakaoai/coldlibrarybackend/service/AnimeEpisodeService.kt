@@ -37,8 +37,9 @@ class AnimeEpisodeService(
             }
                 .flatMap(animeEpisodeRepository::save)
             )
+            .map(AnimeEpisode::toAnimeEpisodeDTO)
 
-    fun createAnimeEpisodeFromListOfEpisodeNumber(malId: Long, episodeNumbers: List<Int>) =
+    protected fun createAnimeEpisodeFromListOfEpisodeNumber(malId: Long, episodeNumbers: List<Int>) =
         jikanAPIService.getAnimeEpisodesFromEpisodeByAnimeIdAndEpisodeNumber(malId, episodeNumbers.first())
             .filter { episodeNumbers.contains(it.malId) }
             .map { it.toAnimeEpisode(malId) }
@@ -76,6 +77,7 @@ class AnimeEpisodeService(
                 } else
                     Mono.just(it.t1)
             }.flatMapMany { Flux.fromIterable(it) }
+            .map(AnimeEpisode::toAnimeEpisodeDTO)
 
 
     fun deleteEpisodeByMalId(malId: Long) = animeEpisodeRepository.deleteByMalId(malId)

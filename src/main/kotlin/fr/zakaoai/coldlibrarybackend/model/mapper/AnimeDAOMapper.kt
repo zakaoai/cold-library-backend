@@ -7,6 +7,20 @@ import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO
 
 fun Anime.toAnimeInServer() = AnimeInServer( malId, StorageState.FLUX_FROID, false, episodes != 0, episodes?.or(0) ?: 0)
 
+fun Anime.toAnimeDTO() = AnimeDTO(
+    malId,
+    malUrl,
+    malImg,
+    title,
+    type,
+    episodes,
+    status,
+    score,
+    season,
+    year,
+    broadcast,
+    rank)
+
 fun Anime.toAnimeDTO(animeInServer: AnimeInServer) = AnimeDTO(
     malId,
     malUrl,
