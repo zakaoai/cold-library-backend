@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 
 @Component
-open class HandlerLogger() {
+open class HandlerUtils() {
 
     @Autowired
     lateinit var logService: LogService
@@ -16,4 +16,7 @@ open class HandlerLogger() {
         req.session().map { it.getAttribute<User>("user") }
             .flatMap { logService.addLog(message, it!!) }
             .subscribe()
+
+    fun malId(req: ServerRequest) = req.pathVariable("malId").toLong()
+    fun episodeNumber(req: ServerRequest) = req.pathVariable("episodeNumber").toInt()
 }

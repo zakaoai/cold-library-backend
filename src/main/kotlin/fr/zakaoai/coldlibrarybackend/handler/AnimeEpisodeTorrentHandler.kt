@@ -1,75 +1,138 @@
 package fr.zakaoai.coldlibrarybackend.handler
 
+import fr.zakaoai.coldlibrarybackend.enums.LogMessageHandler
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeTorrentDTO
 import fr.zakaoai.coldlibrarybackend.service.AnimeEpisodeTorrentService
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
-import reactor.kotlin.core.publisher.toMono
 
 @Component
 class AnimeEpisodeTorrentHandler(
     val animeEpisodeTorrentService: AnimeEpisodeTorrentService
-) : HandlerLogger() {
+) : HandlerUtils() {
 
-    fun findAnimeEpisodeTorrentByMalId(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
-        .toMono()
-        .flatMapMany(animeEpisodeTorrentService::findAnimeEpisodeTorrentByMalId)
-        .collectList()
-        .flatMap(ServerResponse.ok()::bodyValue)
-
-
-    fun searchAlternateEpisodeTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
-        .toMono().zipWith(req.pathVariable("episodeNumber").toInt().toMono())
-        .flatMapMany { animeEpisodeTorrentService.searchAlternateEpisodeTorrent(it.t1, it.t2) }
-        .collectList()
-        .flatMap(ServerResponse.ok()::bodyValue)
-
-
-    fun updateEpisodeTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
-        .toMono().zipWith(req.pathVariable("episodeNumber").toInt().toMono())
-        .flatMap { animeEpisodeTorrentService.updateEpisodeTorrent(it.t1, it.t2) }
-        .flatMap(ServerResponse.ok()::bodyValue)
-
-
-    fun replaceEpisodeTorrent(req: ServerRequest): Mono<ServerResponse> =
-        req.bodyToMono(AnimeEpisodeTorrentDTO::class.java)
-            .flatMap {
-                animeEpisodeTorrentService.replaceEpisodeTorrent(
-                    req.pathVariable("id").toLong(),
-                    req.pathVariable("episodeNumber").toInt(),
-                    it
+    fun findByMalId(req: ServerRequest): Mono<ServerResponse> =
+        animeEpisodeTorrentService.findAnimeEpisodeTorrentByMalId(malId(req))
+            .collectList()
+            .doOnNext {
+                logRequest(
+                    req,
+                    LogMessageHandler.ANIME_EPISODE_TORRENT_FIND_BY_MAL_ID.message.format(malId(req))
                 )
             }
             .flatMap(ServerResponse.ok()::bodyValue)
 
 
-    fun deleteEpisodeTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
-        .toMono().zipWith(req.pathVariable("episodeNumber").toInt().toMono())
-        .flatMap { animeEpisodeTorrentService.deleteEpisodeTorrent(it.t1, it.t2) }
-        .flatMap { ServerResponse.ok().build() }
+    fun searchAlternate(req: ServerRequest): Mono<ServerResponse> =
+        animeEpisodeTorrentService.searchAlternateEpisodeTorrent(
+            malId(req),
+            episodeNumber(req)
+        )
+            .collectList()
+            .doOnNext {
+                logRequest(
+                    req,
+                    LogMessageHandler.ANIME_EPISODE_TORRENT_SEARCH_ALTERNATE.message.format(
+                        malId(req),
+                        episodeNumber(req)
+                    )
+                )
+            }
+            .flatMap(ServerResponse.ok()::bodyValue)
 
 
-    fun scanEpisodeTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
-        .toMono()
-        .flatMap { animeEpisodeTorrentService.scanEpisodeTorrent(it).collectList() }
-        .defaultIfEmpty(emptyList<AnimeEpisodeTorrentDTO>())
-        .flatMap(ServerResponse.ok()::bodyValue)
+    fun update(req: ServerRequest): Mono<ServerResponse> =
+        animeEpisodeTorrentService.updateEpisodeTorrent(
+            malId(req),
+            episodeNumber(req)
+        )
+            .doOnNext {
+                logRequest(
+                    req,
+                    LogMessageHandler.ANIME_EPISODE_TORRENT_UPDATE.message.format(
+                        malId(req),
+                        episodeNumber(req)
+                    )
+                )
+            }
+            .flatMap(ServerResponse.ok()::bodyValue)
 
 
-    fun scanPackageTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
-        .toMono()
-        .flatMap(animeEpisodeTorrentService::scanPackageTorrent)
-        .flatMap(ServerResponse.ok()::bodyValue)
-        .switchIfEmpty(ServerResponse.notFound().build())
+    fun replace(req: ServerRequest): Mono<ServerResponse> =
+        req.bodyToMono(AnimeEpisodeTorrentDTO::class.java)
+            .flatMap {
+                animeEpisodeTorrentService.replaceEpisodeTorrent(
+                    malId(req),
+                    episodeNumber(req),
+                    it
+                )
+            }
+            .doOnNext {
+                logRequest(
+                    req,
+                    LogMessageHandler.ANIME_EPISODE_TORRENT_REPLACE.message.format(
+                        malId(req),
+                        episodeNumber(req)
+                    )
+                )
+            }
+            .flatMap(ServerResponse.ok()::bodyValue)
 
 
-    fun scanNextTorrent(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("id").toLong()
-        .toMono()
-        .flatMap(animeEpisodeTorrentService::scanNextEpisode)
-        .flatMap(ServerResponse.ok()::bodyValue)
-        .switchIfEmpty(ServerResponse.notFound().build())
+    fun delete(req: ServerRequest): Mono<ServerResponse> =
+        animeEpisodeTorrentService.deleteEpisodeTorrent(
+            malId(req),
+            episodeNumber(req)
+        )
+            .doOnNext {
+                logRequest(
+                    req,
+                    LogMessageHandler.ANIME_EPISODE_TORRENT_DELETE.message.format(
+                        malId(req),
+                        episodeNumber(req)
+                    )
+                )
+            }
+            .flatMap { ServerResponse.ok().build() }
+
+
+    fun scanAll(req: ServerRequest): Mono<ServerResponse> =
+        animeEpisodeTorrentService.scanEpisodeTorrent(malId(req))
+            .collectList()
+            .defaultIfEmpty(emptyList<AnimeEpisodeTorrentDTO>())
+            .doOnNext {
+                logRequest(
+                    req,
+                    LogMessageHandler.ANIME_EPISODE_TORRENT_SCAN_ALL.message.format(malId(req))
+                )
+            }
+            .flatMap(ServerResponse.ok()::bodyValue)
+
+
+    fun scanPackage(req: ServerRequest): Mono<ServerResponse> =
+        animeEpisodeTorrentService.scanPackageTorrent(malId(req))
+            .doOnNext {
+                logRequest(
+                    req,
+                    LogMessageHandler.ANIME_EPISODE_TORRENT_SCAN_PACKAGE.message.format(malId(req))
+                )
+            }
+            .flatMap(ServerResponse.ok()::bodyValue)
+            .switchIfEmpty(ServerResponse.notFound().build())
+
+
+    fun scanNext(req: ServerRequest): Mono<ServerResponse> =
+        animeEpisodeTorrentService.scanNextEpisode(malId(req))
+            .doOnNext {
+                logRequest(
+                    req,
+                    LogMessageHandler.ANIME_EPISODE_TORRENT_SCAN_NEXT.message.format(malId(req))
+                )
+            }
+            .flatMap(ServerResponse.ok()::bodyValue)
+            .switchIfEmpty(ServerResponse.notFound().build())
 
 
 }
