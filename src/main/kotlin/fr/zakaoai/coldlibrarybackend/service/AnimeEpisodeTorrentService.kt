@@ -88,7 +88,7 @@ class AnimeEpisodeTorrentService(
                         animeEpisode.episodeNumber + animeTorrent.deltaEpisode,
                         animeTorrent.searchWords
                     ).next()
-                        .map { it.toAnimeEpisodeTorrent(malId, animeEpisode.id!!) }
+                        .map { it.toAnimeEpisodeTorrent(malId, animeEpisode.id) }
                         .flatMap(animeEpisodeTorrentRepository::save)
                         .map { it.toAnimeEpisodeTorrentDTO(animeEpisode.episodeNumber) }
                 }
@@ -120,7 +120,7 @@ class AnimeEpisodeTorrentService(
             }
             .next()
             .zipWith(animeEpisodeService.findOrcreateAnimeEpisode(malId, episodeNumber))
-            .map { it.t1.toAnimeEpisodeTorrent(malId, it.t2.id!!) }
+            .map { it.t1.toAnimeEpisodeTorrent(malId, it.t2.id) }
             .flatMap(animeEpisodeTorrentRepository::save)
             .map { it.toAnimeEpisodeTorrentDTO(episodeNumber) }
     }

@@ -13,7 +13,8 @@ open class HandlerUtils() {
     lateinit var logService: LogService
 
     fun logRequest(req: ServerRequest, message: String) =
-        req.session().map { it.getAttribute<User>("user") }
+        req.session()
+            .mapNotNull { it.getAttribute<User>("user") }
             .flatMap { logService.addLog(message, it!!) }
             .subscribe()
 

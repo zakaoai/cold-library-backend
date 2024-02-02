@@ -54,7 +54,7 @@ class SecurityConfig {
         authorizeExchange {
             authorize("/anime/**", hasAuthority("admin"))
             authorize("/torrent/**", hasAuthority("admin"))
-            authorize(anyExchange, permitAll)
+            authorize(anyExchange, hasAuthority("admin"))
         }
         oauth2ResourceServer {
             jwt {

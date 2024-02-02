@@ -1,9 +1,12 @@
 package fr.zakaoai.coldlibrarybackend.service
 
+import fr.zakaoai.coldlibrarybackend.infrastructure.JikanApiService
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeEpisodeRepository
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeInServerRepository
 
-import fr.zakaoai.coldlibrarybackend.infrastructure.JikanAPIService
+
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeRepository
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeTorrentRepository
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -15,15 +18,14 @@ import reactor.test.StepVerifier
 
 class AnimeServiceTest{
 
-    @MockK
-    lateinit var repo: AnimeRepository
-    @MockK
-    lateinit var episodeRepo: AnimeEpisodeRepository
-    @MockK
-    lateinit var jikanService: JikanAPIService
-    @MockK
-    lateinit var trackedAnimeTorrentRepository: TrackedAnimeTorrentRepository
 
+
+    @MockK
+    lateinit var animeInServerRepository: AnimeInServerRepository
+    @MockK
+    lateinit var animeRepository: AnimeRepository
+    @MockK
+    lateinit var jikanService: JikanApiService
 
     @InjectMockKs
     lateinit var animeService: AnimeService
@@ -34,7 +36,7 @@ class AnimeServiceTest{
     @Test
     fun getListRdq_shouldReturnEmptyList_WhenRdqRepositoryReturnEmptyList(){
 
-        every { repo.findAll() } returns Flux.empty()
+        every { animeInServerRepository.findAllWithAnimeInformation() } returns Flux.empty()
 
 
         val result = animeService.getAllAnime()
