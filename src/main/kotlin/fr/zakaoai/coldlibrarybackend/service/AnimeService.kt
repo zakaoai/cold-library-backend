@@ -5,19 +5,22 @@ import fr.zakaoai.coldlibrarybackend.enums.StorageState
 import fr.zakaoai.coldlibrarybackend.infrastructure.JikanApiService
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.Anime
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeInServer
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeTorrent
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeInServerRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeRepository
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeTorrentRepository
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeInServerDTO
 import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeDTO
 import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeInServer
 import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeInServerDTO
 import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeModel
-import net.sandrohc.jikan.model.anime.Anime as JikanAnime
 import net.sandrohc.jikan.model.season.Season
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import java.time.DayOfWeek
+import net.sandrohc.jikan.model.anime.Anime as JikanAnime
 
 
 @Service
@@ -25,14 +28,14 @@ class AnimeService(
     private val animeInServerRepository: AnimeInServerRepository,
     private val animeRepository: AnimeRepository,
     private val jikanService: JikanApiService,
-
-    ) {
+    private val animeTorrentRepository: AnimeTorrentRepository
+) {
 
     fun getAllAnime(): Flux<AnimeDTO> = animeInServerRepository.findAllWithAnimeInformation()
 
     fun findAnimeAndSave(malId: Long) = animeRepository.findById(malId).switchIfEmpty(jikanService.getAnimeById(malId)
         .map(JikanAnime::toAnimeModel)
-        .map{it.copy(isNew = true)}
+        .map { it.copy(isNew = true) }
         .flatMap(animeRepository::save))
 
     fun findAnimeInServerAndSave(malId: Long): Mono<AnimeDTO> = findAnimeAndSave(malId)
@@ -88,6 +91,15 @@ class AnimeService(
 
     fun updateIsDownloading(malId: Long, isDownloading: Boolean): Mono<AnimeInServerDTO> =
         animeInServerRepository.findById(malId)
+            .doOnNext {
+                if (isDownloading) {
+                    animeTorrentRepository.findById(malId)
+                        .switchIfEmpty(
+                            animeRepository.findById(malId)
+                                .map { AnimeTorrent(malId, 0, it.title, DayOfWeek.MONDAY, 0, "/${it.title}", true) }
+                                .flatMap(animeTorrentRepository::save)).subscribe()
+                }
+            }
             .map { it.copy(isDownloading = isDownloading) }
             .flatMap(animeInServerRepository::save)
             .map(AnimeInServer::toAnimeInServerDTO)

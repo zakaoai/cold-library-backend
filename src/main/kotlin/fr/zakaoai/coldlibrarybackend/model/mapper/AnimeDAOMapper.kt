@@ -35,8 +35,8 @@ fun Anime.toAnimeDTO(animeInServer: AnimeInServer) = AnimeDTO(
     broadcast,
     rank,
     animeInServer.storageState,
-    animeInServer.isComplete,
     animeInServer.isDownloading,
+    animeInServer.isComplete,
     animeInServer.lastAvaibleEpisode,
     animeInServer.addedOnServer!!,
 )
