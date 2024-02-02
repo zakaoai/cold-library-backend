@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 
 @Component
-open class HandlerUtils() {
+class HandlerUtils {
 
     @Autowired
     lateinit var logService: LogService

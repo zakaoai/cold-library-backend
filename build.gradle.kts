@@ -68,7 +68,7 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-kotlin
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.0")
 	implementation("net.sandrohc:reactive-jikan:2.2.0")
-	implementation("com.github.zakaoai:NyaaSi-API:1.0.1")
+	implementation("com.github.zakaoai:NyaaSi-API:1.0.2")
 
 	// https://mvnrepository.com/artifact/org.springframework.session/spring-session-core
 	implementation("org.springframework.session:spring-session-core")

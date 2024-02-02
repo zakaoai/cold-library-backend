@@ -23,12 +23,12 @@ class Auth0Client {
     lateinit var audience: String
 
     @Bean
-    fun auth0AuthenticationApi() = AuthAPI.newBuilder(domain, clientId, clientSecret).build()
+    fun auth0AuthenticationApi() : AuthAPI = AuthAPI.newBuilder(domain, clientId, clientSecret).build()
 
     @Bean
-    fun apiTokenRequest(authAPI: AuthAPI) = authAPI.requestToken(audience)
+    fun apiTokenRequest(authAPI: AuthAPI): TokenRequest = authAPI.requestToken(audience)
 
     @Bean
-    fun auth0ManagementApi(tokenRequest: TokenRequest) = ManagementAPI.newBuilder(domain, tokenRequest.execute().body.accessToken).build()
+    fun auth0ManagementApi(tokenRequest: TokenRequest) : ManagementAPI = ManagementAPI.newBuilder(domain, tokenRequest.execute().body.accessToken).build()
 
 }

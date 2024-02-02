@@ -3,6 +3,7 @@ package fr.zakaoai.coldlibrarybackend.infrastructure.implementation
 
 import fr.zakaoai.coldlibrarybackend.infrastructure.JikanApiService
 import net.sandrohc.jikan.Jikan
+import net.sandrohc.jikan.model.anime.Anime
 import net.sandrohc.jikan.model.anime.AnimeEpisode
 import net.sandrohc.jikan.model.season.Season
 import net.sandrohc.jikan.model.season.SeasonEntry
@@ -25,7 +26,7 @@ class JikanAPIServiceImpl(private val jikan: Jikan) : JikanApiService {
         .cache()
 
     @Cacheable("jikanAnimes")
-    override fun getAnimeById(id: Long) = jikan.query().anime().get(id.toInt()).execute()
+    override fun getAnimeById(id: Long): Mono<Anime> = jikan.query().anime().get(id.toInt()).execute()
 
     @Cacheable("jikanAnimesEpisodes")
     override fun getAnimeEpisodesPage(id: Long): Flux<AnimeEpisode> {
@@ -41,9 +42,10 @@ class JikanAPIServiceImpl(private val jikan: Jikan) : JikanApiService {
     override fun getAnimeEpisodeByAnimeIdAndEpisodeNumber(malId: Long, episodeNumber: Int): Mono<AnimeEpisode> =
         jikan.query().anime().episode(malId.toInt(), episodeNumber).execute()
 
-    override fun getAnimeBySeason(year: Int, season: Season, page: Int?) = jikan.query().season()[year, season]
-        .page(page)
-        .execute()
+    override fun getAnimeBySeason(year: Int, season: Season, page: Int?): Flux<Anime> =
+        jikan.query().season()[year, season]
+            .page(page)
+            .execute()
 
     @Cacheable("jikanSeasonList")
     override fun getSeason(): Flux<SeasonEntry> = jikan.query().season().list().execute()
