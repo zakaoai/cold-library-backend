@@ -62,7 +62,7 @@ class AnimeEpisodeService(
             .zipWith(animeInServerRepository.findById(malId).map(AnimeInServer::lastAvaibleEpisode))
             .flatMap {
                 val listOfEpisodeNumber =
-                    (episodeNumber..it.t2).filter { number -> it.t1.none { animeEpisode -> animeEpisode.episodeNumber == number } }
+                    (episodeNumber+1..it.t2).filter { number -> it.t1.none { animeEpisode -> animeEpisode.episodeNumber == number } }
                 if (listOfEpisodeNumber.isNotEmpty()) {
                     createAnimeEpisodeFromListOfEpisodeNumber(malId, listOfEpisodeNumber)
                         .collectList()
