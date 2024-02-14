@@ -4,7 +4,7 @@ import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeEpisodeTorr
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeTorrentDTO
 
 fun AnimeEpisodeTorrent.toAnimeEpisodeTorrentDTO(episodeNumber: Int) = AnimeEpisodeTorrentDTO(
-    id!!,
+    id,
     title,
     date,
     torrentLink,

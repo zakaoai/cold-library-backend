@@ -4,7 +4,7 @@ import com.auth0.json.auth.TokenHolder
 import com.auth0.net.Response
 import com.auth0.net.TokenRequest
 import com.ninjasquad.springmockk.MockkBean
-import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO
+import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeWithServerInformationDTO
 import fr.zakaoai.coldlibrarybackend.service.AnimeService
 import io.mockk.every
 import io.mockk.mockk
@@ -61,7 +61,7 @@ class AnimeHandlerTest {
     @WithMockUser
     fun getAllAnime_ShouldReturnEmptyListOfAnime_WhenAnimeServiceReturnEmptyListOfAnime() {
 
-        every { animeService.getAllAnime() } returns emptyList<AnimeDTO>().toFlux()
+        every { animeService.getAllAnime() } returns emptyList<AnimeWithServerInformationDTO>().toFlux()
 
 
         webTestClient.get()
