@@ -1,0 +1,15 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "8000:5000"
+    env_file:
+      - .env.back
+  postgresql:
+    image: "postgres:16-alpine"
+    env_file:
+      - .env.db
+    environment:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+      POSTGRES_DB:
