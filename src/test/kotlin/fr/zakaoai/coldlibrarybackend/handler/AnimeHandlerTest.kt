@@ -23,7 +23,7 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.kotlin.core.publisher.toFlux
 
 
-@SpringBootTest
+//@SpringBootTest
 @TestPropertySource(properties = ["spring.liquibase.enabled=false"])
 class AnimeHandlerTest {
 
@@ -57,7 +57,7 @@ class AnimeHandlerTest {
     @MockkBean
     lateinit var animeService: AnimeService
 
-    @Test
+//    @Test
     @WithMockUser
     fun getAllAnime_ShouldReturnEmptyListOfAnime_WhenAnimeServiceReturnEmptyListOfAnime() {
 

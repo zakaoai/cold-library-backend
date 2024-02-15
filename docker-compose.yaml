@@ -1,15 +1,12 @@
 services:
-  backend:
+  app-backend:
     build: .
     ports:
-      - "8000:5000"
+      - "9000:9000"
     env_file:
       - .env.back
+      - .env.db
   postgresql:
     image: "postgres:16-alpine"
     env_file:
       - .env.db
-    environment:
-      POSTGRES_USER:
-      POSTGRES_PASSWORD:
-      POSTGRES_DB:

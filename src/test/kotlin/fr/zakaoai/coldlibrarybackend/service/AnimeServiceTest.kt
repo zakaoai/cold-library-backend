@@ -25,6 +25,8 @@ class AnimeServiceTest{
     @MockK
     lateinit var animeRepository: AnimeRepository
     @MockK
+    lateinit var animeTorrentRepository: AnimeTorrentRepository
+    @MockK
     lateinit var jikanService: JikanApiService
 
     @InjectMockKs
