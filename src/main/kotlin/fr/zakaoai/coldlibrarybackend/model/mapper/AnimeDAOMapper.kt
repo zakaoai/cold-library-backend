@@ -6,7 +6,7 @@ import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeInServer
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeWithServerInformationDTO
 
-fun Anime.toAnimeInServer() = AnimeInServer( malId, StorageState.FLUX_FROID, false, episodes != 0, episodes?.or(0) ?: 0)
+fun Anime.toAnimeInServer() = AnimeInServer(malId, StorageState.FLUX_FROID, false, episodes != 0, episodes?.or(0) ?: 0)
 
 fun Anime.toAnimeDTO() = AnimeDTO(
     malId,
@@ -20,7 +20,8 @@ fun Anime.toAnimeDTO() = AnimeDTO(
     season,
     year,
     broadcast,
-    rank)
+    rank
+)
 
 fun Anime.toAnimeWithServerInformationDTO(animeInServer: AnimeInServer) = AnimeWithServerInformationDTO(
     malId,

@@ -13,5 +13,5 @@ class LogService(val logRepository: LogRepository) {
 
     fun getLogs() = logRepository.findAllWithUserInformation()
 
-    fun getLogOfUser( userId: String) = logRepository.findByUserId(userId)
+    fun getLogOfUser(userId: String) = logRepository.findByUserId(userId)
 }

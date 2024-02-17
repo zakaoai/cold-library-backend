@@ -11,9 +11,9 @@ import reactor.core.publisher.Mono
 interface AnimeEpisodeTorrentRepository : ReactiveCrudRepository<AnimeEpisodeTorrent, Long> {
 
     @Query("SELECT aet.*, ae.episode_number FROM cold_library.\"AnimeEpisodeTorrent\" aet INNER JOIN cold_library.\"AnimeEpisode\" ae ON aet.id_anime_episode=ae.id WHERE ae.\"mal_id\" = :malId")
-    fun findByMalIdWithEpisodeNumber(@Param("malId") malId: Long,): Flux<AnimeEpisodeTorrentDTO>
+    fun findByMalIdWithEpisodeNumber(@Param("malId") malId: Long): Flux<AnimeEpisodeTorrentDTO>
 
-    fun findByMalId(malId: Long,): Flux<AnimeEpisodeTorrent>
+    fun findByMalId(malId: Long): Flux<AnimeEpisodeTorrent>
 
     @Query("SELECT aet.* FROM cold_library.\"AnimeEpisodeTorrent\" aet INNER JOIN cold_library.\"AnimeEpisode\" ae ON aet.id_anime_episode=ae.id WHERE ae.\"mal_id\" = :malId AND ae.\"episode_number\" = :episodeNumber")
     fun findByMalIdAndEpisodeNumber(

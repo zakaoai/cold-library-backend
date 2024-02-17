@@ -9,7 +9,7 @@ interface DelugeTorrentClient {
 
     fun downloadTorrent(torrentFile: String, downloadLocation: String): Mono<AddTorrentResponse>
 
-    fun getDownloadTorrentStatus(hash: String) : Mono<GetTorrentStatusResponse>
+    fun getDownloadTorrentStatus(hash: String): Mono<GetTorrentStatusResponse>
 
     fun getMultipleDownloadTorrentStatus(hashs: List<String>): Mono<GetMultipleTorrentStatusResponse>
 }

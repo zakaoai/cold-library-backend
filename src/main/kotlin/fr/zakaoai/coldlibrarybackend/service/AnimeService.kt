@@ -9,8 +9,8 @@ import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeTorrent
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeInServerRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeTorrentRepository
-import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeWithServerInformationDTO
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeInServerDTO
+import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeWithServerInformationDTO
 import fr.zakaoai.coldlibrarybackend.model.mapper.*
 import net.sandrohc.jikan.model.season.Season
 import org.springframework.stereotype.Service
@@ -53,7 +53,8 @@ class AnimeService(
 
     fun deleteById(malId: Long): Mono<Void> = animeInServerRepository.deleteById(malId)
 
-    fun findByMalId(id: Long): Mono<AnimeWithServerInformationDTO> = animeInServerRepository.findWithAnimeInformation(id)
+    fun findByMalId(id: Long): Mono<AnimeWithServerInformationDTO> =
+        animeInServerRepository.findWithAnimeInformation(id)
 
     fun searchAnime(search: String): Flux<AnimeWithServerInformationDTO> = jikanService.searchAnime(search)
         .flatMap { jikanAnime ->

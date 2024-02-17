@@ -35,7 +35,11 @@ class RequestService(
     fun getAllRequest() = requestRepository.findAllWithInformation()
 
     fun updateRequest(requestId: Long, requestInputDTO: RequestInputDTO) = requestRepository.findById(requestId).map {
-        it.copy(type = requestInputDTO.type, assignedUserId = requestInputDTO.assignedUserId, state = requestInputDTO.state)
+        it.copy(
+            type = requestInputDTO.type,
+            assignedUserId = requestInputDTO.assignedUserId,
+            state = requestInputDTO.state
+        )
     }
         .flatMap(requestRepository::save)
         .then(requestRepository.findByIdWithInformation(requestId))

@@ -1,7 +1,6 @@
 package fr.zakaoai.coldlibrarybackend.model.dto.response
 
 
-
 import fr.zakaoai.coldlibrarybackend.enums.StorageState
 import net.sandrohc.jikan.model.anime.AnimeStatus
 import net.sandrohc.jikan.model.anime.AnimeType
@@ -21,7 +20,7 @@ data class AnimeWithServerInformationDTO(
     val year: Int?,
     val broadcast: String?,
     val rank: Int?,
-    val storageState: StorageState? = null ,
+    val storageState: StorageState? = null,
     val isDownloading: Boolean? = null,
     val isComplete: Boolean? = null,
     val lastAvaibleEpisode: Int? = null,

@@ -6,7 +6,7 @@ fun AnimeEpisode.toAnimeEpisode(malId: Long) = fr.zakaoai.coldlibrarybackend.inf
     null,
     malId,
     this.malId,
-    if(title.isEmpty()) "Episode ${this.malId}" else title,
+    if (title.isEmpty()) "Episode ${this.malId}" else title,
     url,
     aired?.toLocalDateTime()
 )

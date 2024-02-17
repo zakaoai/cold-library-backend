@@ -3,7 +3,6 @@ package fr.zakaoai.coldlibrarybackend.infrastructure.db.entities
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
-import java.time.OffsetDateTime
 
 @Table("\"AnimeEpisode\"")
 data class AnimeEpisode(

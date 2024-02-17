@@ -5,16 +5,10 @@ import de.kaysubs.tracker.nyaasi.model.Category
 import de.kaysubs.tracker.nyaasi.model.SearchRequest
 import de.kaysubs.tracker.nyaasi.model.TorrentPreview
 import fr.zakaoai.coldlibrarybackend.infrastructure.NyaaTorrentService
-import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeEpisode
-import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeEpisodeTorrent
-import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeTorrentDTO
-import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeEpisodeTorrent
-import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeEpisodeTorrentDTO
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 
 

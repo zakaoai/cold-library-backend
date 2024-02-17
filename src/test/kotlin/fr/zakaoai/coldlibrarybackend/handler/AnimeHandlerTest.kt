@@ -9,9 +9,7 @@ import fr.zakaoai.coldlibrarybackend.service.AnimeService
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
@@ -32,10 +30,10 @@ class AnimeHandlerTest {
         @Bean
         @Primary
         fun tokenRequest(): TokenRequest {
-            val std= mockk<TokenRequest>()
+            val std = mockk<TokenRequest>()
             every { std.execute() } returns (object : Response<TokenHolder> {
                 override fun getHeaders(): MutableMap<String, String> = HashMap()
-                override fun getBody(): TokenHolder = TokenHolder("",null,null,null,1L,null,null)
+                override fun getBody(): TokenHolder = TokenHolder("", null, null, null, 1L, null, null)
                 override fun getStatusCode(): Int = 200
             })
             return std
@@ -48,7 +46,6 @@ class AnimeHandlerTest {
     lateinit var webTestClient: WebTestClient
 
 
-
     @BeforeEach
     fun setUp() {
         webTestClient = WebTestClient.bindToRouterFunction(routerFunction).build()
@@ -57,7 +54,7 @@ class AnimeHandlerTest {
     @MockkBean
     lateinit var animeService: AnimeService
 
-//    @Test
+    //    @Test
     @WithMockUser
     fun getAllAnime_ShouldReturnEmptyListOfAnime_WhenAnimeServiceReturnEmptyListOfAnime() {
 

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
-import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 import kotlin.random.Random
@@ -51,7 +50,7 @@ class DelugeTorrentImpl(@Qualifier("webClient") private val webClient: WebClient
             .bodyValue(
                 DelugeJsonRPCInput(
                     "core.get_torrent_status",
-                    listOf(hash, listOf("hash","download_location","progress")),
+                    listOf(hash, listOf("hash", "download_location", "progress")),
                     Random.nextInt(0, Int.MAX_VALUE)
                 )
             )
@@ -65,7 +64,7 @@ class DelugeTorrentImpl(@Qualifier("webClient") private val webClient: WebClient
             .bodyValue(
                 DelugeJsonRPCInput(
                     "core.get_torrents_status",
-                    listOf(hashMapOf(Pair("hash",hashs)), listOf("hash","download_location","progress")),
+                    listOf(hashMapOf(Pair("hash", hashs)), listOf("hash", "download_location", "progress")),
                     Random.nextInt(0, Int.MAX_VALUE)
                 )
             )

@@ -9,5 +9,5 @@ interface MyAnimeListClient {
 
     fun getUserAnimeList(myAnimeListUserName: String, malAnimeListInput: MALAnimeListInput): Mono<MALAnimeListResponse>
 
-    fun getAnimeSeason(year: Int,season: Season): Mono<MALAnimeListResponse>
+    fun getAnimeSeason(year: Int, season: Season): Mono<MALAnimeListResponse>
 }

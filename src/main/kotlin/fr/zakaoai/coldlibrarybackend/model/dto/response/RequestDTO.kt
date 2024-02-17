@@ -3,7 +3,6 @@ package fr.zakaoai.coldlibrarybackend.model.dto.response
 
 import fr.zakaoai.coldlibrarybackend.enums.RequestStatus
 import fr.zakaoai.coldlibrarybackend.enums.RequestType
-import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.User
 import java.time.LocalDateTime
 
 data class RequestDTO(

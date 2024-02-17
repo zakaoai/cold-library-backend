@@ -1,6 +1,6 @@
 auth0:
   audience: zakaoai6.ddns.net
-  domain : zakaoai.eu.auth0.com
+  domain: zakaoai.eu.auth0.com
   management:
     domain: zakaoai.eu.auth0.com
     clientId: WuB83Crd8srij5IyNMJtDCm7VPtQj5Yc

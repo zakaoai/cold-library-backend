@@ -25,8 +25,11 @@ class MyAnimeListClientImpl(@Qualifier("MALWebClient") private val webClient: We
                     .queryParamNotNull("sort", malAnimeListInput.sort)
                     .queryParam("limit", malAnimeListInput.limit)
                     .queryParam("offset", malAnimeListInput.offset)
-                    .queryParam("fields","start_date,end_date,mean,rank,popularity,nsfw,genres,media_type,status,num_episodes,start_season,broadcast,rating")
-                    .queryParam("nsfw","true")
+                    .queryParam(
+                        "fields",
+                        "start_date,end_date,mean,rank,popularity,nsfw,genres,media_type,status,num_episodes,start_season,broadcast,rating"
+                    )
+                    .queryParam("nsfw", "true")
                     .build(myAnimeListUserName)
             }
 
@@ -34,14 +37,17 @@ class MyAnimeListClientImpl(@Qualifier("MALWebClient") private val webClient: We
             .retrieve()
             .bodyToMono(MALAnimeListResponse::class.java)
 
-    override fun getAnimeSeason(year: Int,season: Season): Mono<MALAnimeListResponse> =
+    override fun getAnimeSeason(year: Int, season: Season): Mono<MALAnimeListResponse> =
         webClient.get()
             .uri {
                 it.path("/v2/anime/season/{year}/{season}")
                     .queryParam("limit", "1000")
-                    .queryParam("fields","start_date,end_date,mean,rank,popularity,nsfw,genres,media_type,status,num_episodes,start_season,broadcast,rating")
-                    .queryParam("nsfw","true")
-                    .build(year,season)
+                    .queryParam(
+                        "fields",
+                        "start_date,end_date,mean,rank,popularity,nsfw,genres,media_type,status,num_episodes,start_season,broadcast,rating"
+                    )
+                    .queryParam("nsfw", "true")
+                    .build(year, season)
             }
             .retrieve()
             .bodyToMono(MALAnimeListResponse::class.java)
