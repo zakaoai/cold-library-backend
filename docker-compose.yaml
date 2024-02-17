@@ -8,5 +8,7 @@ services:
       - .env.db
   postgresql:
     image: "postgres:16-alpine"
+    ports:
+      - "5432:5432"
     env_file:
       - .env.db

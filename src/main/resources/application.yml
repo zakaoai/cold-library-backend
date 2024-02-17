@@ -24,7 +24,7 @@ spring:
     name: cold-library-backend
   r2dbc:
     url: r2dbc:postgresql://${POSTGRES_HOST}/${POSTGRES_DB}?currentSchema=${POSTGRES_SCHEMA}
-    user: ${POSTGRES_USER}
+    username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
 security:
   basic:
