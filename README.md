@@ -30,7 +30,7 @@
     <a href="/docs"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://zakaoai6.ddns.net:8989/app/home">View Demo</a>
+    <a href="https://www.bonjour404.fr/">View Demo</a>
     ·
     <a href="https://github.com/zakaoai/cold-library-backend//issues">Report Bug</a>
     ·
