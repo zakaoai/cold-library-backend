@@ -2,14 +2,16 @@ package fr.zakaoai.coldlibrarybackend.model.dto.response
 
 
 import fr.zakaoai.coldlibrarybackend.enums.RequestStatus
-import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.Request
+import fr.zakaoai.coldlibrarybackend.enums.RequestType
+import java.time.LocalDateTime
 
 data class RequestDTO(
-    val animeId: Int? = null,
-    val userId: Long? = null,
-    val requestStatus: RequestStatus? = null
-) {
-    fun toModel(withId: Long? = null) =
-        Request(withId, animeId, userId, requestStatus)
-}
-
+    val id: Long,
+    val malId: Long,
+    val animeTitle: String,
+    val type: RequestType,
+    val state: RequestStatus,
+    val date: LocalDateTime,
+    val creator: String,
+    val assignedUser: String? = null
+)

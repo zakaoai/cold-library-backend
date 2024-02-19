@@ -1,10 +1,10 @@
 package fr.zakaoai.coldlibrarybackend.service
 
-import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeEpisodeRepository
 
-import fr.zakaoai.coldlibrarybackend.infrastructure.JikanAPIService
+import fr.zakaoai.coldlibrarybackend.infrastructure.JikanApiService
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeInServerRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeRepository
-import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.TrackedAnimeTorrentRepository
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeTorrentRepository
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -14,17 +14,20 @@ import org.junit.jupiter.api.Test
 import reactor.core.publisher.Flux
 import reactor.test.StepVerifier
 
-class AnimeServiceTest{
+class AnimeServiceTest {
+
 
     @MockK
-    lateinit var repo: AnimeRepository
-    @MockK
-    lateinit var episodeRepo: AnimeEpisodeRepository
-    @MockK
-    lateinit var jikanService: JikanAPIService
-    @MockK
-    lateinit var trackedAnimeTorrentRepository: TrackedAnimeTorrentRepository
+    lateinit var animeInServerRepository: AnimeInServerRepository
 
+    @MockK
+    lateinit var animeRepository: AnimeRepository
+
+    @MockK
+    lateinit var animeTorrentRepository: AnimeTorrentRepository
+
+    @MockK
+    lateinit var jikanService: JikanApiService
 
     @InjectMockKs
     lateinit var animeService: AnimeService
@@ -33,9 +36,9 @@ class AnimeServiceTest{
     fun setUp() = MockKAnnotations.init(this)
 
     @Test
-    fun getListRdq_shouldReturnEmptyList_WhenRdqRepositoryReturnEmptyList(){
+    fun getListRdq_shouldReturnEmptyList_WhenRdqRepositoryReturnEmptyList() {
 
-        every { repo.findAll() } returns Flux.empty()
+        every { animeInServerRepository.findAllWithAnimeInformation() } returns Flux.empty()
 
 
         val result = animeService.getAllAnime()

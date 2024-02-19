@@ -1,13 +1,12 @@
 package fr.zakaoai.coldlibrarybackend.model.mapper
 
 import de.kaysubs.tracker.nyaasi.model.TorrentPreview
-import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeTorrentDTO
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeEpisodeTorrent
 import java.time.LocalDate
 import java.time.ZoneId
 
-fun TorrentPreview.toAnimeEpisodeTorrentDTO(malId: Int, episodeNumber: Int) = AnimeEpisodeTorrentDTO(
-    malId,
-    episodeNumber,
+fun TorrentPreview.toAnimeEpisodeTorrent(malId: Long, animeEpisodeId: Long) = AnimeEpisodeTorrent(
+    null,
     title,
     LocalDate.ofInstant(
         date.toInstant(), ZoneId.systemDefault()
@@ -17,5 +16,7 @@ fun TorrentPreview.toAnimeEpisodeTorrentDTO(malId: Int, episodeNumber: Int) = An
     size.toString(),
     seeders,
     leechers,
-    completed
+    completed,
+    animeEpisodeId,
+    malId
 )

@@ -1,20 +1,25 @@
 package fr.zakaoai.coldlibrarybackend.infrastructure
 
-import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeDTO
-import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeDTO
+import net.sandrohc.jikan.model.anime.Anime
 import net.sandrohc.jikan.model.anime.AnimeEpisode
+import net.sandrohc.jikan.model.season.Season
+import net.sandrohc.jikan.model.season.SeasonEntry
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
+interface JikanApiService {
+    fun searchAnime(search: String): Flux<Anime>
 
-interface JikanAPIService {
+    fun getAnimeById(id: Long): Mono<Anime>
 
-    fun searchAnime(search: String): Flux<AnimeDTO>
+    fun getAnimeEpisodesPage(id: Long): Flux<AnimeEpisode>
 
-    fun getAnimeById(id: Int): Mono<AnimeDTO>
+    fun getAnimeEpisodesFromEpisodeByAnimeIdAndEpisodeNumber(malId: Long, episodeNumber: Int): Flux<AnimeEpisode>
 
-    fun getAnimeEpisodesPage(id: Int): Flux<AnimeEpisode>
+    fun getAnimeEpisodeByAnimeIdAndEpisodeNumber(malId: Long, episodeNumber: Int): Mono<AnimeEpisode>
 
-    fun getAnimeEpisodesByAnimeIdAndEpisodeNumber(malId: Int, episodeNumber: Int): Flux<AnimeEpisodeDTO>
+    fun getAnimeBySeason(year: Int, season: Season, page: Int?): Flux<Anime>
+
+    fun getSeason(): Flux<SeasonEntry>
 
 }

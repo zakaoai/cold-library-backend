@@ -1,0 +1,46 @@
+auth0:
+  audience: zakaoai6.ddns.net
+  domain: zakaoai.eu.auth0.com
+  management:
+    domain: zakaoai.eu.auth0.com
+    clientId: WuB83Crd8srij5IyNMJtDCm7VPtQj5Yc
+    clientSecret: ""
+    audience: https://zakaoai.eu.auth0.com/api/v2/
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        id: zakaoai6.ddns.net
+        jwt:
+          jwk-set-uri: https://zakaoai.eu.auth0.com/.well-known/jwks.json
+          issuer-uri: https://zakaoai.eu.auth0.com/
+  liquibase:
+    url: jdbc:postgresql://localhost:5432/projects?currentSchema=cold_library
+    user: 'postgres'
+    password:
+    enabled: 'true'
+  application:
+    name: cold-library-backend
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/projects?currentSchema=cold_library
+    username: 'postgres'
+    password:
+security:
+  basic:
+    enabled: 'false'
+server:
+  port: '9000'
+logging:
+  level:
+    org:
+      springframework:
+        r2dbc: DEBUG
+        security: TRACE
+
+myanimelist:
+  client-id: ""
+
+deluge:
+  host: ""
+  password: ""

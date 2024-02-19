@@ -1,6 +1,11 @@
 auth0:
   audience: zakaoai6.ddns.net
-  domain : zakaoai.eu.auth0.com
+  domain: zakaoai.eu.auth0.com
+  management:
+    domain: zakaoai.eu.auth0.com
+    clientId: WuB83Crd8srij5IyNMJtDCm7VPtQj5Yc
+    clientSecret: ${AUTH0_MANAGEMENT_CLIENT_SECRET}
+    audience: https://zakaoai.eu.auth0.com/api/v2/
 
 spring:
   security:
@@ -11,20 +16,16 @@ spring:
           jwk-set-uri: https://zakaoai.eu.auth0.com/.well-known/jwks.json
           issuer-uri: https://zakaoai.eu.auth0.com/
   liquibase:
-    url: jdbc:h2:file:./data/database
-    password: ''
+    url: jdbc:postgresql://${POSTGRES_HOST}/${POSTGRES_DB}?currentSchema=${POSTGRES_SCHEMA}
+    user: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     enabled: 'true'
-    user: sa
   application:
     name: cold-library-backend
-  h2:
-    console:
-      path: /h2-ui
-      enabled: 'true'
   r2dbc:
-    password: ''
-    url: r2dbc:h2:file://././data/database?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
+    url: r2dbc:postgresql://${POSTGRES_HOST}/${POSTGRES_DB}?currentSchema=${POSTGRES_SCHEMA}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
 security:
   basic:
     enabled: 'false'
@@ -37,3 +38,9 @@ logging:
         r2dbc: DEBUG
         security: TRACE
 
+myanimelist:
+  client-id: ${MYANIMELIST_CLIENT_ID}
+
+deluge:
+  host: ${DELUGE_HOST}
+  password: ${DELUGE_PASSWORD}

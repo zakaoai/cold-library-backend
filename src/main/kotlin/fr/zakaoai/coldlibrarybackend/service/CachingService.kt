@@ -18,9 +18,9 @@ class CachingService(private val cacheManager: CacheManager) {
 
     fun evictAllCaches() {
         cacheManager.cacheNames.stream()
-                .forEach { cacheName: String ->
-                    cacheManager.getCache(cacheName)!!.clear()
-                }
+            .forEach { cacheName: String ->
+                cacheManager.getCache(cacheName)!!.clear()
+            }
     }
 
     @Scheduled(fixedRate = 3600000)

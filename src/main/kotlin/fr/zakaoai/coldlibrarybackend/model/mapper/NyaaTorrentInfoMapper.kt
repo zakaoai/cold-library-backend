@@ -1,19 +1,22 @@
 package fr.zakaoai.coldlibrarybackend.model.mapper
 
 import de.kaysubs.tracker.nyaasi.model.TorrentInfo
-import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeTorrentDTO
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeEpisodeTorrent
+import java.time.LocalDate
+import java.time.ZoneId
 
-fun TorrentInfo.toAnimeEpisodeTorrentDTO(torrentId: Int, malId: Int, episodeNumber: Int) = AnimeEpisodeTorrentDTO(
-    malId,
-    episodeNumber,
+fun TorrentInfo.toAnimeEpisodeTorrent(malId: Long, animeEpisodeId: Long, torrentId: Int) = AnimeEpisodeTorrent(
+    null,
     title,
-    java.time.LocalDate.ofInstant(
-        date.toInstant(), java.time.ZoneId.systemDefault()
+    LocalDate.ofInstant(
+        date.toInstant(), ZoneId.systemDefault()
     ),
     downloadLink.toString(),
     torrentId,
     size.toString(),
     seeders,
     leechers,
-    completed
+    completed,
+    animeEpisodeId,
+    malId
 )

@@ -2,8 +2,8 @@ package fr.zakaoai.coldlibrarybackend.config
 
 
 import jakarta.validation.ConstraintViolationException
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
@@ -15,9 +15,6 @@ import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.reactive.CorsWebFilter
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import org.springframework.web.reactive.config.CorsRegistry
 import org.springframework.web.reactive.config.EnableWebFlux
 import org.springframework.web.reactive.config.WebFluxConfigurer
@@ -56,7 +53,7 @@ class ControllerExceptionHandler {
 @Component
 class RequestTimingFilter : WebFilter {
 
-    val logger = LoggerFactory.getLogger(RequestTimingFilter::class.java)
+    val logger: Logger = LoggerFactory.getLogger(RequestTimingFilter::class.java)
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         val startMillis = System.currentTimeMillis()
@@ -71,7 +68,7 @@ class RequestTimingFilter : WebFilter {
 
 @Component
 class LoggingFilter(val requestLogger: RequestLogger) : WebFilter {
-    val logger = LoggerFactory.getLogger(LoggingFilter::class.java)
+    val logger: Logger = LoggerFactory.getLogger(LoggingFilter::class.java)
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         logger.info(requestLogger.getRequestMessage(exchange))
