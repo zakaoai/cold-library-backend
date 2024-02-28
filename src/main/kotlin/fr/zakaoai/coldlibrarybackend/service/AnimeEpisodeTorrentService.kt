@@ -66,8 +66,10 @@ class AnimeEpisodeTorrentService(
                         ).copy(id = animeEpisodeTorrent.id)
                     }
                     .flatMap(animeEpisodeTorrentRepository::save)
+                    .zipWith(delugeEpisodeTorrentRepository.findByIdAnimeEpisodeTorrent(animeEpisodeTorrent.id!!).singleOptional())
             }
-            .map { it.toAnimeEpisodeTorrentDTO(episodeNumber) }
+
+            .map { it.t1.toAnimeEpisodeTorrentDTO(episodeNumber, it.t2.getOrNull()?.progress) }
 
     fun replaceEpisodeTorrent(
         malId: Long,
