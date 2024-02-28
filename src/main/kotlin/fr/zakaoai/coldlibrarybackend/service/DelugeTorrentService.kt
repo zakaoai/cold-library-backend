@@ -31,7 +31,7 @@ class DelugeTorrentService(
             animeEpisodeTorrent.torrentLink,
             Path("/downloads", animeTorrent.torrentPath).pathString
         )
-            .map { it.toDelugeEpisodeTorrent(animeEpisodeTorrent.id!!, animeEpisodeTorrent.torrentId) }
+            .map { it.toDelugeEpisodeTorrent( animeEpisodeTorrent.torrentId) }
 
     fun downloadTorrent(malId: Long, episodeNumber: Int) =
         animeEpisodeTorrentRepository.findByMalIdAndEpisodeNumber(malId, episodeNumber)
@@ -39,7 +39,6 @@ class DelugeTorrentService(
             .flatMap { (animeEpisodeTorrent, animeTorrent) ->
                 delugeEpisodeTorrentRepository.findByTorrentId(animeEpisodeTorrent.torrentId)
                     .switchIfEmpty(downloadDeluge(animeEpisodeTorrent, animeTorrent))
-                    .map { it.copy(idAnimeEpisodeTorrent = animeEpisodeTorrent.id!!) }
                     .flatMap(delugeEpisodeTorrentRepository::save)
             }
             .map(DelugeEpisodeTorrent::toDelugeEpisodeTorrentDTO)
