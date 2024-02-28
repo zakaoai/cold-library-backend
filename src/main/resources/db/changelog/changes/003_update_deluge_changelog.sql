@@ -1,0 +1,1 @@
+ALTER TABLE cold_library."DelugeEpisodeTorrent" DROP COLUMN id_anime_episode_torrent;

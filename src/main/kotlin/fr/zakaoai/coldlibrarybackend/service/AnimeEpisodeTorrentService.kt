@@ -32,7 +32,7 @@ class AnimeEpisodeTorrentService(
     fun getAllDownloadingEpisodeTorrent() = animeTorrentRepository.getAllDownloadingAnime().flatMap {
         animeEpisodeTorrentRepository.findByMalId(it.malId)
     }.flatMap { animeEpisodeTorrent ->
-        delugeEpisodeTorrentRepository.findByIdAnimeEpisodeTorrent(animeEpisodeTorrent.id!!).singleOptional()
+        delugeEpisodeTorrentRepository.findByTorrentId(animeEpisodeTorrent.torrentId).singleOptional()
             .zipWith(animeEpisodeRepository.findById(animeEpisodeTorrent.idAnimeEpisode)).map {
                 animeEpisodeTorrent.toAnimeEpisodeTorrentDTO(it.t2.episodeNumber, it.t1.getOrNull()?.progress)
             }
@@ -66,7 +66,7 @@ class AnimeEpisodeTorrentService(
                         ).copy(id = animeEpisodeTorrent.id)
                     }
                     .flatMap(animeEpisodeTorrentRepository::save)
-                    .zipWith(delugeEpisodeTorrentRepository.findByIdAnimeEpisodeTorrent(animeEpisodeTorrent.id!!).singleOptional())
+                    .zipWith(delugeEpisodeTorrentRepository.findByTorrentId(animeEpisodeTorrent.torrentId).singleOptional())
             }
 
             .map { it.t1.toAnimeEpisodeTorrentDTO(episodeNumber, it.t2.getOrNull()?.progress) }

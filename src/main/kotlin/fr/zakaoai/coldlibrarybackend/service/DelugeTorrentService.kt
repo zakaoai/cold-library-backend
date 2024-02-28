@@ -46,7 +46,7 @@ class DelugeTorrentService(
 
     fun updateTorrent(malId: Long, episodeNumber: Int) =
         animeEpisodeTorrentRepository.findByMalIdAndEpisodeNumber(malId, episodeNumber)
-            .flatMap { delugeEpisodeTorrentRepository.findByIdAnimeEpisodeTorrent(it.id!!) }
+            .flatMap { delugeEpisodeTorrentRepository.findByTorrentId(it.torrentId) }
             .flatMap { delugeEpisodeTorrent ->
                 delugeTorrentClient.getDownloadTorrentStatus(delugeEpisodeTorrent.torrentHash)
                     .map { torrentStatus ->

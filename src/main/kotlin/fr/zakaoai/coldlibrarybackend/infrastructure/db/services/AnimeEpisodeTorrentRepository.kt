@@ -13,7 +13,7 @@ interface AnimeEpisodeTorrentRepository : ReactiveCrudRepository<AnimeEpisodeTor
     @Query("SELECT aet.*, ae.episode_number, d.progress " +
             "FROM cold_library.\"AnimeEpisodeTorrent\" aet " +
             "INNER JOIN cold_library.\"AnimeEpisode\" ae ON aet.id_anime_episode=ae.id " +
-            "LEFT JOIN cold_library.\"DelugeEpisodeTorrent\" d ON aet.id = d.id_anime_episode_torrent   " +
+            "LEFT JOIN cold_library.\"DelugeEpisodeTorrent\" d ON aet.torrent_id = d.torrent_id " +
             "WHERE ae.\"mal_id\" = :malId")
     fun findByMalIdWithEpisodeNumber(@Param("malId") malId: Long): Flux<AnimeEpisodeTorrentDTO>
 
