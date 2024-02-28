@@ -47,7 +47,8 @@ class RouterConfiguration {
             }
             GET("/cache/clearAllCaches", cacheHandler::clearAllCaches)
             "/torrent".nest {
-                GET("/updateDelugeTorrent", delugeTorrentHandler::updateAllTorrent)
+                GET("episodes", animeEpisodeTorrentHandler::findAllDownloading)
+                GET("updateDelugeTorrent", delugeTorrentHandler::updateAllTorrent)
                 GET("", animeTorrentHandler::getAllTrackedAnime)
                 GET("{malId}", animeTorrentHandler::getTrackedAnime)
                 PATCH("{malId}", animeTorrentHandler::updateTrackedAnime)

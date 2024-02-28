@@ -6,4 +6,5 @@ import reactor.core.publisher.Mono
 
 interface DelugeEpisodeTorrentRepository : ReactiveCrudRepository<DelugeEpisodeTorrent, Long> {
     fun findByIdAnimeEpisodeTorrent(idAnimeEpisodeTorrent: Long): Mono<DelugeEpisodeTorrent>
+    fun findByTorrentId(torrentId: Int): Mono<DelugeEpisodeTorrent>
 }

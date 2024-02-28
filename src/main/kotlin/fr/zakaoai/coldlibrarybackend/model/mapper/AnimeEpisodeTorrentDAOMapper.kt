@@ -3,7 +3,7 @@ package fr.zakaoai.coldlibrarybackend.model.mapper
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeEpisodeTorrent
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeTorrentDTO
 
-fun AnimeEpisodeTorrent.toAnimeEpisodeTorrentDTO(episodeNumber: Int) = AnimeEpisodeTorrentDTO(
+fun AnimeEpisodeTorrent.toAnimeEpisodeTorrentDTO(episodeNumber: Int, progress: Float? = null) = AnimeEpisodeTorrentDTO(
     id,
     title,
     date,
@@ -14,5 +14,6 @@ fun AnimeEpisodeTorrent.toAnimeEpisodeTorrentDTO(episodeNumber: Int) = AnimeEpis
     leechers,
     completed,
     episodeNumber,
-    malId
+    malId,
+    progress
 )

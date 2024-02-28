@@ -14,5 +14,6 @@ data class AnimeEpisodeTorrentDTO(
     val leechers: Int,
     val completed: Int,
     val episodeNumber: Int,
-    val malId: Long
+    val malId: Long,
+    val progress: Float? = null
 )

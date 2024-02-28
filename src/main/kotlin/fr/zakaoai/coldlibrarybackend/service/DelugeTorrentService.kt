@@ -1,11 +1,15 @@
 package fr.zakaoai.coldlibrarybackend.service
 
 import fr.zakaoai.coldlibrarybackend.infrastructure.DelugeTorrentClient
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeEpisodeTorrent
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeTorrent
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.DelugeEpisodeTorrent
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeEpisodeTorrentRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeTorrentRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.DelugeEpisodeTorrentRepository
 import fr.zakaoai.coldlibrarybackend.model.mapper.toDelugeEpisodeTorrent
+import fr.zakaoai.coldlibrarybackend.model.mapper.toDelugeEpisodeTorrentDTO
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import reactor.kotlin.core.util.function.component1
 import reactor.kotlin.core.util.function.component2
@@ -20,23 +24,25 @@ class DelugeTorrentService(
     val animeEpisodeTorrentRepository: AnimeEpisodeTorrentRepository
 ) {
 
+    private val logger = LoggerFactory.getLogger(DelugeTorrentService::class.java)
+
+    fun downloadDeluge(animeEpisodeTorrent: AnimeEpisodeTorrent, animeTorrent: AnimeTorrent) =
+        delugeTorrentClient.downloadTorrent(
+            animeEpisodeTorrent.torrentLink,
+            Path("/downloads", animeTorrent.torrentPath).pathString
+        )
+            .map { it.toDelugeEpisodeTorrent(animeEpisodeTorrent.id!!, animeEpisodeTorrent.torrentId) }
+
     fun downloadTorrent(malId: Long, episodeNumber: Int) =
         animeEpisodeTorrentRepository.findByMalIdAndEpisodeNumber(malId, episodeNumber)
             .zipWith(animeTorrentRepository.findById(malId))
-
             .flatMap { (animeEpisodeTorrent, animeTorrent) ->
-
-                delugeEpisodeTorrentRepository.findByIdAnimeEpisodeTorrent(animeEpisodeTorrent.id!!)
-                    .switchIfEmpty(
-                        delugeTorrentClient.downloadTorrent(
-                            animeEpisodeTorrent.torrentLink,
-                            Path("/downloads", animeTorrent.torrentPath).pathString
-                        ).map {
-                            it.toDelugeEpisodeTorrent(animeEpisodeTorrent.id!!)
-
-                        }
-                            .flatMap(delugeEpisodeTorrentRepository::save))
+                delugeEpisodeTorrentRepository.findByTorrentId(animeEpisodeTorrent.torrentId)
+                    .switchIfEmpty(downloadDeluge(animeEpisodeTorrent, animeTorrent))
+                    .map { it.copy(idAnimeEpisodeTorrent = animeEpisodeTorrent.id!!) }
+                    .flatMap(delugeEpisodeTorrentRepository::save)
             }
+            .map(DelugeEpisodeTorrent::toDelugeEpisodeTorrentDTO)
 
     fun updateTorrent(malId: Long, episodeNumber: Int) =
         animeEpisodeTorrentRepository.findByMalIdAndEpisodeNumber(malId, episodeNumber)
@@ -49,6 +55,7 @@ class DelugeTorrentService(
                     }
             }
             .flatMap(delugeEpisodeTorrentRepository::save)
+            .map(DelugeEpisodeTorrent::toDelugeEpisodeTorrentDTO)
 
     fun updateAllTorrent() = delugeEpisodeTorrentRepository.findAll()
         .filter { it.progress < 100 }
@@ -65,6 +72,7 @@ class DelugeTorrentService(
                 }
                 .flatMapMany(delugeEpisodeTorrentRepository::saveAll)
         }
+        .map(DelugeEpisodeTorrent::toDelugeEpisodeTorrentDTO)
 
 
 }

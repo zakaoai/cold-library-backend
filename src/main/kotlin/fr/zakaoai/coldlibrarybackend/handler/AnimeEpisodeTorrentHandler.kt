@@ -24,6 +24,16 @@ class AnimeEpisodeTorrentHandler(
             }
             .flatMap(ServerResponse.ok()::bodyValue)
 
+    fun findAllDownloading(req: ServerRequest): Mono<ServerResponse> =
+        animeEpisodeTorrentService.getAllDownloadingEpisodeTorrent()
+            .collectList()
+            .doOnNext {
+                logRequest(
+                    req,
+                    LogMessageHandler.ANIME_EPISODE_TORRENT_FIND_ALL_DOWNLOADING.message
+                )
+            }
+            .flatMap(ServerResponse.ok()::bodyValue)
 
     fun searchAlternate(req: ServerRequest): Mono<ServerResponse> =
         animeEpisodeTorrentService.searchAlternateEpisodeTorrent(

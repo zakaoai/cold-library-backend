@@ -6,6 +6,7 @@ enum class LogMessageHandler(val message: String) {
     ANIME_EPISODE_DELETE_BY_MAL_ID("AnimeEpisodeHandler:deleteByMalId - Suppression des épisodes de l'anime %s"),
     ANIME_EPISODE_DELETE_BY_MAL_ID_AND_EPISODE_NUMBER("AnimeEpisodeHandler:deleteByMalIdAndEpisodeNumber - Suppression de l'anime %s épisode %s"),
     ANIME_EPISODE_TORRENT_FIND_BY_MAL_ID("AnimeEpisodeTorrentHandler:findByMalId - Recherche des torrent pour l'anime %s"),
+    ANIME_EPISODE_TORRENT_FIND_ALL_DOWNLOADING("AnimeEpisodeTorrentHandler:findAllDownloading - Lecture de tout les épisodes des animes en cours de téléchargement"),
     ANIME_EPISODE_TORRENT_SEARCH_ALTERNATE("AnimeEpisodeTorrentHandler:searchAlternate - Recherche de torrent alternatif pour l'anime %s épisode %s"),
     ANIME_EPISODE_TORRENT_UPDATE("AnimeEpisodeTorrentHandler:update - Mise à jour du torrent pour l'anime %s épisode %s"),
     ANIME_EPISODE_TORRENT_REPLACE("AnimeEpisodeTorrentHandler:replace - Remplacement du torrent pour l'anime %s épisode %s"),
