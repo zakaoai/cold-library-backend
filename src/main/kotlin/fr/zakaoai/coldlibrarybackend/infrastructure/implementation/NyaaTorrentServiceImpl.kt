@@ -19,7 +19,7 @@ class NyaaTorrentServiceImpl(
 //    private val trackedAnimeTorrentRepository: TrackedAnimeTorrentRepository
 ) : NyaaTorrentService {
 
-    val filterSearchWord = listOf("x265", "1080p", "720p", "10 bits", "5.1", "x264", "1920", "1080")
+    val filterSearchWord = listOf("x265", "1080p", "720p", "10 bits", "5.1", "x264", "1920", "1080", "H.264")
 
     @Cacheable
     override fun getAnimeSearch(searchTerm: String): SearchRequest {

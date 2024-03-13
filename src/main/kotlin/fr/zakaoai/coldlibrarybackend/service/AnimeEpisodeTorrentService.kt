@@ -2,9 +2,7 @@ package fr.zakaoai.coldlibrarybackend.service
 
 import fr.zakaoai.coldlibrarybackend.infrastructure.NyaaTorrentService
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeEpisodeTorrent
-import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeEpisodeTorrentRepository
-import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeInServerRepository
-import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeTorrentRepository
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.*
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeEpisodeTorrentDTO
 import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeEpisodeTorrent
 import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeEpisodeTorrentDTO
@@ -13,6 +11,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class AnimeEpisodeTorrentService(
@@ -20,13 +19,24 @@ class AnimeEpisodeTorrentService(
     private val animeTorrentRepository: AnimeTorrentRepository,
     private val animeInServerRepository: AnimeInServerRepository,
     private val animeEpisodeService: AnimeEpisodeService,
-    private val nyaaTorrentService: NyaaTorrentService
+    private val nyaaTorrentService: NyaaTorrentService,
+    private val delugeEpisodeTorrentRepository: DelugeEpisodeTorrentRepository,
+    private val animeEpisodeRepository: AnimeEpisodeRepository
 ) {
 
     private val logger = LoggerFactory.getLogger(AnimeEpisodeTorrentService::class.java)
 
 
     fun findAnimeEpisodeTorrentByMalId(malId: Long) = animeEpisodeTorrentRepository.findByMalIdWithEpisodeNumber(malId)
+
+    fun getAllDownloadingEpisodeTorrent() = animeTorrentRepository.getAllDownloadingAnime().flatMap {
+        animeEpisodeTorrentRepository.findByMalId(it.malId)
+    }.flatMap { animeEpisodeTorrent ->
+        delugeEpisodeTorrentRepository.findByTorrentId(animeEpisodeTorrent.torrentId).singleOptional()
+            .zipWith(animeEpisodeRepository.findById(animeEpisodeTorrent.idAnimeEpisode)).map {
+                animeEpisodeTorrent.toAnimeEpisodeTorrentDTO(it.t2.episodeNumber, it.t1.getOrNull()?.progress)
+            }
+    }
 
     fun searchAlternateEpisodeTorrent(malId: Long, episodeNumber: Int): Flux<AnimeEpisodeTorrentDTO> =
         animeEpisodeTorrentRepository.findByMalIdAndEpisodeNumber(malId, episodeNumber)
@@ -56,8 +66,10 @@ class AnimeEpisodeTorrentService(
                         ).copy(id = animeEpisodeTorrent.id)
                     }
                     .flatMap(animeEpisodeTorrentRepository::save)
+                    .zipWith(delugeEpisodeTorrentRepository.findByTorrentId(animeEpisodeTorrent.torrentId).singleOptional())
             }
-            .map { it.toAnimeEpisodeTorrentDTO(episodeNumber) }
+
+            .map { it.t1.toAnimeEpisodeTorrentDTO(episodeNumber, it.t2.getOrNull()?.progress) }
 
     fun replaceEpisodeTorrent(
         malId: Long,
