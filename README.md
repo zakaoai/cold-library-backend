@@ -12,7 +12,10 @@
 -->
 
 [![Sonatype Repository][Sonatype Repository]][Sonatype Repository-url]
-
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
 
 
 <!-- PROJECT LOGO -->
@@ -32,9 +35,9 @@
     <br />
     <a href="https://www.bonjour404.fr/">View Demo</a>
     ·
-    <a href="https://github.com/zakaoai/cold-library-backend//issues">Report Bug</a>
+    <a href="https://github.com/zakaoai/cold-library-backend/issues">Report Bug</a>
     ·
-    <a href="https://github.com/zakaoai/cold-library-backend//issues">Request Feature</a>
+    <a href="https://github.com/zakaoai/cold-library-backend/issues">Request Feature</a>
   </p>
 </div>
 
@@ -44,6 +47,9 @@
   <ol>
     <li>
       <a href="#a-propos-du-projet">A propos du projet</a>
+      <ul>
+        <li><a href="#fonctionnalités">Fonctionnalités</a></li>
+      </ul>
       <ul>
         <li><a href="#construit-avec">Construit avec</a></li>
       </ul>
@@ -65,28 +71,25 @@
 
 ## A propos du projet
 
-[![Product Name Screen Shot][product-screenshot]](https://echo-dev.altima-assurances.fr/)
+### Fonctionnalités
+
+L'application possède plusieurs fonctionnalités :
+
+* Faire des recherche d'anime via l'api Jikan
+* Recherche de torrent via scrapping de Nyaa
+* Lecture d'anime list via l'api de MyAnimeList
+* Envoyer un torrent sur un serveur deluge
+* Gerer une base de données d'anime et de telechargement
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Construit avec
 
-#### Back
+
 * [![Kotlin][Kotlin]][Kotlin-url]
 * [![Spring][Spring]][Spring-url]
 * [![Spring Security][Spring Security]][Spring Security-url]
 * [![Liquibase][Liquibase]][Liquibase-url]
-#### Front
-* [![React][React.js]][React-url]
-* [![Vite][Vite.js]][Vite-url]
-* [![TypeScript][TypeScript]][TypeScript-url]
-* [![MUI][MUI]][MUI-url]
-* [![React Query][React Query]][React Query-url]
-* [![React Router][React Router]][React Router-url]
-* [![Eslint][Eslint]][Eslint-url]
-* [![Testing Library][Testing Library]][Testing Library-url]
-* [![Vitest][Vitest]][Vitest-url]
-* [![Mock Service Worker][Mock Service Worker]][Mock Service Worker-url]
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -110,10 +113,6 @@
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Utilisation
-
-### Fonctionnalités
-
-L'application possède plusieurs fonctionnalités :
 
 ### Démarrer l'application en local
 Pour lancer l'application, assurez-vous que le port 9000 renseigné dans le fichier [application.yml](src/main/ressources/application.yml) sur la config server:port ne correspond pas à une autre application lancer sur votre machine.
@@ -143,7 +142,7 @@ _Pour plus d'informations sur son usage, merci de vous référer à la [Document
 
 - [ ] 
 
-Voir [open issues](https://github.com/zakaoai/cold-library-backend//issues) pour une liste complete des feature ( et des issues connues)
+Voir [open issues](https://github.com/zakaoai/cold-library-backend/issues) pour une liste complete des feature ( et des issues connues)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -171,43 +170,23 @@ Lien projet: [https://github.com/zakaoai/cold-library-backend/](https://github.c
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/altima-assurances/altima-echo.svg?style=for-the-badge
-[contributors-url]: https://github.com/zakaoai/cold-library-backend//graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/altima-assurances/altima-echo.svg?style=for-the-badge
-[forks-url]: https://github.com/zakaoai/cold-library-backend//network/members
-[stars-shield]: https://img.shields.io/github/stars/altima-assurances/altima-echo.svg?style=for-the-badge
-[stars-url]: https://github.com/zakaoai/cold-library-backend//stargazers
-[issues-shield]: https://img.shields.io/github/issues/altima-assurances/altima-echo.svg?style=for-the-badge
-[issues-url]: https://github.com/zakaoai/cold-library-backend//issues
+[contributors-shield]: https://img.shields.io/github/contributors/zakaoai/cold-library-backend.svg?style=for-the-badge
+[contributors-url]: https://github.com/zakaoai/cold-library-backend/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/zakaoai/cold-library-backend.svg?style=for-the-badge
+[forks-url]: https://github.com/zakaoai/cold-library-backend/network/members
+[stars-shield]: https://img.shields.io/github/stars/zakaoai/cold-library-backend.svg?style=for-the-badge
+[stars-url]: https://github.com/zakaoai/cold-library-backend/stargazers
+[issues-shield]: https://img.shields.io/github/issues/zakaoai/cold-library-backend.svg?style=for-the-badge
+[issues-url]: https://github.com/zakaoai/cold-library-backend/issues
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [product-screenshot]: images/screenshot.png
 [Spring]: https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white
 [Spring-url]: https://spring.io/
-[Vite.js]: https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white
-[Vite-url]: https://vitejs.dev/
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[React-url]: https://reactjs.org/
 [Kotlin]: https://img.shields.io/badge/kotlin-%237F52FF.svg?style=for-the-badge&logo=kotlin&logoColor=white
 [Kotlin-url]: https://kotlinlang.org/
-[TypeScript]: https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white
-[TypeScript-url]: https://www.typescriptlang.org/
-[MUI]: https://img.shields.io/badge/MUI-007FFF.svg?style=for-the-badge&logo=MUI&logoColor=white
-[MUI-url]: https://mui.com/
-[React Router]:https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white
-[React Router-url]: https://reactrouter.com/en/main
-[React Query]: https://img.shields.io/badge/-React%20Query-FF4154?style=for-the-badge&logo=react%20query&logoColor=white
-[React Query-url]: https://tanstack.com/query/v3/
 [Sonatype Repository]: https://img.shields.io/badge/Sonatype_Repository-228B22.svg?style=for-the-badge&logo=Sonatype&logoColor=white
 [Sonatype Repository-url]: localhost
 [Spring Security]: https://img.shields.io/badge/Spring%20Security-6DB33F.svg?style=for-the-badge&logo=Spring-Security&logoColor=white
 [Spring Security-url]: https://spring.io/projects/spring-security
-[Testing Library]: https://img.shields.io/badge/Testing%20Library-E33332.svg?style=for-the-badge&logo=Testing-Library&logoColor=white
-[Testing Library-url]: https://testing-library.com/
-[Eslint]: https://img.shields.io/badge/ESLint-4B32C3.svg?style=for-the-badge&logo=ESLint&logoColor=white
-[Eslint-url]: https://eslint.org/
-[Vitest]: https://img.shields.io/badge/Vitest-6E9F18.svg?style=for-the-badge&logo=Vitest&logoColor=white
-[Vitest-url]: https://vitest.dev/
 [Liquibase]: https://img.shields.io/badge/Liquibase-2962FF.svg?style=for-the-badge&logo=Liquibase&logoColor=white
 [Liquibase-url]: https://www.liquibase.org/
-[Mock Service Worker]: https://img.shields.io/badge/Mock%20Service%20Worker-FF6A33.svg?style=for-the-badge&logo=Mock-Service-Worker&logoColor=white
-[Mock Service Worker-url]: https://v1.mswjs.io/
