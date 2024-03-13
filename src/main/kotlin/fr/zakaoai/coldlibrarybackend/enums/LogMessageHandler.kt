@@ -31,6 +31,7 @@ enum class LogMessageHandler(val message: String) {
     ANIME_TORRENT_UPDATE_BY_MAL_ID("AnimeTorrentHandler:updateTrackedAnime - Mise à jour des informations de torrent pour l'anime %s"),
     ANIME_TORRENT_DELETE_BY_MAL_ID("AnimeTorrentHandler:deleteTrackedAnime - Supression des informations de torrent pour l'anime %s"),
     ANIME_TORRENT_CREATE_BY_MAL_ID("AnimeTorrentHandler:createTrackedAnime - Création des informations d'un anime torrent pour l'anime %s"),
+    ANIME_TORRENT_UPDATE_LAST_EPISODE_ON_SERVER("AnimeTorrentHandler:updateLastEpisodeOnServer - Mise à jour du dernier episode disponible sur le server pour l'anime %s"),
     CACHE_CLEAR_ALL("CacheHandler:clearAllCaches - Supression de tout les cache"),
     DELUGE_TORRENT_DOWNLOAD("DelugeTorrentHandler:downloadTorrent - Lancement du téléchargement pour l'anime %s épisode %s"),
     DELUGE_TORRENT_UPDATE("DelugeTorrentHandler:updateTorrent - Mise à jour des informations du torrent pour l'anime %s épisode %s "),
