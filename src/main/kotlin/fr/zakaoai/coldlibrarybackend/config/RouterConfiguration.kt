@@ -51,6 +51,7 @@ class RouterConfiguration {
                 GET("updateDelugeTorrent", delugeTorrentHandler::updateAllTorrent)
                 GET("", animeTorrentHandler::getAllTrackedAnime)
                 GET("{malId}", animeTorrentHandler::getTrackedAnime)
+                PUT("{malId}/lastEpisodeOnServer", animeTorrentHandler::updateLastEpisodeOnServer)
                 PATCH("{malId}", animeTorrentHandler::updateTrackedAnime)
                 DELETE("{malId}", animeTorrentHandler::deleteTrackedAnime)
                 POST("{malId}", animeTorrentHandler::createTrackedAnime)

@@ -77,5 +77,19 @@ class AnimeTorrentHandler(val animeTorrentService: AnimeTorrentService) : Handle
             .flatMap(ServerResponse.ok()::bodyValue)
             .switchIfEmpty(ServerResponse.notFound().build())
 
+    fun updateLastEpisodeOnServer(req: ServerRequest): Mono<ServerResponse> =
+        req.bodyToMono(Int::class.java).flatMap {
+            animeTorrentService.updateLastEpisodeOnServer(malId(req), it)
+        }
+            .doOnNext {
+                logRequest(
+                    req,
+                    LogMessageHandler.ANIME_TORRENT_UPDATE_LAST_EPISODE_ON_SERVER.message.format(
+                        malId(req)
+                    )
+                )
+            }
+            .flatMap(ServerResponse.ok()::bodyValue)
+            .switchIfEmpty(ServerResponse.notFound().build())
 
 }

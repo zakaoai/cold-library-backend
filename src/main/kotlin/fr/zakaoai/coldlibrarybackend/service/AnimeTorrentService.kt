@@ -39,4 +39,9 @@ class AnimeTorrentService(
         .flatMap(animeInServerRepository::save)
         .then(animeTorrentRepository.deleteById(malId))
 
+    fun updateLastEpisodeOnServer(malId: Long, lastEpisodeOnServer: Int) = animeTorrentRepository.findById(malId)
+        .map { it.copy(lastEpisodeOnServer=lastEpisodeOnServer)}
+        .flatMap(animeTorrentRepository::save)
+        .map(AnimeTorrent::toAnimeTorrentDTO)
+
 }
