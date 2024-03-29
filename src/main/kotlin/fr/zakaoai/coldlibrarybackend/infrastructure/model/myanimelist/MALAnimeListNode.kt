@@ -16,6 +16,7 @@ data class MALAnimeListNode(
     val num_episodes: Int,
     val start_season: MALSeason?,
     val broadcast: MALBroadcast?,
-    val rating: String
+    val rating: String,
+    val userStatus: String?
 
 )

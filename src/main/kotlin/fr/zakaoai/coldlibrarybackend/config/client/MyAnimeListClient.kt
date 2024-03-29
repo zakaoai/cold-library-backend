@@ -7,7 +7,7 @@ import org.springframework.http.client.ReactorResourceFactory
 import org.springframework.web.reactive.function.client.WebClient
 
 @Configuration
-class MyAnimeListClient {
+class MyAnimeListClient(val webFluxConfiguration: WebFluxConfiguration) {
 
     val myAnimeListUrl = "https://api.myanimelist.net"
 
@@ -16,5 +16,7 @@ class MyAnimeListClient {
 
     @Bean("MALWebClient")
     fun authWebClient(resourceFactory: ReactorResourceFactory) = WebClient.builder().baseUrl(myAnimeListUrl)
-        .defaultHeader("X-MAL-CLIENT-ID", clientId).build()
+        .defaultHeader("X-MAL-CLIENT-ID", clientId)
+        .codecs { it.defaultCodecs().maxInMemorySize(500 * 1024) }
+        .build()
 }
