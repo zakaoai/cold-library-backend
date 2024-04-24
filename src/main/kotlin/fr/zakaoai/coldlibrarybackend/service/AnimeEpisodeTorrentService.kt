@@ -45,7 +45,7 @@ class AnimeEpisodeTorrentService(
                     .flatMapMany {
                         nyaaTorrentService.searchEpisodeTorrent(
                             malId,
-                            episodeNumber,
+                            episodeNumber + it.deltaEpisode,
                             it.searchWords
                         )
                     }
@@ -126,7 +126,7 @@ class AnimeEpisodeTorrentService(
             .flatMapMany {
                 if (it.isEmpty)
                     animeTorrentRepository.findById(malId)
-                        .flatMapMany { nyaaTorrentService.searchEpisodeTorrent(malId, episodeNumber, it.searchWords) }
+                        .flatMapMany { nyaaTorrentService.searchEpisodeTorrent(malId, episodeNumber + it.deltaEpisode, it.searchWords) }
                 else
                     Flux.empty()
             }

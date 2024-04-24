@@ -1,8 +1,11 @@
 package fr.zakaoai.coldlibrarybackend.service
 
+import fr.zakaoai.coldlibrarybackend.extension.logger
 import org.springframework.cache.CacheManager
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Service
 class CachingService(private val cacheManager: CacheManager) {
@@ -19,6 +22,7 @@ class CachingService(private val cacheManager: CacheManager) {
     fun evictAllCaches() {
         cacheManager.cacheNames.stream()
             .forEach { cacheName: String ->
+                logger().info("Cache {} cleared", cacheName)
                 cacheManager.getCache(cacheName)!!.clear()
             }
     }
@@ -26,5 +30,6 @@ class CachingService(private val cacheManager: CacheManager) {
     @Scheduled(fixedRate = 3600000)
     fun evictAllcachesAtIntervals() {
         evictAllCaches()
+        logger().info("Cache clear at {}", SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Date()))
     }
 }
