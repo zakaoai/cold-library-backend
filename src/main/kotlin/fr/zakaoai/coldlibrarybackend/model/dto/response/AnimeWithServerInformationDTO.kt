@@ -1,12 +1,15 @@
 package fr.zakaoai.coldlibrarybackend.model.dto.response
 
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonInclude.Include
 import fr.zakaoai.coldlibrarybackend.enums.StorageState
 import net.sandrohc.jikan.model.anime.AnimeStatus
 import net.sandrohc.jikan.model.anime.AnimeType
 import net.sandrohc.jikan.model.season.Season
 import java.time.LocalDateTime
 
+@JsonInclude(Include.NON_NULL)
 data class AnimeWithServerInformationDTO(
     var malId: Long,
     var malUrl: String,

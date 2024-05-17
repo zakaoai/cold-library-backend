@@ -21,7 +21,7 @@ class NyaaTorrentServiceImpl(
 
     val filterSearchWord = listOf("x265", "1080p", "720p", "10 bits", "5.1", "x264", "1920", "1080", "H.264")
 
-    @Cacheable
+    @Cacheable("search")
     override fun getAnimeSearch(searchTerm: String): SearchRequest {
         return SearchRequest()
             .setCategory(Category.Nyaa.anime)
@@ -36,7 +36,7 @@ class NyaaTorrentServiceImpl(
         copyTitle.contains(episodeNumber.toString())
     }
 
-    @Cacheable
+    @Cacheable("episode")
     override fun searchEpisodeTorrent(
         malId: Long,
         episodeNumber: Int,

@@ -8,6 +8,7 @@ import reactor.core.publisher.Mono
 interface MyAnimeListClient {
 
     fun getUserAnimeList(myAnimeListUserName: String, malAnimeListInput: MALAnimeListInput): Mono<MALAnimeListResponse>
+    fun expandUserAnimeList(nextUrl: String): Mono<MALAnimeListResponse>
 
     fun getAnimeSeason(year: Int, season: Season): Mono<MALAnimeListResponse>
 }

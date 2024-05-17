@@ -1,8 +1,8 @@
-package fr.zakaoai.coldlibrarybackend.model.dto.response
+package fr.zakaoai.coldlibrarybackend.infrastructure.db.projections
 
 import java.time.DayOfWeek
 
-class AnimeTorrentDTO(
+data class AnimeTorrentProjection(
     val malId: Long,
     val lastEpisodeOnServer: Int,
     val searchWords: String,
@@ -10,5 +10,5 @@ class AnimeTorrentDTO(
     val deltaEpisode: Int,
     val torrentPath: String,
     val title: String,
-    val isComplete: Boolean
+    val episodes: Int?,
 )

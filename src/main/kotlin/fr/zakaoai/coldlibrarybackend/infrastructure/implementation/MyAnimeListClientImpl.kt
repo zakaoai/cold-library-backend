@@ -1,5 +1,6 @@
 package fr.zakaoai.coldlibrarybackend.infrastructure.implementation
 
+import fr.zakaoai.coldlibrarybackend.extension.logger
 import fr.zakaoai.coldlibrarybackend.extension.queryParamNotNull
 import fr.zakaoai.coldlibrarybackend.infrastructure.MyAnimeListClient
 import fr.zakaoai.coldlibrarybackend.infrastructure.model.myanimelist.MALAnimeListInput
@@ -10,6 +11,7 @@ import org.springframework.cache.annotation.CacheConfig
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
+import java.net.URI
 
 @Service
 @CacheConfig
@@ -31,10 +33,13 @@ class MyAnimeListClientImpl(@Qualifier("MALWebClient") private val webClient: We
                     )
                     .queryParam("nsfw", "true")
                     .build(myAnimeListUserName)
+
             }
-
-
             .retrieve()
+            .bodyToMono(MALAnimeListResponse::class.java)
+
+    override fun expandUserAnimeList(nextUrl: String): Mono<MALAnimeListResponse> =
+        webClient.get().uri(URI.create(nextUrl)).retrieve()
             .bodyToMono(MALAnimeListResponse::class.java)
 
     override fun getAnimeSeason(year: Int, season: Season): Mono<MALAnimeListResponse> =

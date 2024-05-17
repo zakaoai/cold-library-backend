@@ -2,11 +2,14 @@ package fr.zakaoai.coldlibrarybackend.service
 
 
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeTorrent
+import fr.zakaoai.coldlibrarybackend.infrastructure.db.projections.AnimeTorrentProjection
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeInServerRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeTorrentRepository
 import fr.zakaoai.coldlibrarybackend.model.mapper.toAnimeTorrentDTO
 import org.springframework.stereotype.Service
+import reactor.kotlin.core.util.function.component1
+import reactor.kotlin.core.util.function.component2
 import java.time.DayOfWeek
 
 @Service
@@ -17,13 +20,15 @@ class AnimeTorrentService(
 ) {
 
     fun getAllTrackedAnime() = animeTorrentRepository.getAllDownloadingAnime()
-        .map(AnimeTorrent::toAnimeTorrentDTO)
+        .map(AnimeTorrentProjection::toAnimeTorrentDTO)
 
     fun getTrackedAnime(malId: Long) = animeTorrentRepository.findById(malId)
-        .map(AnimeTorrent::toAnimeTorrentDTO)
+        .zipWith(animeRepository.findById(malId))
+        .map { (torrent, anime) -> torrent.toAnimeTorrentDTO(anime.title, anime.episodes) }
 
     fun updateTrackedAnime(animeTorrent: AnimeTorrent) = animeTorrentRepository.save(animeTorrent)
-        .map(AnimeTorrent::toAnimeTorrentDTO)
+        .zipWith(animeRepository.findById(animeTorrent.malId))
+        .map { (torrent, anime) -> torrent.toAnimeTorrentDTO(anime.title, anime.episodes) }
 
     fun createTrackedAnime(malId: Long) =
         animeInServerRepository.findById(malId)
@@ -32,7 +37,8 @@ class AnimeTorrentService(
             .then(animeRepository.findById(malId))
             .map { AnimeTorrent(malId, 0, it.title, DayOfWeek.MONDAY, 0, "/${it.title}", true) }
             .flatMap { animeTorrentRepository.findById(malId).switchIfEmpty(animeTorrentRepository.save(it)) }
-            .map(AnimeTorrent::toAnimeTorrentDTO)
+            .zipWith(animeRepository.findById(malId))
+            .map { (torrent, anime) -> torrent.toAnimeTorrentDTO(anime.title, anime.episodes) }
 
     fun deleteTrackedAnime(malId: Long) = animeInServerRepository.findById(malId)
         .map { it.copy(isDownloading = false) }
@@ -40,8 +46,9 @@ class AnimeTorrentService(
         .then(animeTorrentRepository.deleteById(malId))
 
     fun updateLastEpisodeOnServer(malId: Long, lastEpisodeOnServer: Int) = animeTorrentRepository.findById(malId)
-        .map { it.copy(lastEpisodeOnServer=lastEpisodeOnServer)}
+        .map { it.copy(lastEpisodeOnServer = lastEpisodeOnServer) }
         .flatMap(animeTorrentRepository::save)
-        .map(AnimeTorrent::toAnimeTorrentDTO)
+        .zipWith(animeRepository.findById(malId))
+        .map { (torrent, anime) -> torrent.toAnimeTorrentDTO(anime.title, anime.episodes) }
 
 }

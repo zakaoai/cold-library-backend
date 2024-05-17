@@ -14,6 +14,20 @@ import kotlin.random.Random
 @CacheConfig
 class DelugeTorrentImpl(@Qualifier("webClient") private val webClient: WebClient) : DelugeTorrentClient {
 
+    fun isConnected() = webClient.post()
+        .uri("/json")
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(
+            DelugeJsonRPCInput(
+                "web.connected",
+                listOf(),
+                Random.nextInt(0, Int.MAX_VALUE)
+            )
+        )
+        .retrieve()
+
+        .bodyToMono(ConnectedResponse::class.java)
+
     fun connect() = webClient.post()
         .uri("/json")
         .contentType(MediaType.APPLICATION_JSON)
@@ -28,47 +42,86 @@ class DelugeTorrentImpl(@Qualifier("webClient") private val webClient: WebClient
 
         .bodyToMono(AuthLoginResponse::class.java)
 
+    fun getHosts() = webClient.post()
+        .uri("/json")
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(
+            DelugeJsonRPCInput(
+                "web.get_hosts",
+                listOf(),
+                Random.nextInt(0, Int.MAX_VALUE)
+            )
+        )
+        .retrieve()
+
+        .bodyToMono(GetHostsResponse::class.java)
+
+    fun webConnect(idHost: String) = webClient.post()
+        .uri("/json")
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(
+            DelugeJsonRPCInput(
+                "web.connect",
+                listOf(idHost),
+                Random.nextInt(0, Int.MAX_VALUE)
+            )
+        )
+        .retrieve()
+
+        .bodyToMono(WebConnectResponse::class.java)
+
+    fun connectToHost() = connect().then(getHosts()).map { it.result?.get(0)?.get(0) as String }
+        .flatMap(this::webConnect)
+
+    fun connectIfNeeded() = isConnected().flatMap { if (it.result == false) connectToHost() else Mono.empty() }
+
 
     override fun downloadTorrent(torrentFile: String, downloadLocation: String) =
-        webClient.post()
-            .uri("/json")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(
-                DelugeJsonRPCInput(
-                    "core.add_torrent_url",
-                    listOf(torrentFile, AddTorrentConfiguration(downloadLocation)),
-                    Random.nextInt(0, Int.MAX_VALUE)
+        connectIfNeeded().then(
+            webClient.post()
+                .uri("/json")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(
+                    DelugeJsonRPCInput(
+                        "core.add_torrent_url",
+                        listOf(torrentFile, AddTorrentConfiguration(downloadLocation)),
+                        Random.nextInt(0, Int.MAX_VALUE)
+                    )
                 )
-            )
-            .retrieve()
-            .bodyToMono(AddTorrentResponse::class.java)
+                .retrieve()
+                .bodyToMono(AddTorrentResponse::class.java)
+        )
 
     override fun getDownloadTorrentStatus(hash: String): Mono<GetTorrentStatusResponse> =
-        webClient.post()
-            .uri("/json")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(
-                DelugeJsonRPCInput(
-                    "core.get_torrent_status",
-                    listOf(hash, listOf("hash", "download_location", "progress")),
-                    Random.nextInt(0, Int.MAX_VALUE)
+        connectIfNeeded().then(
+            webClient.post()
+                .uri("/json")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(
+                    DelugeJsonRPCInput(
+                        "core.get_torrent_status",
+                        listOf(hash, listOf("hash", "download_location", "progress")),
+                        Random.nextInt(0, Int.MAX_VALUE)
+                    )
                 )
-            )
-            .retrieve()
-            .bodyToMono(GetTorrentStatusResponse::class.java)
+                .retrieve()
+                .bodyToMono(GetTorrentStatusResponse::class.java)
+        )
 
     override fun getMultipleDownloadTorrentStatus(hashs: List<String>): Mono<GetMultipleTorrentStatusResponse> =
-        webClient.post()
-            .uri("/json")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(
-                DelugeJsonRPCInput(
-                    "core.get_torrents_status",
-                    listOf(hashMapOf(Pair("hash", hashs)), listOf("hash", "download_location", "progress")),
-                    Random.nextInt(0, Int.MAX_VALUE)
+        connectIfNeeded().then(
+            webClient.post()
+                .uri("/json")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(
+                    DelugeJsonRPCInput(
+                        "core.get_torrents_status",
+                        listOf(hashMapOf(Pair("hash", hashs)), listOf("hash", "download_location", "progress")),
+                        Random.nextInt(0, Int.MAX_VALUE)
+                    )
                 )
-            )
-            .retrieve()
-            .bodyToMono(GetMultipleTorrentStatusResponse::class.java)
+                .retrieve()
+                .bodyToMono(GetMultipleTorrentStatusResponse::class.java)
+        )
 
 }
