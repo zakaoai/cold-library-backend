@@ -8,6 +8,8 @@ auth0:
     audience: https://zakaoai.eu.auth0.com/api/v2/
 
 spring:
+  jackson:
+    default-property-inclusion: non_null
   codec:
     max-in-memory-size: 500KB
   security:

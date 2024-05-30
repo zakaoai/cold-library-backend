@@ -12,10 +12,12 @@ import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeTorrentRepo
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeInServerDTO
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeWithServerInformationDTO
 import fr.zakaoai.coldlibrarybackend.model.mapper.*
+import net.sandrohc.jikan.model.DataListHolderWithPagination
 import net.sandrohc.jikan.model.season.Season
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toFlux
 import java.time.DayOfWeek
 import net.sandrohc.jikan.model.anime.Anime as JikanAnime
 
@@ -56,11 +58,21 @@ class AnimeService(
     fun findByMalId(id: Long): Mono<AnimeWithServerInformationDTO> =
         animeInServerRepository.findWithAnimeInformation(id)
 
-    fun searchAnime(search: String): Flux<AnimeWithServerInformationDTO> = jikanService.searchAnime(search)
-        .flatMap { jikanAnime ->
-            findByMalId(jikanAnime.malId.toLong())
-                .defaultIfEmpty(jikanAnime.toAnimeWithServerInformationDTO())
-        }
+    fun searchAnime(search: String, page: Int): Mono<DataListHolderWithPagination<AnimeWithServerInformationDTO>> =
+        jikanService.searchAnime(search, page)
+            .flatMap { datalistwithPagination ->
+                datalistwithPagination.data.toFlux()
+                    .flatMap { jikanAnime -> findByMalId(jikanAnime.malId.toLong()).defaultIfEmpty(jikanAnime.toAnimeWithServerInformationDTO()) }
+                    .collectList()
+                    .map {
+                        val result = DataListHolderWithPagination<AnimeWithServerInformationDTO>()
+                        result.setPagination(datalistwithPagination.pagination)
+                        result.setData(
+                            it
+                        )
+                        result
+                    }
+            }
 
     fun updateAnimeStorageState(
         malId: Long,

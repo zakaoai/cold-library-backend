@@ -9,6 +9,8 @@ import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
+import reactor.kotlin.core.util.function.*
+import kotlin.jvm.optionals.getOrNull
 
 @Component
 class AnimeHandler(val animeService: AnimeService) : HandlerUtils() {
@@ -77,9 +79,10 @@ class AnimeHandler(val animeService: AnimeService) : HandlerUtils() {
 
 
     fun searchAnime(req: ServerRequest): Mono<ServerResponse> = req.pathVariable("search").takeIf { it.length >= 3 }
-        .toMono()
-        .flatMapMany(animeService::searchAnime)
-        .collectList()
+        .toMono().zipWith(req.queryParam("page").getOrNull().toMono()
+            .map(String::toInt)
+            .defaultIfEmpty(1))
+        .flatMap {(search, page) -> animeService.searchAnime(search, page) }
         .doOnNext {
             logRequest(
                 req,

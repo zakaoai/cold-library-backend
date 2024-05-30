@@ -18,11 +18,12 @@ import reactor.core.publisher.Mono
 class JikanAPIServiceImpl(private val jikan: Jikan) : JikanApiService {
 
     @Cacheable(cacheNames = ["jikanAnimes"], unless = "#result instanceof T(java.lang.Exception)")
-    override fun searchAnime(search: String) = jikan.query()
+    override fun searchAnime(search: String, page: Int) = jikan.query()
         .anime()
         .search()
+        .page(page)
         .query(search)
-        .execute()
+        .executeWithoutProcess()
         .cache()
 
     @Cacheable("jikanAnimes")
