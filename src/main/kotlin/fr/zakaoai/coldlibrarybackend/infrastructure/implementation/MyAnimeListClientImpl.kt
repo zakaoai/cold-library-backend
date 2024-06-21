@@ -49,7 +49,7 @@ class MyAnimeListClientImpl(@Qualifier("MALWebClient") private val webClient: We
                     .queryParam("limit", "1000")
                     .queryParam(
                         "fields",
-                        "start_date,end_date,mean,rank,popularity,nsfw,genres,media_type,status,num_episodes,start_season,broadcast,rating"
+                        "start_date,end_date,mean,rank,popularity,nsfw,genres,media_type,status,num_episodes,start_season,broadcast,rating,num_list_users"
                     )
                     .queryParam("nsfw", "true")
                     .build(year, season)
