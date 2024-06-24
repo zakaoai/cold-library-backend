@@ -2,6 +2,7 @@ package fr.zakaoai.coldlibrarybackend.service
 
 
 import fr.zakaoai.coldlibrarybackend.infrastructure.JikanApiService
+import fr.zakaoai.coldlibrarybackend.infrastructure.MyAnimeListClient
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeInServerRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeTorrentRepository
@@ -29,6 +30,9 @@ class AnimeServiceTest {
     @MockK
     lateinit var jikanService: JikanApiService
 
+    @MockK
+    lateinit var myAnimeListClient: MyAnimeListClient
+
     @InjectMockKs
     lateinit var animeService: AnimeService
 
@@ -36,7 +40,7 @@ class AnimeServiceTest {
     fun setUp() = MockKAnnotations.init(this)
 
     @Test
-    fun getListRdq_shouldReturnEmptyList_WhenRdqRepositoryReturnEmptyList() {
+    fun getExemple() {
 
         every { animeInServerRepository.findAllWithAnimeInformation() } returns Flux.empty()
 
