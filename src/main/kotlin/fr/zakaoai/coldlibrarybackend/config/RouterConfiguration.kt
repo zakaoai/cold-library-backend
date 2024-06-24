@@ -25,7 +25,7 @@ class RouterConfiguration {
         router {
             "seasons".nest {
                 GET("", animeHandler::getSeasons)
-                GET("{year}/{season}/{page}", animeHandler::searchAnimeBySeason)
+                GET("{year}/{season}", animeHandler::searchAnimeBySeason)
             }
             "/anime".nest {
                 GET("", animeHandler::getAllAnime)

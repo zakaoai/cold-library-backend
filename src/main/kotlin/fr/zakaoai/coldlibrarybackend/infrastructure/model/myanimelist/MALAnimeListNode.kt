@@ -10,7 +10,7 @@ data class MALAnimeListNode(
     val mean: Float?,
     val rank: Int?,
     val popularity: Int?,
-    val genres: List<MALGenre>,
+    val genres: List<MALGenre>?,
     val media_type: String,
     val status: String,
     val num_episodes: Int,
