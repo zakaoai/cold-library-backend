@@ -29,6 +29,7 @@ class RouterConfiguration {
             }
             "/anime".nest {
                 GET("", animeHandler::getAllAnime)
+                GET("recent",animeHandler::getRecent)
                 GET("{malId}", animeHandler::findByMalId)
                 GET("{malId}/update", animeHandler::updateByMalId)
                 POST("{malId}", animeHandler::saveAnime)

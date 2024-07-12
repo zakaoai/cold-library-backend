@@ -26,6 +26,7 @@ enum class LogMessageHandler(val message: String) {
     ANIME_UPDATE_IS_DOWNLOADING("AnimeHandler:updateIsDownloading - Mise à jour de l'état en téléchargement pour l'anime %s"),
     ANIME_SEARCH_BY_SEASON("AnimeHandler:searchAnimeBySeason - Lecture des anime par saison pour l'année %s saison %s"),
     ANIME_GET_SEASONS("AnimeHandler:getSeasons - Lecture de la liste de saisons disponible"),
+    ANIME_GET_RECENT("AnimeHandler:getRecent - Lecture des derniers anime ajouté"),
     ANIME_TORRENT_GET_BY_MAL_ID("AnimeTorrentHandler:getTrackedAnime - Lecture des information de torrent pour l'anime %s"),
     ANIME_TORRENT_GET_ALL("AnimeTorrentHandler:getAllTrackedAnime - Lecture des informations de torrent de tout les animes en cours de téléchargement"),
     ANIME_TORRENT_UPDATE_BY_MAL_ID("AnimeTorrentHandler:updateTrackedAnime - Mise à jour des informations de torrent pour l'anime %s"),

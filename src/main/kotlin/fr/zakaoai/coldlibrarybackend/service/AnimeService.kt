@@ -121,4 +121,9 @@ class AnimeService(
 
 
     fun getSeasons() = jikanService.getSeason()
+
+    fun getRecent() = animeInServerRepository.findAllWithAnimeInformation()
+        .filter{ it.storageState === StorageState.FLUX_CHAUD}
+        .sort(compareBy<AnimeWithServerInformationDTO> { it.addedOnServer}.reversed() )
+        .take(5)
 }
