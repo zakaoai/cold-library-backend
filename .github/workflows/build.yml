@@ -10,8 +10,14 @@ jobs:
         java-version: [ 17 ]
     steps:
       - uses: actions/checkout@v4
-      - name: Gradle Dependency Submission
-        uses: mikepenz/gradle-dependency-submission@v1.0.0
+      - name: Root Gradle Dependency Submission
+        uses: mikepenz/gradle-dependency-submission@{latest}
+        with:
+          use-gradlew: false
+          gradle-build-module: |-
+            :
+          gradle-build-configuration: |-
+            compileClasspath
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
