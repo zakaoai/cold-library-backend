@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Root Gradle Dependency Submission
-        uses: mikepenz/gradle-dependency-submission@{latest}
+        uses: mikepenz/gradle-dependency-submission@1.0.0
         with:
           use-gradlew: false
           gradle-build-module: |-
