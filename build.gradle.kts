@@ -50,7 +50,7 @@ dependencies {
 	implementation("org.springframework:spring-jdbc")
 	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0")
 // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webflux-api
-	testImplementation("org.springdoc:springdoc-openapi-starter-webflux-api:2.3.0")
+	testImplementation("org.springdoc:springdoc-openapi-starter-webflux-api:2.8.6")
 	runtimeOnly("org.postgresql:postgresql")
 	runtimeOnly("org.postgresql:r2dbc-postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
