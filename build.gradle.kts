@@ -1,11 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.2.2"
-    id("io.spring.dependency-management") version "1.1.4"
-    kotlin("jvm") version "1.9.21"
-    kotlin("plugin.spring") version "1.9.21"
-    id("org.springdoc.openapi-gradle-plugin") version "1.8.0"
+    id("org.springframework.boot") version "3.4.4"
+    id("io.spring.dependency-management") version "1.1.7"
+    kotlin("jvm") version "1.9.25"
+    kotlin("plugin.spring") version "1.9.25"
+    id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
     id("jacoco")
 }
 
@@ -49,9 +49,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.liquibase:liquibase-core")
     implementation("org.springframework:spring-jdbc")
-    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.6")
 // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webflux-api
-    testImplementation("org.springdoc:springdoc-openapi-starter-webflux-api:2.3.0")
+    testImplementation("org.springdoc:springdoc-openapi-starter-webflux-api:2.8.6")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("org.postgresql:r2dbc-postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -60,7 +60,7 @@ dependencies {
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.security:spring-security-test")
     // https://mvnrepository.com/artifact/io.mockk/mockk
-    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("io.mockk:mockk:1.13.17")
     testImplementation("com.ninja-squad:springmockk:4.0.2")
     testImplementation("io.rest-assured:spring-mock-mvc")
     // https://mvnrepository.com/artifact/io.rest-assured/spring-mock-mvc-kotlin-extensions
@@ -75,7 +75,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.session/spring-session-core
     implementation("org.springframework.session:spring-session-core")
 
-    implementation("com.auth0:auth0:2.10.0")
+    implementation("com.auth0:auth0:2.19.0")
 
 
 }

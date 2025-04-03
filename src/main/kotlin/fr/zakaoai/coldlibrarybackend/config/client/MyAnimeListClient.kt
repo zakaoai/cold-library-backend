@@ -7,7 +7,7 @@ import org.springframework.http.client.ReactorResourceFactory
 import org.springframework.web.reactive.function.client.WebClient
 
 @Configuration
-class MyAnimeListClient(val webFluxConfiguration: WebFluxConfiguration) {
+class MyAnimeListClient {
 
     val myAnimeListUrl = "https://api.myanimelist.net"
 
