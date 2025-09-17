@@ -1,12 +1,10 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    id("org.springframework.boot") version "3.4.4"
-    id("io.spring.dependency-management") version "1.1.7"
-    kotlin("jvm") version "1.9.25"
-    kotlin("plugin.spring") version "1.9.25"
-    id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
-    id("jacoco")
+	id("org.springframework.boot") version "3.5.5"
+	id("io.spring.dependency-management") version "1.1.7"
+	kotlin("jvm") version "2.2.20"
+	kotlin("plugin.spring") version "2.2.20"
+	id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
+	id ("jacoco")
 }
 
 group = "fr.zakaoai"
@@ -35,56 +33,44 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-// https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-resource-server
-    implementation("org.springframework.security:spring-security-oauth2-resource-server")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springframework.boot:spring-boot-starter-cache")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-    implementation("org.liquibase:liquibase-core")
-    implementation("org.springframework:spring-jdbc")
-    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.6")
-// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webflux-api
-    testImplementation("org.springdoc:springdoc-openapi-starter-webflux-api:2.8.6")
-    runtimeOnly("org.postgresql:postgresql")
-    runtimeOnly("org.postgresql:r2dbc-postgresql")
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude(module = "mockito-core")
-    }
-    testImplementation("io.projectreactor:reactor-test")
-    testImplementation("org.springframework.security:spring-security-test")
-    // https://mvnrepository.com/artifact/io.mockk/mockk
-    testImplementation("io.mockk:mockk:1.13.17")
-    testImplementation("com.ninja-squad:springmockk:4.0.2")
-    testImplementation("io.rest-assured:spring-mock-mvc")
-    // https://mvnrepository.com/artifact/io.rest-assured/spring-mock-mvc-kotlin-extensions
-    testImplementation("io.rest-assured:spring-mock-mvc-kotlin-extensions")
+	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+	implementation("org.springframework.security:spring-security-oauth2-resource-server:6.5.5")
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("org.springframework.boot:spring-boot-starter-cache")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.2.4")
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.10.2")
+	implementation("org.liquibase:liquibase-core:4.33.0")
+	implementation("org.springframework:spring-jdbc:6.2.11")
+	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.13")
+	testImplementation("org.springdoc:springdoc-openapi-starter-webflux-api:2.8.13")
+	runtimeOnly("org.postgresql:postgresql")
+	runtimeOnly("org.postgresql:r2dbc-postgresql")
+	testImplementation("org.springframework.boot:spring-boot-starter-test") {
+		exclude(module = "mockito-core")
+	}
+	testImplementation("io.projectreactor:reactor-test:3.7.11")
+	testImplementation("org.springframework.security:spring-security-test:6.5.5")
+	// https://mvnrepository.com/artifact/io.mockk/mockk
+	testImplementation("io.mockk:mockk:1.14.5")
+	testImplementation("com.ninja-squad:springmockk:4.0.2")
+	testImplementation ("io.rest-assured:spring-mock-mvc")
+	// https://mvnrepository.com/artifact/io.rest-assured/spring-mock-mvc-kotlin-extensions
+	testImplementation("io.rest-assured:spring-mock-mvc-kotlin-extensions")
 
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-kotlin
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.0")
-    implementation("com.github.zakaoai:reactive-jikan:feature~pagination-SNAPSHOT")
-
-    implementation("com.github.zakaoai:NyaaSi-API:1.0.2")
-
-    // https://mvnrepository.com/artifact/org.springframework.session/spring-session-core
-    implementation("org.springframework.session:spring-session-core")
-
-    implementation("com.auth0:auth0:2.19.0")
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-kotlin
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.0")
+	implementation("net.sandrohc:reactive-jikan:2.2.0")
+	implementation("com.github.zakaoai:NyaaSi-API:1.0.2")
 
 
-}
+	implementation("com.auth0:auth0:2.24.0")
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs += "-Xjsr305=strict"
-        jvmTarget = "17"
-    }
+
 }
 
 tasks.withType<Test> {
