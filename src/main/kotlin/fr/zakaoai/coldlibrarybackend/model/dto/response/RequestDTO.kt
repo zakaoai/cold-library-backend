@@ -9,6 +9,7 @@ data class RequestDTO(
     val id: Long,
     val malId: Long,
     val animeTitle: String,
+    var malImg: String?,
     val type: RequestType,
     val state: RequestStatus,
     val date: LocalDateTime,

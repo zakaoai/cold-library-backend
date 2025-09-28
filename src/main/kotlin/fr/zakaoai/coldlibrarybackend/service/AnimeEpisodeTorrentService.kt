@@ -43,9 +43,13 @@ class AnimeEpisodeTorrentService(
             .flatMapMany { animeEpisodeTorrent ->
                 animeTorrentRepository.findById(malId)
                     .flatMapMany {
+                        var episodeToSearch = episodeNumber + it.deltaEpisode
+                        if(episodeNumber == 0) {
+                            episodeToSearch = 0
+                        }
                         nyaaTorrentService.searchEpisodeTorrent(
                             malId,
-                            episodeNumber + it.deltaEpisode,
+                            episodeToSearch,
                             it.searchWords
                         )
                     }
@@ -126,7 +130,17 @@ class AnimeEpisodeTorrentService(
             .flatMapMany {
                 if (it.isEmpty)
                     animeTorrentRepository.findById(malId)
-                        .flatMapMany { nyaaTorrentService.searchEpisodeTorrent(malId, episodeNumber + it.deltaEpisode, it.searchWords) }
+                        .flatMapMany {
+                            var episodeToSearch = episodeNumber + it.deltaEpisode
+                            if(episodeNumber == 0) {
+                                episodeToSearch = 0
+                            }
+                            nyaaTorrentService.searchEpisodeTorrent(
+                                malId,
+                                episodeToSearch,
+                                it.searchWords
+                            )
+                        }
                 else
                     Flux.empty()
             }
