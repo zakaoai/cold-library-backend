@@ -1,5 +1,6 @@
 package fr.zakaoai.coldlibrarybackend.infrastructure
 
+import net.sandrohc.jikan.model.DataListHolderWithPagination
 import net.sandrohc.jikan.model.anime.Anime
 import net.sandrohc.jikan.model.anime.AnimeEpisode
 import net.sandrohc.jikan.model.season.Season
@@ -8,7 +9,7 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 interface JikanApiService {
-    fun searchAnime(search: String): Flux<Anime>
+    fun searchAnime(search: String, page: Int): Mono<DataListHolderWithPagination<Anime>>
 
     fun getAnimeById(id: Long): Mono<Anime>
 
