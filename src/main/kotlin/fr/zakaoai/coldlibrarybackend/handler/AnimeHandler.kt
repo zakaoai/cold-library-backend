@@ -177,4 +177,16 @@ class AnimeHandler(val animeService: AnimeService) : HandlerUtils() {
         }
         .flatMap(ServerResponse.ok()::bodyValue)
         .switchIfEmpty(ServerResponse.notFound().build())
+
+    fun getRecent(req: ServerRequest): Mono<ServerResponse> = animeService.getRecent()
+        .collectList()
+        .doOnNext {
+            logRequest(
+                req,
+                LogMessageHandler.ANIME_GET_RECENT.message
+            )
+        }
+        .flatMap(ServerResponse.ok()::bodyValue)
+        .switchIfEmpty(ServerResponse.notFound().build())
+
 }
