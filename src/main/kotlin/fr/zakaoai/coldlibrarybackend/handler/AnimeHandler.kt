@@ -152,8 +152,7 @@ class AnimeHandler(val animeService: AnimeService) : HandlerUtils() {
     fun searchAnimeBySeason(req: ServerRequest): Mono<ServerResponse> =
         animeService.searchAnimeBySeason(
             req.pathVariable("year").toInt(),
-            Season.valueOf(req.pathVariable("season")),
-            req.pathVariable("page").toInt()
+            Season.valueOf(req.pathVariable("season"))
         )
             .collectList()
             .doOnNext {
@@ -161,8 +160,7 @@ class AnimeHandler(val animeService: AnimeService) : HandlerUtils() {
                     req,
                     LogMessageHandler.ANIME_SEARCH_BY_SEASON.message.format(
                         req.pathVariable("year").toInt(),
-                        Season.valueOf(req.pathVariable("season")),
-                        req.pathVariable("page").toInt()
+                        Season.valueOf(req.pathVariable("season"))
                     )
                 )
             }

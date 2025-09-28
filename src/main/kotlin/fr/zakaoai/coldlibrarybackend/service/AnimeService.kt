@@ -3,12 +3,14 @@ package fr.zakaoai.coldlibrarybackend.service
 
 import fr.zakaoai.coldlibrarybackend.enums.StorageState
 import fr.zakaoai.coldlibrarybackend.infrastructure.JikanApiService
+import fr.zakaoai.coldlibrarybackend.infrastructure.MyAnimeListClient
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.Anime
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeInServer
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.entities.AnimeTorrent
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeInServerRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeRepository
 import fr.zakaoai.coldlibrarybackend.infrastructure.db.services.AnimeTorrentRepository
+import fr.zakaoai.coldlibrarybackend.infrastructure.model.myanimelist.MALAnimeListData
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeInServerDTO
 import fr.zakaoai.coldlibrarybackend.model.dto.response.AnimeWithServerInformationDTO
 import fr.zakaoai.coldlibrarybackend.model.mapper.*
@@ -27,7 +29,8 @@ class AnimeService(
     private val animeInServerRepository: AnimeInServerRepository,
     private val animeRepository: AnimeRepository,
     private val jikanService: JikanApiService,
-    private val animeTorrentRepository: AnimeTorrentRepository
+    private val animeTorrentRepository: AnimeTorrentRepository,
+    val myAnimeListClient: MyAnimeListClient
 ) {
 
     fun getAllAnime(): Flux<AnimeWithServerInformationDTO> = animeInServerRepository.findAllWithAnimeInformation()
@@ -114,11 +117,8 @@ class AnimeService(
             .flatMap(animeInServerRepository::save)
             .map(AnimeInServer::toAnimeInServerDTO)
 
-    fun searchAnimeBySeason(year: Int, season: Season, page: Int) = jikanService.getAnimeBySeason(year, season, page)
-        .flatMap { jikanAnime ->
-            findByMalId(jikanAnime.malId.toLong())
-                .defaultIfEmpty(jikanAnime.toAnimeWithServerInformationDTO())
-        }
+    fun searchAnimeBySeason(year: Int, season: Season) = myAnimeListClient.getAnimeSeason(year, season).flatMapMany { it.data.map(MALAnimeListData::node).toFlux() }
+
 
     fun getSeasons() = jikanService.getSeason()
 }

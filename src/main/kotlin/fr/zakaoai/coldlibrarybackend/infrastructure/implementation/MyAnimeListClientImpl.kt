@@ -46,13 +46,13 @@ class MyAnimeListClientImpl(@Qualifier("MALWebClient") private val webClient: We
         webClient.get()
             .uri {
                 it.path("/v2/anime/season/{year}/{season}")
-                    .queryParam("limit", "1000")
+                    .queryParam("limit", "500")
                     .queryParam(
                         "fields",
-                        "start_date,end_date,mean,rank,popularity,nsfw,genres,media_type,status,num_episodes,start_season,broadcast,rating"
+                        "start_date,end_date,mean,rank,popularity,nsfw,genres,media_type,status,num_episodes,start_season,broadcast,rating,num_list_users"
                     )
                     .queryParam("nsfw", "true")
-                    .build(year, season)
+                    .build(year, season.search)
             }
             .retrieve()
             .bodyToMono(MALAnimeListResponse::class.java)
