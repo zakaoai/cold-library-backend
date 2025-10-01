@@ -51,7 +51,7 @@ class RequestService(
         .map(SecurityContext::getAuthentication)
         .map { Pair(it.name,it.authorities) }
         .flatMap { p -> requestRepository.findById(requestId)
-            .filter { request -> request.userId === p.first || p.second.any { it.authority == "admin" }}
+            .filter { request -> request.userId == p.first || p.second.any { it.authority == "admin" }}
         }
         .switchIfEmpty(Mono.error(IllegalAccessException("Vous n'êtes pas autorisé à supprimer cette demande")))
         .flatMap { requestRepository.deleteById(it.id!!) }

@@ -87,6 +87,6 @@ class RequestHandler(val requestService: RequestService) : HandlerUtils() {
                 )
             }
             .onErrorResume( IllegalAccessException::class.java) {
-                ServerResponse.status(403).bodyValue(mapOf("error" to (it.message ?: "Forbidden")))
+                ServerResponse.status(412).bodyValue(mapOf("error" to (it.message ?: "Forbidden")))
             }
 }
