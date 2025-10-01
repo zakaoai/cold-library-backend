@@ -7,6 +7,9 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.stereotype.Service
+import org.springframework.web.reactive.function.client.WebClientResponseException
+import reactor.core.publisher.Mono
+import reactor.util.function.Tuple2
 
 @Service
 class RequestService(
@@ -43,5 +46,14 @@ class RequestService(
     }
         .flatMap(requestRepository::save)
         .then(requestRepository.findByIdWithInformation(requestId))
+
+    fun deleteRequest(requestId: Long) = ReactiveSecurityContextHolder.getContext()
+        .map(SecurityContext::getAuthentication)
+        .map { Pair(it.name,it.authorities) }
+        .flatMap { p -> requestRepository.findById(requestId)
+            .filter { request -> request.userId === p.first || p.second.any { it.authority == "admin" }}
+        }
+        .switchIfEmpty(Mono.error(IllegalAccessException("Vous n'êtes pas autorisé à supprimer cette demande")))
+        .flatMap { requestRepository.deleteById(it.id!!) }
 
 }

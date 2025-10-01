@@ -45,6 +45,9 @@ enum class LogMessageHandler(val message: String) {
     REQUEST_GET_MY_ASSIGNED("RequestHandler:getMyAssignedRequest - Lecture des requêtes assigné à l'utlisateur"),
     REQUEST_GET_ALL("RequestHandler:getAllRequest - Lecture de toute les requests"),
     REQUEST_UPDATE("RequestHandler:updateRequest - Mise à jour de la request %s"),
+    REQUEST_DELETE("RequestHandler:deleteRequest - Suppression de la request %s"),
+
+    REQUEST_DELETE_ILLEGAL_ACCESS("RequestHandler:deleteRequest - Tentative de suppression de la request %s sans autorisation"),
     USER_CURRENT("UserHandler:getCurrentUser - Lecture des informations courante de l'utlilisateur"),
     USER_UPDATE_CURRENT_MAL_USERNAME("UserHandler:updateCurrentUserMalUsername - Mise à jour du nom d'utilisateur MyAnimeList pour l'utilisateur courrant"),
     USER_GET_ALL("UserHandler:getAllUser - Lecture de tout les utilisateurs"),
