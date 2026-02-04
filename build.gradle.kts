@@ -56,7 +56,7 @@ dependencies {
 	testImplementation("io.projectreactor:reactor-test:3.7.11")
 	testImplementation("org.springframework.security:spring-security-test:6.5.5")
 	// https://mvnrepository.com/artifact/io.mockk/mockk
-	testImplementation("io.mockk:mockk:1.14.5")
+	testImplementation("io.mockk:mockk:1.14.9")
 	testImplementation("com.ninja-squad:springmockk:4.0.2")
 	testImplementation ("io.rest-assured:spring-mock-mvc")
 	// https://mvnrepository.com/artifact/io.rest-assured/spring-mock-mvc-kotlin-extensions
