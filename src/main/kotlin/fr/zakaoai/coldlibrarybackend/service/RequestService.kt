@@ -19,19 +19,19 @@ class RequestService(
 
     fun createRequest(request: RequestInputDTO) = animeService.findAnimeAndSave(request.malId)
         .then(ReactiveSecurityContextHolder.getContext())
-        .map(SecurityContext::getAuthentication)
+        .mapNotNull(SecurityContext::getAuthentication)
         .map(Authentication::getName)
         .map(request::toRequest)
         .flatMap(requestRepository::save)
         .flatMap { requestRepository.findByIdWithInformation(it.id!!) }
 
     fun getMyRequests() = ReactiveSecurityContextHolder.getContext()
-        .map(SecurityContext::getAuthentication)
+        .mapNotNull(SecurityContext::getAuthentication)
         .map(Authentication::getName)
         .flatMapMany(requestRepository::findByCreatorId)
 
     fun getMyAssignedRequest() = ReactiveSecurityContextHolder.getContext()
-        .map(SecurityContext::getAuthentication)
+        .mapNotNull(SecurityContext::getAuthentication)
         .map(Authentication::getName)
         .flatMapMany(requestRepository::findByAssignedUserId)
 
@@ -48,7 +48,7 @@ class RequestService(
         .then(requestRepository.findByIdWithInformation(requestId))
 
     fun deleteRequest(requestId: Long) = ReactiveSecurityContextHolder.getContext()
-        .map(SecurityContext::getAuthentication)
+        .mapNotNull(SecurityContext::getAuthentication)
         .map { Pair(it.name,it.authorities) }
         .flatMap { p -> requestRepository.findById(requestId)
             .filter { request -> request.userId == p.first || p.second.any { it.authority == "admin" }}

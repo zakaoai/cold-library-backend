@@ -1,11 +1,14 @@
 package fr.zakaoai.coldlibrarybackend.config.client
 
-import com.auth0.client.auth.AuthAPI
-import com.auth0.client.mgmt.ManagementAPI
-import com.auth0.net.TokenRequest
+import com.auth0.client.mgmt.ManagementApi
+import com.auth0.client.mgmt.core.ClientOptions
+import com.auth0.client.mgmt.core.Environment
+import com.auth0.client.mgmt.core.OAuthTokenSupplier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import java.util.function.Supplier
+
 
 @Configuration
 class Auth0Client {
@@ -23,13 +26,17 @@ class Auth0Client {
     lateinit var audience: String
 
     @Bean
-    fun auth0AuthenticationApi(): AuthAPI = AuthAPI.newBuilder(domain, clientId, clientSecret).build()
+    fun oAuthTokenSupplier(): OAuthTokenSupplier =
+        OAuthTokenSupplier(clientId, clientSecret, "https://$domain", audience)
 
     @Bean
-    fun apiTokenRequest(authAPI: AuthAPI): TokenRequest = authAPI.requestToken(audience)
+    fun clientOptions(tokenSupplier: OAuthTokenSupplier): ClientOptions = ClientOptions.builder()
+        .environment(Environment.custom("https://$audience"))
+        .addHeader("Authorization", Supplier { "Bearer " + tokenSupplier.get() })
+        .build();
 
     @Bean
-    fun auth0ManagementApi(tokenRequest: TokenRequest): ManagementAPI =
-        ManagementAPI.newBuilder(domain, tokenRequest.execute().body.accessToken).build()
+    fun auth0ManagementApi(clientOptions: ClientOptions): ManagementApi = ManagementApi(clientOptions)
+
 
 }
