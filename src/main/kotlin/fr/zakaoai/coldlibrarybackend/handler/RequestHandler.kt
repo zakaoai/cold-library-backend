@@ -6,6 +6,7 @@ import fr.zakaoai.coldlibrarybackend.service.RequestService
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
+import java.lang.IllegalAccessException
 
 @Component
 class RequestHandler(val requestService: RequestService) : HandlerUtils() {
@@ -65,4 +66,27 @@ class RequestHandler(val requestService: RequestService) : HandlerUtils() {
             )
         }
         .flatMap(ServerResponse.ok()::bodyValue)
+
+    fun deleteRequest(req: ServerRequest) =
+        requestService.deleteRequest(req.pathVariable("requestId").toLong())
+            .doOnNext {
+                logRequest(
+                    req,
+                    LogMessageHandler.REQUEST_DELETE.message.format(
+                        req.pathVariable("requestId").toLong()
+                    )
+                )
+            }
+            .flatMap { ServerResponse.ok().build() }
+            .doOnError( IllegalAccessException::class.java) {
+                logRequest(
+                    req,
+                    LogMessageHandler.REQUEST_DELETE_ILLEGAL_ACCESS.message.format(
+                        req.pathVariable("requestId").toLong()
+                    )
+                )
+            }
+            .onErrorResume( IllegalAccessException::class.java) {
+                ServerResponse.status(412).bodyValue(mapOf("error" to (it.message ?: "Forbidden")))
+            }
 }

@@ -82,6 +82,7 @@ class RouterConfiguration {
                 GET("assigned", requestHandler::getMyAssignedRequest)
                 GET("all", requestHandler::getAllRequest)
                 POST("{requestId}", requestHandler::updateRequest)
+                DELETE("{requestId}", requestHandler::deleteRequest)
             }
             "log".nest {
                 GET("", logHandler::getAllLogs)
