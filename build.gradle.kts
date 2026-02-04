@@ -48,8 +48,8 @@ dependencies {
 	implementation("org.springframework:spring-jdbc:7.0.3")
 	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:3.0.1")
 	testImplementation("org.springdoc:springdoc-openapi-starter-webflux-api:3.0.1")
-	runtimeOnly("org.postgresql:postgresql:42.7.9")
-	runtimeOnly("org.postgresql:r2dbc-postgresql:1.1.1.RELEASE")
+	runtimeOnly("org.postgresql:postgresql")
+	runtimeOnly("org.postgresql:r2dbc-postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(module = "mockito-core")
 	}
