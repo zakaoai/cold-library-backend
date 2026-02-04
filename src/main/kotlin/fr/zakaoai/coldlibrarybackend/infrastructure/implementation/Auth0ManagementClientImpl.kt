@@ -7,7 +7,7 @@ import fr.zakaoai.coldlibrarybackend.infrastructure.Auth0ManagementClient
 import org.springframework.stereotype.Service
 
 @Service
-class Auth0ManagementClientImpl( val clientOptions: ClientOptions) :
+class Auth0ManagementClientImpl(val clientOptions: ClientOptions) :
     Auth0ManagementClient {
 
     override fun getCurrentUser(userId: String) =

@@ -31,7 +31,7 @@ class Auth0Client {
 
     @Bean
     fun clientOptions(tokenSupplier: OAuthTokenSupplier): ClientOptions = ClientOptions.builder()
-        .environment(Environment.custom("https://$audience"))
+        .environment(Environment.custom(audience))
         .addHeader("Authorization", Supplier { "Bearer " + tokenSupplier.get() })
         .build();
 
