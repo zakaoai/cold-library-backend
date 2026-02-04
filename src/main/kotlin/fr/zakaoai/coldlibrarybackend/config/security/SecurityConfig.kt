@@ -4,6 +4,7 @@ package fr.zakaoai.coldlibrarybackend.config.security
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.config.web.server.invoke
@@ -14,6 +15,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtGrantedAuthoritiesConverterAdapter
 import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers.anyExchange
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers.pathMatchers
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.reactive.CorsConfigurationSource
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
@@ -50,12 +54,31 @@ class SecurityConfig {
         http: ServerHttpSecurity,
         corsConfigurationSource: CorsConfigurationSource
     ): SecurityWebFilterChain = http {
-        cors { }
+        cors {
+            configurationSource = corsConfigurationSource
+        }
+        csrf { disable() }
+        formLogin { disable() }
+        httpBasic { disable() }
         authorizeExchange {
-            authorize("/anime/**", hasAuthority("admin"))
+            authorize(
+                pathMatchers(HttpMethod.OPTIONS, "/**"),
+                permitAll
+            )
+            authorize("log/**", hasAuthority("admin"))
             authorize("/torrent/**", hasAuthority("admin"))
+            authorize ("cache/**", hasAuthority("admin"))
+            authorize(
+                pathMatchers(HttpMethod.GET, "anime/**"),
+                hasAnyAuthority("user", "admin")
+            )
+            authorize("/anime/**", hasAuthority("admin"))
+            authorize("request/**", hasAnyAuthority("user", "admin"))
+            authorize("user/**", hasAnyAuthority("user", "admin"))
+            authorize ("seasons/**", hasAnyAuthority("user", "admin"))
             authorize(anyExchange, hasAuthority("admin"))
         }
+
         oauth2ResourceServer {
             jwt {
                 jwtAuthenticationConverter = makePermissionsConverter()

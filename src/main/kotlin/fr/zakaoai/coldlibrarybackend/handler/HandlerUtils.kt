@@ -14,8 +14,8 @@ class HandlerUtils {
 
     fun logRequest(req: ServerRequest, message: String) =
         req.session()
-            .mapNotNull { it.getAttribute<User>("user") }
-            .flatMap { logService.addLog(message, it!!) }
+            .map { it.getAttribute<User>("user") }
+            .flatMap { logService.addLog(message, it) }
             .subscribe()
 
     fun malId(req: ServerRequest) = req.pathVariable("malId").toLong()
