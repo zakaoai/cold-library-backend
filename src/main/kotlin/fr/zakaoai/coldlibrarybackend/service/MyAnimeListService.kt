@@ -30,7 +30,7 @@ class MyAnimeListService(val myAnimeListClient: MyAnimeListClient, val userRepos
         .flatMapIterable { it }
 
     fun getUserAnimeList() = ReactiveSecurityContextHolder.getContext()
-        .map(SecurityContext::getAuthentication)
+        .mapNotNull (SecurityContext::getAuthentication)
         .map(Authentication::getName)
         .flatMap(userRepository::findById)
         .mapNotNull(User::malUsername)

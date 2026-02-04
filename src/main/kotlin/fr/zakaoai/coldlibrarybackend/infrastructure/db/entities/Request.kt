@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
-@Table("\"Request\"")
+@Table("Request")
 data class Request(
     @Id
     val id: Long? = null,

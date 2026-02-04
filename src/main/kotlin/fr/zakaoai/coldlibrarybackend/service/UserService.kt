@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service
 class UserService(val userRepository: UserRepository) {
 
     fun getCurrentUser() = ReactiveSecurityContextHolder.getContext()
-        .map(SecurityContext::getAuthentication)
+        .mapNotNull(SecurityContext::getAuthentication)
         .map(Authentication::getName)
         .flatMap(userRepository::findById)
         .map(User::toUserDTO)
 
     fun updateCurrentUserMalUserName(malUsername: String) = ReactiveSecurityContextHolder.getContext()
-        .map(SecurityContext::getAuthentication)
+        .mapNotNull(SecurityContext::getAuthentication)
         .map(Authentication::getName)
         .flatMap(userRepository::findById)
         .map { it.copy(malUsername = malUsername) }
