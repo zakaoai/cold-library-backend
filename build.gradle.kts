@@ -70,7 +70,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.session/spring-session-core
     implementation("org.springframework.session:spring-session-core")
 
-	implementation("com.auth0:auth0:2.24.0")
+	implementation("com.auth0:auth0:3.1.0")
 
 
 }
