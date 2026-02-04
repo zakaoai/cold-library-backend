@@ -7,7 +7,7 @@ import org.springframework.data.domain.Persistable
 import org.springframework.data.relational.core.mapping.Table
 import java.time.DayOfWeek
 
-@Table(value = "\"AnimeTorrent\"", schema = "cold_library")
+@Table(value = "AnimeTorrent", schema = "cold_library")
 data class AnimeTorrent(
     @Id
     val malId: Long,

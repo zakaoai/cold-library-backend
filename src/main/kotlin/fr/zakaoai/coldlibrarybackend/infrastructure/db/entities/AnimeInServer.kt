@@ -9,7 +9,7 @@ import org.springframework.data.domain.Persistable
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
-@Table(value = "\"AnimeInServer\"", schema = "cold_library")
+@Table(value = "AnimeInServer", schema = "cold_library")
 data class AnimeInServer(
     @Id
     val malId: Long,

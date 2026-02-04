@@ -3,7 +3,7 @@ package fr.zakaoai.coldlibrarybackend.infrastructure.db.entities
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 
-@Table("\"DelugeEpisodeTorrent\"")
+@Table("DelugeEpisodeTorrent")
 data class DelugeEpisodeTorrent(
     @Id
     var id: Long? = null,

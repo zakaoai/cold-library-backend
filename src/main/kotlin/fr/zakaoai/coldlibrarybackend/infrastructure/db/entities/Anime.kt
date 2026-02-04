@@ -10,7 +10,7 @@ import org.springframework.data.domain.Persistable
 import org.springframework.data.relational.core.mapping.Table
 
 
-@Table(value = "\"Anime\"", schema = "cold_library")
+@Table(value = "Anime", schema = "cold_library")
 data class Anime(
     @Id
     var malId: Long,
