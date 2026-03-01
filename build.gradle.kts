@@ -63,7 +63,7 @@ dependencies {
 	testImplementation("io.rest-assured:spring-mock-mvc-kotlin-extensions:6.0.0")
 
 	implementation("com.github.zakaoai:NyaaSi-API:1.0.2")
-	implementation("org.springframework.session:spring-session-core:4.0.1")
+	implementation("org.springframework.session:spring-session-core:4.0.2")
 	implementation("com.auth0:auth0:3.1.0")
 	implementation("com.github.zakaoai:reactive-jikan:feature~pagination-SNAPSHOT")
 }
