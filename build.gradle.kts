@@ -40,7 +40,7 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-cache")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.0")
+	implementation("tools.jackson.module:jackson-module-kotlin:3.1.0")
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.3.0")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.10.2")
