@@ -1,5 +1,5 @@
 plugins {
-	id("org.springframework.boot") version "4.0.2"
+	id("org.springframework.boot") version "4.0.3"
 	id("io.spring.dependency-management") version "1.1.7"
 	kotlin("jvm") version "2.3.10"
 	kotlin("plugin.spring") version "2.3.10"
@@ -36,7 +36,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-	implementation("org.springframework.security:spring-security-oauth2-resource-server:7.0.2")
+	implementation("org.springframework.security:spring-security-oauth2-resource-server:7.0.3")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-cache")
@@ -44,7 +44,7 @@ dependencies {
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.3.0")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.10.2")
-	implementation("org.liquibase:liquibase-core:5.0.1")
+	implementation("org.liquibase:liquibase-core:5.0.2")
 	implementation("org.springframework:spring-jdbc:7.0.5")
 	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:3.0.2")
 	testImplementation("org.springdoc:springdoc-openapi-starter-webflux-api:3.0.2")
@@ -64,7 +64,7 @@ dependencies {
 
 	implementation("com.github.zakaoai:NyaaSi-API:1.0.2")
 	implementation("org.springframework.session:spring-session-core:4.0.2")
-	implementation("com.auth0:auth0:3.1.0")
+	implementation("com.auth0:auth0:3.2.0")
 	implementation("com.github.zakaoai:reactive-jikan:feature~pagination-SNAPSHOT")
 }
 
