@@ -45,7 +45,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.10.2")
 	implementation("org.liquibase:liquibase-core:5.0.2")
-	implementation("org.springframework:spring-jdbc:7.0.5")
+	implementation("org.springframework:spring-jdbc:7.0.6")
 	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:3.0.2")
 	testImplementation("org.springdoc:springdoc-openapi-starter-webflux-api:3.0.2")
 	runtimeOnly("org.postgresql:postgresql")
