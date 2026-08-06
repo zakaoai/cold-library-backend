@@ -48,3 +48,6 @@ myanimelist:
 deluge:
   host: ${DELUGE_HOST}
   password: ${DELUGE_PASSWORD}
+
+jikan:
+  host: ${JIKAN_HOST}

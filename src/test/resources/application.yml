@@ -44,3 +44,6 @@ myanimelist:
 deluge:
   host: ""
   password: ""
+
+jikan:
+  host: ""
