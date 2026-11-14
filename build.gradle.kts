@@ -54,7 +54,7 @@ dependencies {
 		exclude(module = "mockito-core")
 	}
 	testImplementation("io.projectreactor:reactor-test:3.8.2")
-	testImplementation("org.springframework.security:spring-security-test:7.0.2")
+	testImplementation("org.springframework.security:spring-security-test:7.0.4")
 	// https://mvnrepository.com/artifact/io.mockk/mockk
 	testImplementation("io.mockk:mockk:1.14.9")
 	testImplementation("com.ninja-squad:springmockk:5.0.1")
